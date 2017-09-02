@@ -6,6 +6,10 @@ import Update exposing (update)
 import Init exposing (init)
 import Subscriptions exposing (subscriptions)
 
+import Model exposing (Model)
+import Msg exposing (Msg)
+
+main : Program Never Model Msg 
 main = Html.program {
   subscriptions = subscriptions
   , view = view

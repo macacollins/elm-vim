@@ -5,5 +5,5 @@ import Msg exposing (Msg(..))
 import Keyboard
 
 subscriptions _ =
-  Keyboard.presses KeyInput
+  Keyboard.ups KeyInput
 
