@@ -20,7 +20,7 @@ newStateAfterActions entries =
 
 applyActions : Model -> List ActionEntry -> Model
 applyActions model actions =
-    List.foldr enterKeySequence model actions
+    List.foldl enterKeySequence model actions
 
 
 enterKeySequence : ActionEntry -> Model -> Model
