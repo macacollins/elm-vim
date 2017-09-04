@@ -1,6 +1,6 @@
-module Model exposing (Model)
+module Model exposing (Model, initialModel)
 
-import Array exposing (Array)
+import Array exposing (..)
 
 import Mode exposing (Mode(..))
 
@@ -11,5 +11,8 @@ type alias Model =
   , mode : Mode
   }
 
-
-
+initialModel = Model
+     (repeat 1 "")
+     0
+     0
+     Control
