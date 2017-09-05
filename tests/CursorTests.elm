@@ -26,4 +26,20 @@ testCursor =
                             [ Keys "iaaa", Enter ]
                 in
                     Expect.equal cursorX 0
+        , test "Cursor doesn't go negative" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaa", Escape, Keys "hhhhhhhhhhhhhhhhhhhhh" ]
+                in
+                    Expect.equal cursorX 0
+        , test "Cursor doesn't go past the end of the line" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaa", Escape, Keys "hhhllllllllllllllllllllllllll" ]
+                in
+                    Expect.equal cursorX 3
         ]

@@ -5,6 +5,7 @@ import Keyboard exposing (KeyCode)
 import Array exposing (..)
 import Char
 import Mode exposing (Mode(..))
+import Handlers.Delete exposing (..)
 
 
 controlModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
@@ -13,15 +14,47 @@ controlModeUpdate model keyCode =
         trash =
             Debug.log "Pressed" keyCode
 
+        { lines, cursorX, cursorY } =
+            model
+
         newModel =
             case keyCode of
                 108 ->
                     -- h
-                    { model | cursorX = model.cursorX + 1 }
+                    let
+                        currentLine =
+                            case get cursorY lines of
+                                Just line ->
+                                    line
+
+                                Nothing ->
+                                    ""
+
+                        newCursorX =
+                            if model.cursorX < String.length currentLine then
+                                model.cursorX + 1
+                            else
+                                model.cursorX
+                    in
+                        { model | cursorX = newCursorX }
 
                 104 ->
-                    -- l
-                    { model | cursorX = model.cursorX - 1 }
+                    let
+                        currentLine =
+                            case get cursorY lines of
+                                Just line ->
+                                    line
+
+                                Nothing ->
+                                    ""
+
+                        newCursorX =
+                            if model.cursorX > 0 then
+                                model.cursorX - 1
+                            else
+                                model.cursorX
+                    in
+                        { model | cursorX = newCursorX }
 
                 106 ->
                     -- j
@@ -40,6 +73,9 @@ controlModeUpdate model keyCode =
                 105 ->
                     -- i
                     { model | mode = Insert }
+
+                120 ->
+                    handleDelete model
 
                 _ ->
                     model
