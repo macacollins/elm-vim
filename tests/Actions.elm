@@ -4,7 +4,9 @@ import Char
 import Keyboard exposing (KeyCode)
 import Update exposing (update)
 import Msg exposing (Msg(..))
-import Model exposing (..)
+import Model exposing (Model)
+import Array exposing (fromList, repeat)
+import Mode exposing (Mode(..))
 
 
 type ActionEntry
@@ -15,7 +17,7 @@ type ActionEntry
 
 newStateAfterActions : List ActionEntry -> Model
 newStateAfterActions entries =
-    applyActions initialModel entries
+    applyActions (initialModel [ "" ]) entries
 
 
 applyActions : Model -> List ActionEntry -> Model
@@ -34,9 +36,6 @@ enterKeySequence actionEntry model =
             let
                 ( newModel, _ ) =
                     update (KeyInput code) model
-
-                trash =
-                    Debug.log "model after update: " newModel
             in
                 newModel
     in
@@ -59,3 +58,15 @@ getCodeArray actionEntry =
                     Char.toCode character :: resultArray
             in
                 String.foldl addCodeAndRecur [] keys
+
+
+initialModel lines =
+    Debug.log "Getting the model." <|
+        Model
+            (Array.fromList
+                lines
+            )
+            0
+            0
+            Control
+            []

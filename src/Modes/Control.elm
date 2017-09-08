@@ -5,6 +5,7 @@ import Keyboard exposing (KeyCode)
 import Array exposing (..)
 import Char
 import Mode exposing (Mode(..))
+import Handlers.DeleteCharacter exposing (..)
 import Handlers.Delete exposing (..)
 
 
@@ -70,12 +71,16 @@ controlModeUpdate model keyCode =
                     else
                         { model | cursorY = model.cursorY - 1 }
 
+                100 ->
+                    -- d
+                    handleD model
+
                 105 ->
                     -- i
                     { model | mode = Insert }
 
                 120 ->
-                    handleDelete model
+                    handleX model
 
                 _ ->
                     model

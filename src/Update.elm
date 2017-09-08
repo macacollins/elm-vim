@@ -23,8 +23,4 @@ update msg model =
             if keyPress == 27 then
                 update (KeyInput 27) model
             else
-                let
-                    trash =
-                        Debug.log "key up, no action" keyPress
-                in
-                    ( model, Cmd.none )
+                ( model, Cmd.none )

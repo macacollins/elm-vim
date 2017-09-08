@@ -1,29 +1,23 @@
-module Handlers.Delete exposing (handleDelete)
+module Handlers.Delete exposing (handleD)
 
 import Model exposing (Model)
 import Array
 
 
-handleDelete : Model -> Model
-handleDelete model =
+handleD : Model -> Model
+handleD model =
     let
-        { lines, cursorY, cursorX } =
-            model
+        newInProgress =
+            if List.length model.inProgress > 0 then
+                []
+            else
+                [ 'd' ]
 
-        currentLine =
-            case Array.get cursorY lines of
-                Just theLine ->
-                    theLine
-
-                Nothing ->
-                    ""
-
-        updatedLine =
-            (String.slice 0 cursorX currentLine) ++ (String.slice (cursorX + 1) (String.length currentLine) currentLine)
-
-        finalLines =
-            Array.append (Array.slice 0 cursorY lines) <|
-                Array.append (Array.fromList [ updatedLine ]) <|
-                    Array.slice (cursorY + 1) (Array.length lines) lines
+        lines =
+            if List.member 'd' model.inProgress then
+                Array.append (Array.slice 0 model.cursorY model.lines) <|
+                    Array.slice (model.cursorY + 1) (Array.length model.lines) model.lines
+            else
+                model.lines
     in
-        { model | lines = finalLines }
+        { model | inProgress = newInProgress, lines = lines }
