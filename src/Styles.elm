@@ -1,6 +1,8 @@
 module Styles exposing (styleString)
 
-styleString = """
+
+styleString =
+    """
 span {
   background-color : #aaa;
 }
@@ -20,6 +22,8 @@ main {
   width: 1em;
 }
 
+* {
+  font-family: monospace, 'Courier';
+}
+
 """
-
-
