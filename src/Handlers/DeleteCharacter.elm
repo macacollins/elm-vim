@@ -2,6 +2,7 @@ module Handlers.DeleteCharacter exposing (handleX)
 
 import Model exposing (Model)
 import Array
+import Util.ArrayUtils exposing (..)
 
 
 handleX : Model -> Model
@@ -10,20 +11,10 @@ handleX model =
         { lines, cursorY, cursorX } =
             model
 
-        currentLine =
-            case Array.get cursorY lines of
-                Just theLine ->
-                    theLine
-
-                Nothing ->
-                    ""
-
-        updatedLine =
+        updateLine currentLine =
             (String.slice 0 cursorX currentLine) ++ (String.slice (cursorX + 1) (String.length currentLine) currentLine)
 
         finalLines =
-            Array.append (Array.slice 0 cursorY lines) <|
-                Array.append (Array.fromList [ updatedLine ]) <|
-                    Array.slice (cursorY + 1) (Array.length lines) lines
+            mutateAtIndex cursorY lines updateLine
     in
         { model | lines = finalLines }

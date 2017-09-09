@@ -2,6 +2,7 @@ module Handlers.Delete exposing (handleD)
 
 import Model exposing (Model)
 import Array
+import Util.ArrayUtils exposing (..)
 
 
 handleD : Model -> Model
@@ -13,11 +14,10 @@ handleD model =
             else
                 [ 'd' ]
 
-        lines =
+        ( lines, _ ) =
             if List.member 'd' model.inProgress then
-                Array.append (Array.slice 0 model.cursorY model.lines) <|
-                    Array.slice (model.cursorY + 1) (Array.length model.lines) model.lines
+                removeAtIndex model.cursorY model.lines
             else
-                model.lines
+                ( model.lines, Nothing )
     in
         { model | inProgress = newInProgress, lines = lines }

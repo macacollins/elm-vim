@@ -7,6 +7,7 @@ import Char
 import Mode exposing (Mode(..))
 import Handlers.DeleteCharacter exposing (..)
 import Handlers.Delete exposing (..)
+import Util.ArrayUtils exposing (..)
 
 
 controlModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
@@ -24,12 +25,7 @@ controlModeUpdate model keyCode =
                     -- h
                     let
                         currentLine =
-                            case get cursorY lines of
-                                Just line ->
-                                    line
-
-                                Nothing ->
-                                    ""
+                            getLine cursorY lines
 
                         newCursorX =
                             if model.cursorX < String.length currentLine then
@@ -40,14 +36,10 @@ controlModeUpdate model keyCode =
                         { model | cursorX = newCursorX }
 
                 104 ->
+                    -- l
                     let
                         currentLine =
-                            case get cursorY lines of
-                                Just line ->
-                                    line
-
-                                Nothing ->
-                                    ""
+                            getLine cursorY lines
 
                         newCursorX =
                             if model.cursorX > 0 then

@@ -2,6 +2,7 @@ module Handlers.NewLine exposing (handleNewLine)
 
 import Model exposing (Model)
 import Array exposing (..)
+import Util.ArrayUtils exposing (..)
 
 
 handleNewLine : Model -> Model
@@ -11,9 +12,7 @@ handleNewLine model =
             (model.cursorY + 1)
 
         updatedLines =
-            Array.append (slice 0 sliceIndex model.lines) <|
-                Array.append (fromList [ "" ])
-                    (slice sliceIndex (Array.length model.lines) model.lines)
+            insertAtIndex sliceIndex model.lines ""
 
         newCursorY =
             model.cursorY + 1

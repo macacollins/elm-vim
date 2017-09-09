@@ -4,35 +4,32 @@ import Array exposing (..)
 import Char
 import Keyboard exposing (KeyCode)
 import Model exposing (Model)
+import Util.ArrayUtils exposing (..)
+
 
 handleInsertCharacter : Model -> KeyCode -> Model
 handleInsertCharacter model keyCode =
     let
-          currentLine : String
-          currentLine = 
-            case get model.cursorY model.lines of
-              Just line -> line
-              Nothing -> ""
+        transformer currentLine =
+            let
+                indexToSplit =
+                    model.cursorX
 
-          indexToSplit =
-              model.cursorX
-  
-          before = String.slice 0 indexToSplit currentLine
-          after  = String.slice indexToSplit (String.length currentLine) currentLine
- 
-          withNewCharacter : String
-          withNewCharacter =
-              before ++ (String.cons (Char.fromCode keyCode) "") ++ after
+                before =
+                    String.slice 0 indexToSplit currentLine
 
-          updatedLines : Array String
-          updatedLines =
-            set model.cursorY withNewCharacter model.lines
+                after =
+                    String.slice indexToSplit (String.length currentLine) currentLine
+            in
+                before ++ (String.cons (Char.fromCode keyCode) "") ++ after
 
-          newCursorX =
-            if String.length currentLine == String.length withNewCharacter then
-              model.cursorX
+        newLines =
+            mutateAtIndex model.cursorY model.lines transformer
+
+        newCursorX =
+            if newLines == model.lines then
+                model.cursorX
             else
-              model.cursorX + 1
+                model.cursorX + 1
     in
-        { model | lines = updatedLines, cursorX = newCursorX }
-
+        { model | lines = newLines, cursorX = newCursorX }
