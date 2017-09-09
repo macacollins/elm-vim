@@ -3,9 +3,6 @@ module Styles exposing (styleString)
 
 styleString =
     """
-span {
-  background-color : #aaa;
-}
 
 main {
   background-color : #DADADA;

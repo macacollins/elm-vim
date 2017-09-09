@@ -20,7 +20,8 @@ update msg model =
                     controlModeUpdate model keyPress
 
         KeyUp keyPress ->
-            if keyPress == 27 then
-                update (KeyInput 27) model
+            if List.member keyPress [ 27, 8 ] then
+                update (KeyInput keyPress) model
             else
-                ( model, Cmd.none )
+                Debug.log ("Nothing to do for " ++ toString keyPress)
+                    ( model, Cmd.none )

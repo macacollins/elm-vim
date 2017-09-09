@@ -26,10 +26,7 @@ getLine : Model -> Int -> String -> Html msg
 getLine model index line =
     let
         className =
-            if model.cursorY == index then
-                "selectedLine"
-            else
-                "normalLine"
+            "normalLine"
 
         textContents =
             if model.cursorY == index then

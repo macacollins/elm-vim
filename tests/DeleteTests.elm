@@ -34,6 +34,75 @@ dTests =
         ]
 
 
+backspaceTests : Test
+backspaceTests =
+    describe "backspacin'"
+        [ test "delete one character" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "ia", Backspace ]
+                in
+                    Expect.equal (getLine 0 lines) ""
+        , test "after one delete, " <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions [ Keys "ia", Backspace ]
+                in
+                    Expect.equal cursorX 0
+        , test "more characters, " <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions [ Keys "iaaaaaa", Backspace, Backspace, Backspace, Backspace, Backspace, Backspace ]
+                in
+                    Expect.equal cursorX 0
+        , test "more characters actually deletes all the characters " <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "iaaaaaa", Backspace, Backspace, Backspace, Backspace, Backspace, Backspace ]
+                in
+                    Expect.equal (getLine 0 lines) ""
+        , test "copies line onto previous line when at 0 cursorX" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "ia", Enter, Keys "a", Escape, Keys "hi", Backspace ]
+                in
+                    Expect.equal (getLine 0 lines) "aa"
+        , test "remove line if at 0 index" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "i", Enter, Backspace ]
+                in
+                    Expect.equal (Array.length lines) 1
+        , test "Moves the cursor up one if a line got removed." <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions [ Keys "i", Enter, Backspace ]
+                in
+                    Expect.equal cursorY 0
+        , test "Moves the cursor to the right horizontal position." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions [ Keys "iaa", Enter, Keys "a", Escape, Keys "hi", Backspace ]
+                in
+                    Expect.equal cursorX 2
+        , test "Doesn't remove the first line." <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "ia", Escape, Keys "hi", Backspace ]
+                in
+                    Expect.equal (getLine 0 lines) "a"
+        ]
+
+
 getLine : Int -> Array.Array String -> String
 getLine index lines =
     case Array.get index lines of

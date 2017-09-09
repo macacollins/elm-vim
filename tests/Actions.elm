@@ -12,6 +12,7 @@ import Mode exposing (Mode(..))
 type ActionEntry
     = Enter
     | Escape
+    | Backspace
     | Keys String
 
 
@@ -50,6 +51,9 @@ getCodeArray actionEntry =
 
         Escape ->
             [ 27 ]
+
+        Backspace ->
+            [ 8 ]
 
         Keys keys ->
             let
