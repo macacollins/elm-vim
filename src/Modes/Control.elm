@@ -22,7 +22,7 @@ controlModeUpdate model keyCode =
         newModel =
             case keyCode of
                 108 ->
-                    -- h
+                    -- l
                     let
                         currentLine =
                             getLine cursorY lines
@@ -30,22 +30,26 @@ controlModeUpdate model keyCode =
                         newCursorX =
                             if model.cursorX < String.length currentLine then
                                 model.cursorX + 1
+                            else if model.cursorX == 0 then
+                                0
                             else
-                                model.cursorX
+                                String.length currentLine
                     in
                         { model | cursorX = newCursorX }
 
                 104 ->
-                    -- l
+                    -- h
                     let
                         currentLine =
                             getLine cursorY lines
 
                         newCursorX =
-                            if model.cursorX > 0 then
-                                model.cursorX - 1
+                            if model.cursorX == 0 then
+                                0
+                            else if model.cursorX > String.length currentLine then
+                                String.length currentLine - 1
                             else
-                                model.cursorX
+                                model.cursorX - 1
                     in
                         { model | cursorX = newCursorX }
 

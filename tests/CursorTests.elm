@@ -42,4 +42,36 @@ testCursor =
                             [ Keys "iaaa", Escape, Keys "hhhllllllllllllllllllllllllll" ]
                 in
                     Expect.equal cursorX 3
+        , test "Cursor on 0 length line doesn't go to -1 on l." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "i", Enter, Escape, Keys "kl" ]
+                in
+                    Expect.equal cursorX 0
+        , test "Cursor resets on l key." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaa", Enter, Keys "aaaa", Escape, Keys "kl" ]
+                in
+                    Expect.equal cursorX 2
+        , test "Cursor resets on h key." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "ia", Enter, Keys "aaa", Escape, Keys "kh" ]
+                in
+                    Expect.equal cursorX 0
+        , test "Cursor sticks around for k key." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaa", Enter, Enter, Keys "aaa", Escape, Keys "kk" ]
+                in
+                    Expect.equal cursorX 3
         ]
