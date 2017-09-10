@@ -80,6 +80,32 @@ controlModeUpdate model keyCode =
                 120 ->
                     handleX model
 
+                79 ->
+                    let
+                        updatedLines =
+                            insertAtIndex (model.cursorY) lines ""
+                    in
+                        { model
+                            | mode = Insert
+                            , lines = updatedLines
+                            , cursorX = 0
+                        }
+
+                111 ->
+                    let
+                        newCursorY =
+                            model.cursorY + 1
+
+                        updatedLines =
+                            insertAtIndex (model.cursorY + 1) lines ""
+                    in
+                        { model
+                            | mode = Insert
+                            , cursorY = newCursorY
+                            , cursorX = 0
+                            , lines = updatedLines
+                        }
+
                 _ ->
                     model
     in
