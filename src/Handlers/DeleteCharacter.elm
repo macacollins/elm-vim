@@ -1,8 +1,8 @@
 module Handlers.DeleteCharacter exposing (handleX, handleBackspace)
 
 import Model exposing (Model)
-import Array
-import Util.ArrayUtils exposing (..)
+import List
+import Util.ListUtils exposing (..)
 
 
 handleX : Model -> Model

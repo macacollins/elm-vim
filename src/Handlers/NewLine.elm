@@ -1,8 +1,8 @@
 module Handlers.NewLine exposing (handleNewLine)
 
 import Model exposing (Model)
-import Array exposing (..)
-import Util.ArrayUtils exposing (..)
+import List exposing (..)
+import Util.ListUtils exposing (..)
 
 
 handleNewLine : Model -> Model
@@ -12,7 +12,7 @@ handleNewLine model =
             (model.cursorY + 1)
 
         updatedLines =
-            insertAtIndex sliceIndex model.lines ""
+            insertAtIndex sliceIndex (Debug.log "Updating lines" model.lines) ""
 
         newCursorY =
             model.cursorY + 1

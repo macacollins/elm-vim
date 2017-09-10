@@ -4,7 +4,8 @@ import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Test exposing (..)
 import Actions exposing (ActionEntry(..), newStateAfterActions)
-import Array
+import List exposing (..)
+import Util.ListUtils exposing (..)
 
 
 dTests : Test
@@ -23,7 +24,7 @@ dTests =
                     { lines } =
                         newStateAfterActions [ Keys "ia", Enter, Keys "test", Escape, Keys "kdd" ]
                 in
-                    Expect.equal (Array.length lines) 1
+                    Expect.equal (List.length lines) 1
         , test "2 key presses removes the right line" <|
             \_ ->
                 let
@@ -31,13 +32,20 @@ dTests =
                         newStateAfterActions [ Keys "ia", Enter, Keys "test", Escape, Keys "kdd" ]
                 in
                     Expect.equal (getLine 0 lines) "test"
+        , test "dd puts the line in the paste buffer." <|
+            \_ ->
+                let
+                    { buffer } =
+                        newStateAfterActions [ Keys "ia", Escape, Keys "dd" ]
+                in
+                    Expect.equal buffer "a"
         , test "2 key presses doesn't remove the last line" <|
             \_ ->
                 let
                     { lines } =
                         newStateAfterActions [ Keys "dd" ]
                 in
-                    Expect.equal (Array.length lines) 1
+                    Expect.equal (List.length lines) 1
         ]
 
 
@@ -85,7 +93,7 @@ backspaceTests =
                     { lines } =
                         newStateAfterActions [ Keys "i", Enter, Backspace ]
                 in
-                    Expect.equal (Array.length lines) 1
+                    Expect.equal (List.length lines) 1
         , test "Moves the cursor up one if a line got removed." <|
             \_ ->
                 let
@@ -110,11 +118,11 @@ backspaceTests =
         ]
 
 
-getLine : Int -> Array.Array String -> String
+getLine : Int -> List String -> String
 getLine index lines =
-    case Array.get index lines of
-        Just head ->
-            head
+    case head <| drop index lines of
+        Just item ->
+            item
 
         Nothing ->
             "Failed; no lines"
@@ -140,12 +148,7 @@ xTests =
                         newStateAfterActions [ Keys "iaa", Enter, Escape, Keys "khx" ]
 
                     finalLine =
-                        case Array.get 0 lines of
-                            Just head ->
-                                head
-
-                            Nothing ->
-                                "Failed; no lines"
+                        getLine 0 lines
                 in
                     Expect.equal finalLine "a"
         ]

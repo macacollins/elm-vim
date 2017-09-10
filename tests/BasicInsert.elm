@@ -4,7 +4,8 @@ import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Test exposing (..)
 import Actions exposing (ActionEntry(..), newStateAfterActions)
-import Array
+import List
+import Util.ListUtils exposing (..)
 
 
 canary : Test
@@ -26,12 +27,7 @@ testBasicInsert =
                             [ Keys "iA" ]
 
                     firstLine =
-                        case Array.get 0 lines of
-                            Just line ->
-                                line
-
-                            Nothing ->
-                                "No string found!"
+                        getLine 0 lines
                 in
                     Expect.equal firstLine "A"
         , test "Enter Key" <|
@@ -41,7 +37,7 @@ testBasicInsert =
                         newStateAfterActions
                             [ Keys "i", Enter, Enter ]
                 in
-                    Expect.equal 3 (Array.length lines)
+                    Expect.equal 3 (List.length lines)
         , test "Enter Key Does nothing in control mode" <|
             \_ ->
                 let
@@ -49,7 +45,7 @@ testBasicInsert =
                         newStateAfterActions
                             [ Enter, Enter ]
                 in
-                    Expect.equal 1 (Array.length lines)
+                    Expect.equal 1 (List.length lines)
         , test "Enter Key Does nothing in control mode 2" <|
             \_ ->
                 let
@@ -57,5 +53,5 @@ testBasicInsert =
                         newStateAfterActions
                             [ Keys "i", Enter, Escape, Enter ]
                 in
-                    Expect.equal 2 (Array.length lines)
+                    Expect.equal 2 (List.length lines)
         ]

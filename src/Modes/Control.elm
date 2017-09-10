@@ -2,12 +2,13 @@ module Modes.Control exposing (controlModeUpdate)
 
 import Model exposing (Model)
 import Keyboard exposing (KeyCode)
-import Array exposing (..)
+import List exposing (..)
 import Char
 import Mode exposing (Mode(..))
 import Handlers.DeleteCharacter exposing (..)
 import Handlers.Delete exposing (..)
-import Util.ArrayUtils exposing (..)
+import Handlers.Paste exposing (handleP)
+import Util.ListUtils exposing (..)
 
 
 controlModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
@@ -105,6 +106,9 @@ controlModeUpdate model keyCode =
                             , cursorX = 0
                             , lines = updatedLines
                         }
+
+                112 ->
+                    handleP model
 
                 _ ->
                     model

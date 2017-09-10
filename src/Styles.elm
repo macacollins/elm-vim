@@ -3,9 +3,8 @@ module Styles exposing (styleString)
 
 styleString =
     """
-
 main {
-  background-color : #DADADA;
+  background-color : #EDAEAEA;
   color : #333;
 }
 
@@ -21,6 +20,16 @@ main {
 
 * {
   font-family: monospace, 'Courier';
+}
+
+#modeDisplay {
+  position: absolute;
+  bottom: 0;
+}
+
+.lineNumber {
+  padding-right: 15px;
+  color: #800;
 }
 
 """

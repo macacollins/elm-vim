@@ -4,8 +4,8 @@ import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Test exposing (..)
 import Actions exposing (ActionEntry(..), newStateAfterActions)
-import Array
-import Util.ArrayUtils exposing (..)
+import List
+import Util.ListUtils exposing (..)
 import Mode exposing (Mode(..))
 
 
@@ -18,7 +18,7 @@ oTests =
                     { lines } =
                         newStateAfterActions [ Keys "o" ]
                 in
-                    Expect.equal (Array.length lines) 2
+                    Expect.equal (List.length lines) 2
         , test "Should move the cursor to the next line." <|
             \_ ->
                 let
@@ -59,7 +59,7 @@ capitalOTests =
                     { lines } =
                         newStateAfterActions [ Keys "O" ]
                 in
-                    Expect.equal (Array.length lines) 2
+                    Expect.equal (List.length lines) 2
         , test "Should move cursorX back to 0" <|
             \_ ->
                 let

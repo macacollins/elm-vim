@@ -2,7 +2,6 @@ module View exposing (view)
 
 import Html exposing (..)
 import Model exposing (Model)
-import Array
 import Styles exposing (styleString)
 import Html.Attributes exposing (class, id)
 
@@ -11,13 +10,17 @@ view : Model -> Html msg
 view model =
     let
         lines =
-            Array.toList <| Array.indexedMap (getLine model) model.lines
+            List.indexedMap (getLine model) model.lines
 
         styles =
             node "style" [] [ text styleString ]
 
+        mode =
+            footer [ id "modeDisplay" ]
+                [ text <| toString model.mode ]
+
         children =
-            styles :: lines
+            styles :: mode :: lines
     in
         main_ [] children
 
@@ -59,6 +62,6 @@ getLine model index line =
                 text line
     in
         div [ class className ]
-            [ span [] [ text <| toString index ]
+            [ span [ class "lineNumber" ] [ text <| toString index ]
             , textContents
             ]

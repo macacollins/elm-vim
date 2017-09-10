@@ -1,8 +1,8 @@
 module Handlers.Delete exposing (handleD)
 
 import Model exposing (Model)
-import Array
-import Util.ArrayUtils exposing (..)
+import List
+import Util.ListUtils exposing (..)
 
 
 handleD : Model -> Model
@@ -14,10 +14,18 @@ handleD model =
             else
                 [ 'd' ]
 
-        ( lines, _ ) =
+        ( lines, removed ) =
             if List.member 'd' model.inProgress then
                 removeAtIndex model.cursorY model.lines
             else
                 ( model.lines, Nothing )
+
+        newBuffer =
+            case removed of
+                Just thing ->
+                    thing
+
+                Nothing ->
+                    ""
     in
-        { model | inProgress = newInProgress, lines = lines }
+        { model | inProgress = newInProgress, lines = lines, buffer = newBuffer }

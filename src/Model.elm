@@ -1,22 +1,23 @@
 module Model exposing (Model, initialModel)
 
-import Array exposing (..)
 import Mode exposing (Mode(..))
 
 
 type alias Model =
-    { lines : Array String
+    { lines : List String
     , cursorX : Int
     , cursorY : Int
     , mode : Mode
     , inProgress : List Char
+    , buffer : String
     }
 
 
 initialModel =
     Model
-        (repeat 1 "")
+        (List.repeat 1 "")
         0
         0
         Control
         []
+        ""

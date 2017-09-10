@@ -1,10 +1,10 @@
 module Handlers.InsertCharacter exposing (handleInsertCharacter)
 
-import Array exposing (..)
+import List exposing (..)
 import Char
 import Keyboard exposing (KeyCode)
 import Model exposing (Model)
-import Util.ArrayUtils exposing (..)
+import Util.ListUtils exposing (..)
 
 
 handleInsertCharacter : Model -> KeyCode -> Model

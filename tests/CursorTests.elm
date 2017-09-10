@@ -4,7 +4,7 @@ import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Test exposing (..)
 import Actions exposing (ActionEntry(..), newStateAfterActions)
-import Array
+import List
 
 
 testCursor : Test
@@ -50,6 +50,15 @@ testCursor =
                             [ Keys "i", Enter, Escape, Keys "kl" ]
                 in
                     Expect.equal cursorX 0
+        , test "When the enter key is pressed 34 times, no error occurs." <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions <|
+                            Keys "i"
+                                :: List.repeat 34 Enter
+                in
+                    Expect.equal (List.length lines) 35
         , test "Cursor on 0 length line doesn't go to -1 on h." <|
             \_ ->
                 let

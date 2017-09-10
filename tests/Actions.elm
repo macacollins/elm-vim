@@ -5,7 +5,7 @@ import Keyboard exposing (KeyCode)
 import Update exposing (update)
 import Msg exposing (Msg(..))
 import Model exposing (Model)
-import Array exposing (fromList, repeat)
+import List exposing (repeat)
 import Mode exposing (Mode(..))
 
 
@@ -30,7 +30,7 @@ enterKeySequence : ActionEntry -> Model -> Model
 enterKeySequence actionEntry model =
     let
         codes =
-            getCodeArray actionEntry
+            getCodeList actionEntry
 
         applyKey : KeyCode -> Model -> Model
         applyKey code model =
@@ -43,8 +43,8 @@ enterKeySequence actionEntry model =
         List.foldr applyKey model codes
 
 
-getCodeArray : ActionEntry -> List KeyCode
-getCodeArray actionEntry =
+getCodeList : ActionEntry -> List KeyCode
+getCodeList actionEntry =
     case actionEntry of
         Enter ->
             [ 13 ]
@@ -58,8 +58,8 @@ getCodeArray actionEntry =
         Keys keys ->
             let
                 addCodeAndRecur : Char -> List KeyCode -> List KeyCode
-                addCodeAndRecur character resultArray =
-                    Char.toCode character :: resultArray
+                addCodeAndRecur character resultList =
+                    Char.toCode character :: resultList
             in
                 String.foldl addCodeAndRecur [] keys
 
@@ -67,10 +67,9 @@ getCodeArray actionEntry =
 initialModel lines =
     Debug.log "Getting the model." <|
         Model
-            (Array.fromList
-                lines
-            )
+            lines
             0
             0
             Control
             []
+            ""
