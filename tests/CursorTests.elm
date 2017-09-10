@@ -92,3 +92,46 @@ testCursor =
                 in
                     Expect.equal cursorX 3
         ]
+
+
+offsetTests : Test
+offsetTests =
+    describe "The first line offset."
+        [ test "Offset starts at 0." <|
+            \_ ->
+                let
+                    { firstLine } =
+                        newStateAfterActions
+                            [ Keys "ia", Enter, Keys "aaa", Escape, Keys "kh" ]
+                in
+                    Expect.equal firstLine 0
+        , test "After 30 lines, the first line starts to increment." <|
+            \_ ->
+                let
+                    { firstLine } =
+                        newStateAfterActions <|
+                            Keys "i"
+                                :: List.repeat 32 Enter
+                in
+                    Expect.equal firstLine 2
+        , test "When you navigate up using k, the first line will decrease when appropriate." <|
+            \_ ->
+                let
+                    { firstLine } =
+                        newStateAfterActions <|
+                            [ Keys "i" ]
+                                ++ (List.repeat 100 Enter)
+                                ++ [ Escape, Keys <| String.repeat 50 "k" ]
+                in
+                    Expect.equal firstLine 50
+        , test "When you navigate down, the first line will increase as well." <|
+            \_ ->
+                let
+                    { firstLine } =
+                        newStateAfterActions <|
+                            [ Keys "i" ]
+                                ++ (List.repeat 100 Enter)
+                                ++ [ Escape, Keys <| String.repeat 50 "k", Keys <| String.repeat 50 "j" ]
+                in
+                    Expect.equal firstLine 70
+        ]

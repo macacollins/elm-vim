@@ -73,3 +73,4 @@ initialModel lines =
             Control
             []
             ""
+            0

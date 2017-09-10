@@ -10,6 +10,7 @@ type alias Model =
     , mode : Mode
     , inProgress : List Char
     , buffer : String
+    , firstLine : Int
     }
 
 
@@ -21,3 +22,4 @@ initialModel =
         Control
         []
         ""
+        0

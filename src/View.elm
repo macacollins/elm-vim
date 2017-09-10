@@ -4,13 +4,17 @@ import Html exposing (..)
 import Model exposing (Model)
 import Styles exposing (styleString)
 import Html.Attributes exposing (class, id)
+import List exposing (..)
 
 
 view : Model -> Html msg
 view model =
     let
+        lineRange =
+            take 31 <| drop model.firstLine model.lines
+
         lines =
-            List.indexedMap (getLine model) model.lines
+            List.indexedMap (getLine model) lineRange
 
         styles =
             node "style" [] [ text styleString ]
@@ -31,14 +35,17 @@ getLine model index line =
         className =
             "normalLine"
 
+        actualIndex =
+            index + model.firstLine
+
         padding =
             String.length <| toString <| List.length model.lines
 
         paddedIndex =
-            String.padLeft padding '0' <| toString index
+            String.padLeft padding '0' <| toString actualIndex
 
         textContents =
-            if model.cursorY == index then
+            if model.cursorY == actualIndex then
                 if String.length line == 0 then
                     span [ id "cursor" ] [ text "_" ]
                 else

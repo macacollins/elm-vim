@@ -19,5 +19,16 @@ handleNewLine model =
 
         newCursorX =
             0
+
+        newFirstLine =
+            if newCursorY > model.firstLine + 30 then
+                newCursorY - 30
+            else
+                model.firstLine
     in
-        { model | lines = updatedLines, cursorY = newCursorY, cursorX = newCursorX }
+        { model
+            | lines = updatedLines
+            , cursorY = newCursorY
+            , cursorX = newCursorX
+            , firstLine = newFirstLine
+        }
