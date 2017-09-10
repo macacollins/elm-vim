@@ -18,7 +18,7 @@ getLine index array =
     getOrDefault index array ""
 
 
-removeAtIndex : Int -> Array a -> ( Array a, Maybe a )
+removeAtIndex : Int -> Array String -> ( Array String, Maybe String )
 removeAtIndex index array =
     let
         newArray =
@@ -28,7 +28,10 @@ removeAtIndex index array =
         removedItem =
             Array.get index array
     in
-        ( newArray, removedItem )
+        if Array.length newArray == 0 then
+            ( Array.fromList [ "" ], removedItem )
+        else
+            ( newArray, removedItem )
 
 
 insertAtIndex : Int -> Array a -> a -> Array a

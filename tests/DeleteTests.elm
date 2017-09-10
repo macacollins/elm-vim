@@ -31,6 +31,13 @@ dTests =
                         newStateAfterActions [ Keys "ia", Enter, Keys "test", Escape, Keys "kdd" ]
                 in
                     Expect.equal (getLine 0 lines) "test"
+        , test "2 key presses doesn't remove the last line" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "dd" ]
+                in
+                    Expect.equal (Array.length lines) 1
         ]
 
 

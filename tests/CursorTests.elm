@@ -50,6 +50,14 @@ testCursor =
                             [ Keys "i", Enter, Escape, Keys "kl" ]
                 in
                     Expect.equal cursorX 0
+        , test "Cursor on 0 length line doesn't go to -1 on h." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "i", Enter, Keys "aaaaaaaaa", Escape, Keys "kh" ]
+                in
+                    Expect.equal cursorX 0
         , test "Cursor resets on l key." <|
             \_ ->
                 let

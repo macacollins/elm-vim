@@ -46,6 +46,8 @@ controlModeUpdate model keyCode =
                         newCursorX =
                             if model.cursorX == 0 then
                                 0
+                            else if String.length currentLine == 0 then
+                                0
                             else if model.cursorX > String.length currentLine then
                                 String.length currentLine - 1
                             else
