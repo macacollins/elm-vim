@@ -31,6 +31,12 @@ getLine model index line =
         className =
             "normalLine"
 
+        padding =
+            String.length <| toString <| List.length model.lines
+
+        paddedIndex =
+            String.padLeft padding '0' <| toString index
+
         textContents =
             if model.cursorY == index then
                 if String.length line == 0 then
@@ -62,6 +68,6 @@ getLine model index line =
                 text line
     in
         div [ class className ]
-            [ span [ class "lineNumber" ] [ text <| toString index ]
+            [ span [ class "lineNumber" ] [ text paddedIndex ]
             , textContents
             ]
