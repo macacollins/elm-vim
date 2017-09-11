@@ -135,3 +135,49 @@ offsetTests =
                 in
                     Expect.equal firstLine 70
         ]
+
+
+wTests : Test
+wTests =
+    describe "The w key"
+        [ test "w takes you to the start of the next word under normal circumstances." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaa aaa", Escape, Keys "hhhhhhhhhhhhhhhhhw" ]
+                in
+                    Expect.equal cursorX 4
+        , test "w takes you to the end of the line if it's all one word." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaaaa", Escape, Keys "hhhhhhhhhhhhhhhhhw" ]
+                in
+                    Expect.equal cursorX 5
+        , test "w takes you to the next line if there are more lines." <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions
+                            [ Keys "iaaaaa", Enter, Keys "aaaaaa", Escape, Keys "khhhhhhhhhhhhhhhhhw" ]
+                in
+                    Expect.equal cursorY 1
+        , test "w takes you to the start of the next line if there are more lines." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaaaa", Enter, Keys "aaaaaa", Escape, Keys "khhhhhhhhhhhhhhhhhw" ]
+                in
+                    Expect.equal cursorX 0
+        , test "w will skip empty lines." <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions
+                            [ Keys "iaaaaa", Enter, Enter, Keys "aaaaaa", Escape, Keys "kkhhhhhhhhhhhhhhhhhw" ]
+                in
+                    Expect.equal cursorY 2
+        ]

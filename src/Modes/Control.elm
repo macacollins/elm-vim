@@ -8,8 +8,9 @@ import Mode exposing (Mode(..))
 import Handlers.DeleteCharacter exposing (..)
 import Handlers.Delete exposing (..)
 import Handlers.Paste exposing (handleP)
-import Util.ListUtils exposing (..)
 import Handlers.Navigation exposing (..)
+import Handlers.NextWord exposing (..)
+import Util.ListUtils exposing (..)
 
 
 controlModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
@@ -51,6 +52,7 @@ controlModeUpdate model keyCode =
                     handleX model
 
                 79 ->
+                    -- O
                     let
                         updatedLines =
                             insertAtIndex (model.cursorY) lines ""
@@ -62,6 +64,7 @@ controlModeUpdate model keyCode =
                         }
 
                 111 ->
+                    -- o
                     let
                         newCursorY =
                             model.cursorY + 1
@@ -75,6 +78,9 @@ controlModeUpdate model keyCode =
                             , cursorX = 0
                             , lines = updatedLines
                         }
+
+                119 ->
+                    handleW model
 
                 112 ->
                     handleP model
