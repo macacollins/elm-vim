@@ -181,3 +181,73 @@ wTests =
                 in
                     Expect.equal cursorY 2
         ]
+
+
+bTests : Test
+bTests =
+    describe "The b key"
+        [ test "b takes you to the start of the next word under normal circumstances." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaa aaa aaa", Escape, Keys "b" ]
+                in
+                    Expect.equal cursorX 8
+        , test "This is another test" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaa aaa aaa", Escape, Keys "bb" ]
+                in
+                    Expect.equal cursorX 4
+        , test "Test that cursorX is sane at the start of the file" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaa aaa aaa", Escape, Keys "bbbbbb" ]
+                in
+                    Expect.equal cursorX 0
+        , test "Test that, also, cursorY is sane at the start of the file" <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions
+                            [ Keys "iaaa aaa aaa", Escape, Keys "bbbbbb" ]
+                in
+                    Expect.equal cursorY 0
+        , test "b takes you to the start of the line if it's all one word." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaaaa", Escape, Keys "b" ]
+                in
+                    Expect.equal cursorX 0
+        , test "b takes you to the previous line if there are previous lines." <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions
+                            [ Keys "iaaaaa", Enter, Keys "aaaaaa", Escape, Keys "bb" ]
+                in
+                    Expect.equal cursorY 0
+        , test "b takes you to the start of the next line if there are more lines." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaaa aaa", Enter, Keys "aaaaaa", Escape, Keys "bb" ]
+                in
+                    Expect.equal cursorX 5
+        , test "b will skip empty lines." <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions
+                            [ Keys "iaaaaa", Enter, Enter, Keys "aaaaaa", Escape, Keys "bb" ]
+                in
+                    Expect.equal cursorY 0
+        ]

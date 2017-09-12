@@ -9,6 +9,7 @@ import Handlers.DeleteCharacter exposing (..)
 import Handlers.Delete exposing (..)
 import Handlers.Paste exposing (handleP)
 import Handlers.Navigation exposing (..)
+import Handlers.PreviousWord exposing (..)
 import Handlers.NextWord exposing (..)
 import Util.ListUtils exposing (..)
 
@@ -84,6 +85,9 @@ controlModeUpdate model keyCode =
 
                 112 ->
                     handleP model
+
+                98 ->
+                    handleB model
 
                 _ ->
                     model
