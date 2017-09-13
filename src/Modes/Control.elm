@@ -11,6 +11,7 @@ import Handlers.Paste exposing (handleP)
 import Handlers.Navigation exposing (..)
 import Handlers.PreviousWord exposing (..)
 import Handlers.NextWord exposing (..)
+import Handlers.NavigateFile exposing (..)
 import Util.ListUtils exposing (..)
 
 
@@ -94,6 +95,12 @@ controlModeUpdate model keyCode =
 
                 36 ->
                     { model | cursorX = String.length <| getLine model.cursorY model.lines }
+
+                71 ->
+                    handleG model
+
+                103 ->
+                    handleLittleG model
 
                 _ ->
                     model

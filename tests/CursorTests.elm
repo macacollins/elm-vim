@@ -20,6 +20,105 @@ testBang =
         ]
 
 
+testG : Test
+testG =
+    let
+        actionsWith100Lines =
+            (Keys "i" :: List.repeat 100 Enter)
+                ++ [ Escape, Keys <| String.repeat 100 "k" ]
+                ++ [ Keys "G" ]
+
+        modelWith100Lines =
+            newStateAfterActions actionsWith100Lines
+    in
+        describe "The G key."
+            [ test "basic movement." <|
+                \_ ->
+                    let
+                        { cursorY } =
+                            modelWith100Lines
+                    in
+                        Expect.equal cursorY 100
+            , test "Also moves the window down." <|
+                \_ ->
+                    let
+                        { firstLine } =
+                            modelWith100Lines
+                    in
+                        Expect.equal firstLine 70
+            , test "When the window has few lines, the cursor still moves to the last line" <|
+                \_ ->
+                    let
+                        { cursorY } =
+                            newStateAfterActions [ Keys "i", Enter, Enter, Enter, Escape, Keys "G" ]
+                    in
+                        Expect.equal cursorY 3
+            , test "When the window has few lines, the first line stays at 0" <|
+                \_ ->
+                    let
+                        { firstLine } =
+                            newStateAfterActions [ Keys "i", Enter, Enter, Enter, Escape, Keys "G" ]
+                    in
+                        Expect.equal firstLine 0
+            ]
+
+
+testLittleG : Test
+testLittleG =
+    let
+        actionsWith100Lines =
+            (Keys "i" :: List.repeat 100 Enter)
+                ++ [ Escape, Keys "gg" ]
+
+        modelWith100Lines =
+            newStateAfterActions actionsWith100Lines
+
+        actionsWith100LinesOneG =
+            (Keys "i" :: List.repeat 100 Enter)
+                ++ [ Escape, Keys "g" ]
+
+        modelWith100LinesOneG =
+            newStateAfterActions actionsWith100LinesOneG
+    in
+        describe "The little g key."
+            [ test "One g goes to in progress." <|
+                \_ ->
+                    let
+                        { inProgress } =
+                            modelWith100LinesOneG
+                    in
+                        Expect.equal inProgress [ 'g' ]
+            , test "One g doesn't move anything." <|
+                \_ ->
+                    let
+                        { firstLine } =
+                            modelWith100LinesOneG
+                    in
+                        Expect.equal firstLine 70
+            , test "One g doesn't move the cursorY ." <|
+                \_ ->
+                    let
+                        { cursorY } =
+                            modelWith100LinesOneG
+                    in
+                        Expect.equal cursorY 100
+            , test "2 gs does move anything." <|
+                \_ ->
+                    let
+                        { firstLine } =
+                            modelWith100Lines
+                    in
+                        Expect.equal firstLine 0
+            , test "2 gs does move the cursorY ." <|
+                \_ ->
+                    let
+                        { cursorY } =
+                            modelWith100Lines
+                    in
+                        Expect.equal cursorY 0
+            ]
+
+
 test0 : Test
 test0 =
     describe "Test my 0."
