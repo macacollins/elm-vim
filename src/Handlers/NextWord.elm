@@ -16,11 +16,17 @@ handleW model =
         currentLine =
             getLine cursorY lines
 
+        actualCursorX =
+            if cursorX > String.length currentLine then
+                String.length currentLine
+            else
+                cursorX
+
         xOffset =
-            nextSpaceIndex (String.dropLeft cursorX currentLine)
+            nextSpaceIndex (String.dropLeft actualCursorX currentLine)
 
         newOneLineIndex =
-            xOffset + cursorX
+            xOffset + actualCursorX
 
         goToNextLine =
             newOneLineIndex == (String.length currentLine) && (List.length lines > (cursorY + 1))

@@ -7,6 +7,32 @@ import Actions exposing (ActionEntry(..), newStateAfterActions)
 import List
 
 
+testBang : Test
+testBang =
+    describe "Test my bangs."
+        [ test "Hitting $ takes you to the end of the line." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions [ Keys "iaaaaa", Escape, Keys "hhhhhhhhhhhhhh$" ]
+                in
+                    Expect.equal cursorX 5
+        ]
+
+
+test0 : Test
+test0 =
+    describe "Test my 0."
+        [ test "hitting 0 takes you to the start of the line" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions [ Keys "iaaaaaaaaaa", Escape, Keys "0" ]
+                in
+                    Expect.equal cursorX 0
+        ]
+
+
 testCursor : Test
 testCursor =
     describe "Basic Cursor Movement"
@@ -156,6 +182,14 @@ wTests =
                             [ Keys "iaaaaa", Escape, Keys "hhhhhhhhhhhhhhhhhw" ]
                 in
                     Expect.equal cursorX 5
+        , test "test behavior of w with a cursor past the end of the line" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaa aaa aaa", Enter, Keys "aaa a", Enter, Keys "a", Escape, Keys "kklllllllllllllllllllllljw" ]
+                in
+                    Expect.equal cursorX 0
         , test "w takes you to the next line if there are more lines." <|
             \_ ->
                 let
@@ -186,7 +220,7 @@ wTests =
 bTests : Test
 bTests =
     describe "The b key"
-        [ test "b takes you to the start of the next word under normal circumstances." <|
+        [ test "b takes you to the start of the last word under normal circumstances." <|
             \_ ->
                 let
                     { cursorX } =
@@ -200,6 +234,14 @@ bTests =
                     { cursorX } =
                         newStateAfterActions
                             [ Keys "iaaa aaa aaa", Escape, Keys "bb" ]
+                in
+                    Expect.equal cursorX 4
+        , test "test behavior of b with a cursor past the end of the line" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaa aaa aaa", Enter, Keys "aaa a", Escape, Keys "klllllllllllllllllllllljb" ]
                 in
                     Expect.equal cursorX 4
         , test "Test that cursorX is sane at the start of the file" <|

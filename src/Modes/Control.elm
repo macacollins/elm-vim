@@ -89,6 +89,12 @@ controlModeUpdate model keyCode =
                 98 ->
                     handleB model
 
+                48 ->
+                    { model | cursorX = 0 }
+
+                36 ->
+                    { model | cursorX = String.length <| getLine model.cursorY model.lines }
+
                 _ ->
                     model
     in

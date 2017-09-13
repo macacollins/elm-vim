@@ -10,19 +10,25 @@ handleB model =
         { cursorY, cursorX, lines } =
             model
 
+        actualCursorX =
+            if cursorX > String.length currentLine then
+                String.length currentLine
+            else
+                cursorX
+
         currentLine =
             getLine cursorY lines
 
         xOffset =
             lastSpaceIndex
                 (String.reverse <|
-                    (String.left cursorX currentLine)
+                    (String.left actualCursorX currentLine)
                 )
                 False
 
         beforeCursorOnLine =
             String.trim <|
-                String.left cursorX currentLine
+                String.left actualCursorX currentLine
 
         goToPreviousLine =
             beforeCursorOnLine == "" && cursorY > 0
@@ -31,7 +37,7 @@ handleB model =
             if goToPreviousLine then
                 goToLastNonEmptyLine lines (cursorY - 1)
             else
-                ( cursorX - xOffset, cursorY )
+                ( actualCursorX - xOffset, cursorY )
     in
         { model | cursorX = newCursorX, cursorY = newCursorY }
 
