@@ -6,6 +6,7 @@ import Mode exposing (Mode(Control))
 import Handlers.NewLine exposing (handleNewLine)
 import Handlers.InsertCharacter exposing (handleInsertCharacter)
 import Handlers.DeleteCharacter exposing (handleBackspace)
+import History exposing (addHistory)
 
 
 insertModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )

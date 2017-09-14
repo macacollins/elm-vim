@@ -4,7 +4,7 @@ import Char
 import Keyboard exposing (KeyCode)
 import Update exposing (update)
 import Msg exposing (Msg(..))
-import Model exposing (Model)
+import Model exposing (Model, initialModel)
 import List exposing (repeat)
 import Mode exposing (Mode(..))
 
@@ -18,7 +18,7 @@ type ActionEntry
 
 newStateAfterActions : List ActionEntry -> Model
 newStateAfterActions entries =
-    applyActions (initialModel [ "" ]) entries
+    applyActions initialModel entries
 
 
 applyActions : Model -> List ActionEntry -> Model
@@ -62,15 +62,3 @@ getCodeList actionEntry =
                     Char.toCode character :: resultList
             in
                 String.foldl addCodeAndRecur [] keys
-
-
-initialModel lines =
-    Debug.log "Getting the model." <|
-        Model
-            lines
-            0
-            0
-            Control
-            []
-            ""
-            0

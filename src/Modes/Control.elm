@@ -1,18 +1,20 @@
 module Modes.Control exposing (controlModeUpdate)
 
-import Model exposing (Model)
+import Model exposing (..)
 import Keyboard exposing (KeyCode)
 import List exposing (..)
 import Char
 import Mode exposing (Mode(..))
 import Handlers.DeleteCharacter exposing (..)
 import Handlers.Delete exposing (..)
+import Handlers.Undo exposing (..)
 import Handlers.Paste exposing (handleP)
 import Handlers.Navigation exposing (..)
 import Handlers.PreviousWord exposing (..)
 import Handlers.NextWord exposing (..)
 import Handlers.NavigateFile exposing (..)
 import Util.ListUtils exposing (..)
+import History exposing (addHistory)
 
 
 controlModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
@@ -48,10 +50,11 @@ controlModeUpdate model keyCode =
 
                 105 ->
                     -- i
-                    { model | mode = Insert }
+                    addHistory model { model | mode = Insert }
 
                 120 ->
-                    handleX model
+                    -- x
+                    addHistory model <| handleX model
 
                 79 ->
                     -- O
@@ -59,11 +62,12 @@ controlModeUpdate model keyCode =
                         updatedLines =
                             insertAtIndex (model.cursorY) lines ""
                     in
-                        { model
-                            | mode = Insert
-                            , lines = updatedLines
-                            , cursorX = 0
-                        }
+                        addHistory model
+                            { model
+                                | mode = Insert
+                                , lines = updatedLines
+                                , cursorX = 0
+                            }
 
                 111 ->
                     -- o
@@ -74,26 +78,32 @@ controlModeUpdate model keyCode =
                         updatedLines =
                             insertAtIndex (model.cursorY + 1) lines ""
                     in
-                        { model
-                            | mode = Insert
-                            , cursorY = newCursorY
-                            , cursorX = 0
-                            , lines = updatedLines
-                        }
+                        addHistory model
+                            { model
+                                | mode = Insert
+                                , cursorY = newCursorY
+                                , cursorX = 0
+                                , lines = updatedLines
+                            }
 
                 119 ->
                     handleW model
 
                 112 ->
-                    handleP model
+                    -- TODO shake out how this works when the paste buffer is empty.
+                    -- It's fine for now... just a little unintuitive
+                    addHistory model <|
+                        handleP model
 
                 98 ->
                     handleB model
 
                 48 ->
+                    -- 0
                     { model | cursorX = 0 }
 
                 36 ->
+                    -- $
                     { model | cursorX = String.length <| getLine model.cursorY model.lines }
 
                 71 ->
@@ -102,7 +112,15 @@ controlModeUpdate model keyCode =
                 103 ->
                     handleLittleG model
 
+                117 ->
+                    handleU model
+
                 _ ->
                     model
     in
         ( newModel, Cmd.none )
+
+
+addHistory : Model -> Model -> Model
+addHistory lastModel newModel =
+    { newModel | pastStates = getState lastModel :: lastModel.pastStates }
