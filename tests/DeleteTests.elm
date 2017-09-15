@@ -49,6 +49,37 @@ dTests =
         ]
 
 
+
+-- this would be a good opportunity to use fuzzing
+
+
+dKeyWithModifiersTests : Test
+dKeyWithModifiersTests =
+    describe "3 lines at a time"
+        [ test "Delete 3 lines." <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "i", Enter, Enter, Enter, Enter, Escape, Keys "gg3dd" ]
+                in
+                    Expect.equal (List.length lines) 2
+        , test "Delete too many lines." <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "i", Enter, Enter, Enter, Enter, Escape, Keys "gg30dd" ]
+                in
+                    Expect.equal (List.length lines) 35
+        , test "Delete all the lines." <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "i", Enter, Enter, Enter, Enter, Escape, Keys "gg30dd" ]
+                in
+                    Expect.equal (List.length lines) 1
+        ]
+
+
 backspaceTests : Test
 backspaceTests =
     describe "backspacin'"
