@@ -1,6 +1,7 @@
 module Handlers.Undo exposing (..)
 
-import Model exposing (Model)
+import Model exposing (..)
+import History exposing (..)
 
 
 handleU : Model -> Model
@@ -13,6 +14,7 @@ handleU model =
                 , cursorY = lastState.cursorY
                 , lines = lastState.lines
                 , firstLine = lastState.firstLine
+                , futureStates = getState model :: model.futureStates
             }
 
         Nothing ->

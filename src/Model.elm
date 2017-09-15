@@ -12,6 +12,7 @@ type alias Model =
     , buffer : String
     , firstLine : Int
     , pastStates : List State
+    , futureStates : List State
     }
 
 
@@ -41,4 +42,5 @@ initialModel =
         []
         ""
         0
+        []
         []
