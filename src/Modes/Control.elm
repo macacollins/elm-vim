@@ -116,7 +116,10 @@ controlModeUpdate model keyCode =
                     handleU model
 
                 _ ->
-                    model
+                    if 48 <= keyCode && keyCode <= 57 then
+                        { model | inProgress = (Char.fromCode keyCode) :: model.inProgress }
+                    else
+                        model
     in
         ( newModel, Cmd.none )
 
