@@ -16,6 +16,8 @@ handleD model =
                 [ 'd' ]
 
         ( lines, removed ) =
+            -- TODO look for modifier ints in the inProgress array
+            -- it will look something like String.toInt <| List.join "" <| List.filter (\c -> List.member c ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ]) model.inProgress
             if List.member 'd' model.inProgress then
                 removeAtIndex model.cursorY model.lines
             else
