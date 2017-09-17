@@ -34,6 +34,28 @@ removeAtIndex index list =
             ( newList, removedItem )
 
 
+removeSlice : Int -> Int -> List String -> ( List String, Maybe (List String) )
+removeSlice start end list =
+    let
+        actualEnd =
+            if end < List.length list then
+                end
+            else
+                List.length list
+
+        startPart =
+            List.take start list
+
+        endPart =
+            List.drop actualEnd list
+
+        removed =
+            List.drop start list
+                |> List.take (actualEnd - start)
+    in
+        ( startPart ++ endPart, Just removed )
+
+
 insertAtIndex : Int -> List a -> a -> List a
 insertAtIndex index list newItem =
     List.append (take index list) <|

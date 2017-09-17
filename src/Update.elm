@@ -25,8 +25,7 @@ update msg model =
             else if List.member keyPress [ 37, 38, 39, 40 ] then
                 controlModeUpdate model <| translateArrowKeys keyPress
             else
-                Debug.log ("Nothing to do for " ++ toString keyPress)
-                    ( model, Cmd.none )
+                ( model, Cmd.none )
 
 
 translateArrowKeys input =

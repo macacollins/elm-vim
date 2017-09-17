@@ -70,6 +70,13 @@ dKeyWithModifiersTests =
                         newStateAfterActions [ Keys "i", Enter, Enter, Enter, Enter, Escape, Keys "gg30dd" ]
                 in
                     Expect.equal (List.length lines) 1
+        , test "Modifiers go in properly" <|
+            \_ ->
+                let
+                    { inProgress } =
+                        newStateAfterActions [ Keys "1234567890" ]
+                in
+                    Expect.equal (List.length inProgress) 10
         ]
 
 
