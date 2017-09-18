@@ -1,7 +1,5 @@
 There are lots of ways to go with this, but prolly:
 
-paste for dd
-number utility file
 yy
 numbers for yy
 command infrastructure

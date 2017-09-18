@@ -10,6 +10,7 @@ import Handlers.Delete exposing (..)
 import Handlers.Undo exposing (..)
 import Handlers.Redo exposing (..)
 import Handlers.Paste exposing (handleP)
+import Handlers.Yank exposing (..)
 import Handlers.Navigation exposing (..)
 import Handlers.PreviousWord exposing (..)
 import Handlers.NextWord exposing (..)
@@ -95,6 +96,10 @@ controlModeUpdate model keyCode =
                     -- It's fine for now... just a little unintuitive
                     addHistory model <|
                         handleP model
+
+                121 ->
+                    -- y
+                    handleY model
 
                 98 ->
                     handleB model
