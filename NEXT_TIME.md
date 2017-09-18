@@ -1,7 +1,6 @@
 There are lots of ways to go with this, but prolly:
 
-yy
-numbers for yy
+numbers for navigation
 command infrastructure
 Search
 highlighting for search
