@@ -42,6 +42,6 @@ handleD model =
         { model
             | inProgress = newInProgress
             , lines = actualLines
-            , buffer = String.join "\n" newBuffer
+            , buffer = newBuffer
             , pastStates = newPastStates
         }

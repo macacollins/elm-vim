@@ -63,6 +63,13 @@ insertAtIndex index list newItem =
             (drop index list)
 
 
+insertMultiple : Int -> List a -> List a -> List a
+insertMultiple index list newItems =
+    List.append (take index list) <|
+        List.append newItems
+            (drop index list)
+
+
 mutateAtIndex : Int -> List a -> (a -> a) -> List a
 mutateAtIndex index list transformer =
     case head <| drop index list of

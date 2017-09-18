@@ -9,7 +9,7 @@ handleP : Model -> Model
 handleP model =
     let
         newLines =
-            insertAtIndex (model.cursorY + 1) model.lines model.buffer
+            insertMultiple (model.cursorY + 1) model.lines model.buffer
     in
         { model
             | lines = newLines

@@ -38,7 +38,7 @@ dTests =
                     { buffer } =
                         newStateAfterActions [ Keys "ia", Escape, Keys "dd" ]
                 in
-                    Expect.equal buffer "a"
+                    Expect.equal buffer [ "a" ]
         , test "2 key presses doesn't remove the last line" <|
             \_ ->
                 let

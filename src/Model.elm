@@ -9,7 +9,7 @@ type alias Model =
     , cursorY : Int
     , mode : Mode
     , inProgress : List Char
-    , buffer : String
+    , buffer : List String
     , firstLine : Int
     , pastStates : List State
     , futureStates : List State
@@ -40,7 +40,7 @@ initialModel =
         0
         Control
         []
-        ""
+        []
         0
         []
         []
