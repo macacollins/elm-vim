@@ -22,10 +22,15 @@ handleG model =
 handleLittleG : Model -> Model
 handleLittleG model =
     let
-        ( newCursorY, newFirstLine, newInProgress ) =
+        ( newCursorX, newCursorY, newFirstLine, newInProgress ) =
             if List.member 'g' model.inProgress then
-                ( 0, 0, [] )
+                ( 0, 0, 0, [] )
             else
-                ( model.cursorY, model.firstLine, 'g' :: model.inProgress )
+                ( model.cursorX, model.cursorY, model.firstLine, 'g' :: model.inProgress )
     in
-        { model | cursorY = newCursorY, firstLine = newFirstLine, inProgress = newInProgress }
+        { model
+            | cursorY = newCursorY
+            , cursorX = newCursorX
+            , firstLine = newFirstLine
+            , inProgress = newInProgress
+        }

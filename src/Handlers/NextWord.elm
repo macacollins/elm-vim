@@ -2,6 +2,7 @@ module Handlers.NextWord exposing (handleW)
 
 import Model exposing (Model)
 import Util.ListUtils exposing (getLine)
+import Util.ModifierUtils exposing (..)
 
 
 -- one test case at a time
@@ -9,6 +10,11 @@ import Util.ListUtils exposing (getLine)
 
 handleW : Model -> Model
 handleW model =
+    handleWInner model (getNumberModifier model)
+
+
+handleWInner : Model -> Int -> Model
+handleWInner model numberLeft =
     let
         { cursorY, cursorX, lines } =
             model
@@ -36,8 +42,16 @@ handleW model =
                 goToNextNonEmptyLine lines (cursorY + 1)
             else
                 ( newOneLineIndex, cursorY )
+
+        updatedModel =
+            { model | cursorX = newCursorX, cursorY = newCursorY }
     in
-        { model | cursorX = newCursorX, cursorY = newCursorY }
+        if numberLeft > 1 then
+            handleWInner
+                updatedModel
+                (numberLeft - 1)
+        else
+            { updatedModel | inProgress = [] }
 
 
 nextSpaceIndex : String -> Int

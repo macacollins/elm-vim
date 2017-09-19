@@ -2,10 +2,15 @@ module Handlers.PreviousWord exposing (..)
 
 import Model exposing (Model)
 import Util.ListUtils exposing (getLine)
+import Util.ModifierUtils exposing (..)
 
 
 handleB : Model -> Model
 handleB model =
+    handleBInner model (getNumberModifier model)
+
+
+handleBInner model countDown =
     let
         { cursorY, cursorX, lines } =
             model
@@ -38,8 +43,14 @@ handleB model =
                 goToLastNonEmptyLine lines (cursorY - 1)
             else
                 ( actualCursorX - xOffset, cursorY )
+
+        updatedModel =
+            { model | cursorX = newCursorX, cursorY = newCursorY }
     in
-        { model | cursorX = newCursorX, cursorY = newCursorY }
+        if countDown > 1 then
+            handleBInner updatedModel (countDown - 1)
+        else
+            { updatedModel | inProgress = [] }
 
 
 lastSpaceIndex : String -> Bool -> Int

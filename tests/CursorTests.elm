@@ -68,7 +68,7 @@ testLittleG =
     let
         actionsWith100Lines =
             (Keys "i" :: List.repeat 100 Enter)
-                ++ [ Escape, Keys "gg" ]
+                ++ [ Keys "aa", Escape, Keys "gg" ]
 
         modelWith100Lines =
             newStateAfterActions actionsWith100Lines
@@ -116,6 +116,13 @@ testLittleG =
                             modelWith100Lines
                     in
                         Expect.equal cursorY 0
+            , test "2 gs does move the cursorX ." <|
+                \_ ->
+                    let
+                        { cursorX } =
+                            modelWith100Lines
+                    in
+                        Expect.equal cursorX 0
             ]
 
 
@@ -289,6 +296,22 @@ wTests =
                             [ Keys "iaaa aaa aaa", Enter, Keys "aaa a", Enter, Keys "a", Escape, Keys "kklllllllllllllllllllllljw" ]
                 in
                     Expect.equal cursorX 0
+        , test "w takes a number arg" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaa aaa aaa", Escape, Keys "gg2w" ]
+                in
+                    Expect.equal cursorX 8
+        , test "w resets the inProgress buffer properly." <|
+            \_ ->
+                let
+                    { inProgress } =
+                        newStateAfterActions
+                            [ Keys "iaaa aaa aaa", Escape, Keys "gg2w" ]
+                in
+                    Expect.equal inProgress []
         , test "w takes you to the next line if there are more lines." <|
             \_ ->
                 let
@@ -359,6 +382,22 @@ bTests =
                             [ Keys "iaaa aaa aaa", Escape, Keys "bbbbbb" ]
                 in
                     Expect.equal cursorY 0
+        , test "b takes modifier keys" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaa aaa aaa", Escape, Keys "3b" ]
+                in
+                    Expect.equal cursorX 0
+        , test "b clears out inProgress" <|
+            \_ ->
+                let
+                    { inProgress } =
+                        newStateAfterActions
+                            [ Keys "iaaa aaa aaa", Escape, Keys "3b" ]
+                in
+                    Expect.equal inProgress []
         , test "b takes you to the start of the line if it's all one word." <|
             \_ ->
                 let
