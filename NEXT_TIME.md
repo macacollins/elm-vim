@@ -1,7 +1,5 @@
 There are lots of ways to go with this, but prolly:
 
-numbers for navigation
-command infrastructure
 Search
 highlighting for search
 Macros

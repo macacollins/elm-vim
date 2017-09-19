@@ -166,7 +166,37 @@ testCursor =
                             [ Keys "iaaa", Escape, Keys "hhhhhhhhhhhhhhhhhhhhh" ]
                 in
                     Expect.equal cursorX 0
-        , test "Cursor doesn't go past the end of the line" <|
+        , test "h takes modifier numbers" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaaaa", Escape, Keys "2h" ]
+                in
+                    Expect.equal cursorX 3
+        , test "h resets the inProgress buffer." <|
+            \_ ->
+                let
+                    { inProgress } =
+                        newStateAfterActions
+                            [ Keys "iaaaaa", Escape, Keys "2h" ]
+                in
+                    Expect.equal inProgress []
+        , test "Too many h leaves the cursor at 0" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaaaa", Escape, Keys "3000h" ]
+                in
+                    Expect.equal cursorX 0
+        ]
+
+
+lTests : Test
+lTests =
+    describe "The l key."
+        [ test "Cursor doesn't go past the end of the line" <|
             \_ ->
                 let
                     { cursorX } =
@@ -184,6 +214,9 @@ testCursor =
                     Expect.equal cursorX 0
         , test "When the enter key is pressed 34 times, no error occurs." <|
             \_ ->
+                -- This tests whether the solution manifests Elm's current issues with Arrays
+                -- Down the road if we switch implementations of Elm and it's not fixed,
+                -- this will trigger again
                 let
                     { lines } =
                         newStateAfterActions <|
@@ -207,6 +240,30 @@ testCursor =
                             [ Keys "iaa", Enter, Keys "aaaa", Escape, Keys "kl" ]
                 in
                     Expect.equal cursorX 2
+        , test "L key takes modifiers" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaaaa", Escape, Keys "gg3l" ]
+                in
+                    Expect.equal cursorX 3
+        , test "L key clears inProgress buffer" <|
+            \_ ->
+                let
+                    { inProgress } =
+                        newStateAfterActions
+                            [ Keys "iaaaaa", Escape, Keys "gg3l" ]
+                in
+                    Expect.equal inProgress []
+        , test "Too many ls doesn't go past the end of the line" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions
+                            [ Keys "iaaaaa", Escape, Keys "gg3000l" ]
+                in
+                    Expect.equal cursorX 5
         , test "Cursor resets on h key." <|
             \_ ->
                 let
@@ -223,6 +280,66 @@ testCursor =
                             [ Keys "iaaa", Enter, Enter, Keys "aaa", Escape, Keys "kk" ]
                 in
                     Expect.equal cursorX 3
+        ]
+
+
+jTests : Test
+jTests =
+    describe "The j key."
+        [ test "j takes modifiers " <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions
+                            [ Keys "i", Enter, Enter, Enter, Escape, Keys "gg2j" ]
+                in
+                    Expect.equal cursorY 2
+        , test "k clears out inProgress" <|
+            \_ ->
+                let
+                    { inProgress } =
+                        newStateAfterActions
+                            [ Keys "i", Enter, Enter, Enter, Escape, Keys "gg2j" ]
+                in
+                    Expect.equal inProgress []
+        , test "too many ks doesn't go above the top of the screen" <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions
+                            [ Keys "i", Enter, Enter, Enter, Escape, Keys "gg2000j" ]
+                in
+                    Expect.equal cursorY 5
+        ]
+
+
+kTests : Test
+kTests =
+    describe "The k key."
+        [ test "k takes modifiers " <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions
+                            [ Keys "i", Enter, Enter, Enter, Escape, Keys "2k" ]
+                in
+                    Expect.equal cursorY 2
+        , test "k clears out inProgress" <|
+            \_ ->
+                let
+                    { inProgress } =
+                        newStateAfterActions
+                            [ Keys "i", Enter, Enter, Enter, Escape, Keys "2k" ]
+                in
+                    Expect.equal inProgress []
+        , test "too many ks doesn't go above the top of the screen" <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions
+                            [ Keys "i", Enter, Enter, Enter, Escape, Keys "2000k" ]
+                in
+                    Expect.equal cursorY 0
         ]
 
 
