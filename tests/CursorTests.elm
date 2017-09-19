@@ -294,7 +294,7 @@ jTests =
                             [ Keys "i", Enter, Enter, Enter, Escape, Keys "gg2j" ]
                 in
                     Expect.equal cursorY 2
-        , test "k clears out inProgress" <|
+        , test "j clears out inProgress" <|
             \_ ->
                 let
                     { inProgress } =
@@ -302,14 +302,14 @@ jTests =
                             [ Keys "i", Enter, Enter, Enter, Escape, Keys "gg2j" ]
                 in
                     Expect.equal inProgress []
-        , test "too many ks doesn't go above the top of the screen" <|
+        , test "too many j's doesn't go below the bottom of the screen" <|
             \_ ->
                 let
                     { cursorY } =
                         newStateAfterActions
-                            [ Keys "i", Enter, Enter, Enter, Escape, Keys "gg2000j" ]
+                            [ Keys "i", Enter, Enter, Enter, Enter, Escape, Keys "gg2000j" ]
                 in
-                    Expect.equal cursorY 5
+                    Expect.equal cursorY 4
         ]
 
 
@@ -321,7 +321,7 @@ kTests =
                 let
                     { cursorY } =
                         newStateAfterActions
-                            [ Keys "i", Enter, Enter, Enter, Escape, Keys "2k" ]
+                            [ Keys "i", Enter, Enter, Enter, Enter, Escape, Keys "2k" ]
                 in
                     Expect.equal cursorY 2
         , test "k clears out inProgress" <|

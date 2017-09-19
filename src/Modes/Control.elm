@@ -107,7 +107,7 @@ controlModeUpdate model keyCode =
                 48 ->
                     -- 0
                     if List.length (List.filter Char.isDigit model.inProgress) > 0 then
-                        { model | inProgress = model.inProgress ++ [ '0' ] }
+                        { model | inProgress = '0' :: model.inProgress }
                     else
                         { model | cursorX = 0 }
 

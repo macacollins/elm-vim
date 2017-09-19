@@ -27,4 +27,24 @@ numTests =
                         getNumberModifier model
                 in
                     Expect.equal result 3
+        , test "Handle 0 consistently" <|
+            \_ ->
+                let
+                    model =
+                        newStateAfterActions [ Keys "200" ]
+
+                    result =
+                        getNumberModifier model
+                in
+                    Expect.equal result 200
+        , test "Double characters come back in the right order" <|
+            \_ ->
+                let
+                    model =
+                        newStateAfterActions [ Keys "21" ]
+
+                    result =
+                        getNumberModifier model
+                in
+                    Expect.equal result 21
         ]
