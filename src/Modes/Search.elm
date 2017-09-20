@@ -2,11 +2,10 @@ module Modes.Search exposing (searchModeUpdate)
 
 import Model exposing (..)
 import Keyboard exposing (KeyCode)
-import List exposing (..)
 import Char
 import Mode exposing (Mode(..))
-import Util.ListUtils exposing (..)
 import History exposing (addHistory)
+import Util.Search exposing (searchTo)
 
 
 searchModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
@@ -42,27 +41,3 @@ searchModeUpdate model keyCode =
                 { model | searchStringBuffer = updatedSearchString }
     in
         updatedModel ! []
-
-
-searchTo : String -> Model -> Maybe Model
-searchTo searchString model =
-    let
-        { cursorX, cursorY } =
-            model
-
-        line =
-            getLine cursorY model.lines
-
-        indexes =
-            String.indexes searchString line
-    in
-        case indexes of
-            -- will have to make this smarter so that we can cycle entries
-            head :: _ ->
-                Just { model | cursorX = head }
-
-            _ ->
-                if model.cursorY == List.length model.lines then
-                    Nothing
-                else
-                    searchTo searchString { model | cursorY = model.cursorY + 1 }

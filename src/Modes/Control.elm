@@ -15,6 +15,7 @@ import Handlers.Navigation exposing (..)
 import Handlers.PreviousWord exposing (..)
 import Handlers.NextWord exposing (..)
 import Handlers.NavigateFile exposing (..)
+import Handlers.NextSearchResult exposing (..)
 import Util.ListUtils exposing (..)
 import History exposing (addHistory)
 
@@ -57,6 +58,10 @@ controlModeUpdate model keyCode =
                 120 ->
                     -- x
                     addHistory model <| handleX model
+
+                110 ->
+                    -- n
+                    handleN model
 
                 79 ->
                     -- O
