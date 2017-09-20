@@ -23,7 +23,7 @@ view model =
 
         mode =
             footer [ id "modeDisplay" ]
-                [ text <| toString model.mode ]
+                [ text <| (toString model.mode ++ " " ++ model.searchStringBuffer) ]
 
         children =
             styles :: mode :: lines

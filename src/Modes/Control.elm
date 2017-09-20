@@ -127,6 +127,10 @@ controlModeUpdate model keyCode =
                 82 ->
                     handleR model
 
+                47 ->
+                    -- /
+                    { model | mode = Search }
+
                 _ ->
                     if 48 <= keyCode && keyCode <= 57 then
                         { model | inProgress = (Char.fromCode keyCode) :: model.inProgress }

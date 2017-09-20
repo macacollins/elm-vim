@@ -6,6 +6,7 @@ import Model exposing (Model)
 import Mode exposing (Mode(..))
 import Modes.Control exposing (controlModeUpdate)
 import Modes.Insert exposing (insertModeUpdate)
+import Modes.Search exposing (searchModeUpdate)
 
 
 update : Msg -> Model -> ( Model, Cmd msg )
@@ -18,6 +19,9 @@ update msg model =
 
                 Control ->
                     controlModeUpdate model keyPress
+
+                Search ->
+                    searchModeUpdate model keyPress
 
         KeyUp keyPress ->
             if List.member keyPress [ 27, 8 ] then
