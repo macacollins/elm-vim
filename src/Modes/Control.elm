@@ -15,6 +15,8 @@ import Handlers.Navigation exposing (..)
 import Handlers.PreviousWord exposing (..)
 import Handlers.NextWord exposing (..)
 import Handlers.NavigateFile exposing (..)
+import Handlers.NextSearchResult exposing (..)
+import Handlers.LastSearchResults exposing (..)
 import Util.ListUtils exposing (..)
 import History exposing (addHistory)
 
@@ -57,6 +59,14 @@ controlModeUpdate model keyCode =
                 120 ->
                     -- x
                     addHistory model <| handleX model
+
+                110 ->
+                    -- n
+                    handleN model
+
+                78 ->
+                    --N
+                    handleCapitalN model
 
                 79 ->
                     -- O
@@ -126,6 +136,10 @@ controlModeUpdate model keyCode =
 
                 82 ->
                     handleR model
+
+                47 ->
+                    -- /
+                    { model | mode = Search }
 
                 _ ->
                     if 48 <= keyCode && keyCode <= 57 then

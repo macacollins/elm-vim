@@ -1,4 +1,4 @@
-module Actions exposing (ActionEntry(..), newStateAfterActions)
+module Actions exposing (ActionEntry(..), newStateAfterActions, applyActions, getModelForString)
 
 import Char
 import Keyboard exposing (KeyCode)
@@ -14,6 +14,17 @@ type ActionEntry
     | Escape
     | Backspace
     | Keys String
+
+
+getModelForString : String -> Model
+getModelForString string =
+    let
+        splitLines =
+            String.split
+                "\n"
+                string
+    in
+        { initialModel | lines = splitLines }
 
 
 newStateAfterActions : List ActionEntry -> Model

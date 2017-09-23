@@ -13,6 +13,8 @@ type alias Model =
     , firstLine : Int
     , pastStates : List State
     , futureStates : List State
+    , searchString : String
+    , searchStringBuffer : String
     }
 
 
@@ -44,3 +46,5 @@ initialModel =
         0
         []
         []
+        ""
+        ""
