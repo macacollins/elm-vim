@@ -4,7 +4,8 @@ import Mode exposing (Mode(..))
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Test exposing (..)
-import Actions exposing (ActionEntry(..), newStateAfterActions, applyActions, getModelForString)
+import Macro.Actions exposing (newStateAfterActions, applyActions, getModelForString)
+import Macro.ActionEntry exposing (ActionEntry(..))
 import List
 
 

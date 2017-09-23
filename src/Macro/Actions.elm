@@ -1,4 +1,4 @@
-module Actions exposing (ActionEntry(..), newStateAfterActions, applyActions, getModelForString)
+module Macro.Actions exposing (newStateAfterActions, applyActions, getModelForString)
 
 import Char
 import Keyboard exposing (KeyCode)
@@ -7,13 +7,7 @@ import Msg exposing (Msg(..))
 import Model exposing (Model, initialModel)
 import List exposing (repeat)
 import Mode exposing (Mode(..))
-
-
-type ActionEntry
-    = Enter
-    | Escape
-    | Backspace
-    | Keys String
+import Macro.ActionEntry exposing (ActionEntry(..))
 
 
 getModelForString : String -> Model

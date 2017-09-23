@@ -7,21 +7,15 @@ import Mode exposing (Mode(..))
 import Modes.Control exposing (controlModeUpdate)
 import Modes.Insert exposing (insertModeUpdate)
 import Modes.Search exposing (searchModeUpdate)
+import Modes.MacroRecord exposing (macroRecordModeUpdate)
+import Keyboard exposing (KeyCode)
 
 
 update : Msg -> Model -> ( Model, Cmd msg )
 update msg model =
     case msg of
         KeyInput keyPress ->
-            case model.mode of
-                Insert ->
-                    insertModeUpdate model keyPress
-
-                Control ->
-                    controlModeUpdate model keyPress
-
-                Search ->
-                    searchModeUpdate model keyPress
+            updateKeyInput keyPress model.mode model
 
         KeyUp keyPress ->
             if List.member keyPress [ 27, 8 ] then
@@ -30,6 +24,32 @@ update msg model =
                 controlModeUpdate model <| translateArrowKeys keyPress
             else
                 ( model, Cmd.none )
+
+
+updateKeyInput : KeyCode -> Mode -> Model -> ( Model, Cmd msg )
+updateKeyInput keyPress mode model =
+    case mode of
+        Insert ->
+            insertModeUpdate model keyPress
+
+        Control ->
+            controlModeUpdate model keyPress
+
+        Search ->
+            searchModeUpdate model keyPress
+
+        Macro inner ->
+            let
+                -- future bug if we start returning cmds
+                -- this could impact performance if we are calculating a model we won't use
+                ( newModel, _ ) =
+                    updateKeyInput keyPress inner model
+
+                initialModel =
+                    model
+            in
+                -- consider re-ordering this
+                macroRecordModeUpdate newModel initialModel keyPress
 
 
 translateArrowKeys input =

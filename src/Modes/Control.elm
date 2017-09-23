@@ -56,6 +56,10 @@ controlModeUpdate model keyCode =
                     -- i
                     addHistory model { model | mode = Insert }
 
+                113 ->
+                    --q
+                    { model | mode = Macro Control }
+
                 120 ->
                     -- x
                     addHistory model <| handleX model

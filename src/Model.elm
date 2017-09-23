@@ -1,6 +1,7 @@
 module Model exposing (..)
 
 import Mode exposing (Mode(..))
+import Macro.Model exposing (MacroModel, initialMacroModel)
 
 
 type alias Model =
@@ -15,6 +16,7 @@ type alias Model =
     , futureStates : List State
     , searchString : String
     , searchStringBuffer : String
+    , macroModel : MacroModel
     }
 
 
@@ -48,3 +50,4 @@ initialModel =
         []
         ""
         ""
+        initialMacroModel
