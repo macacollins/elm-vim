@@ -60,6 +60,10 @@ controlModeUpdate model keyCode =
                     --q
                     { model | mode = Macro Control }
 
+                64 ->
+                    --q
+                    { model | mode = MacroExecute }
+
                 120 ->
                     -- x
                     addHistory model <| handleX model

@@ -1,12 +1,31 @@
 module MacroTests exposing (..)
 
+import Dict
 import Mode exposing (Mode(..))
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Test exposing (..)
 import Macro.Actions exposing (newStateAfterActions)
 import Macro.ActionEntry exposing (ActionEntry(..))
+import Macro.Model exposing (getMacro)
 import List
+import Util.ListUtils exposing (getLine)
+
+
+macroRunTests : Test
+macroRunTests =
+    describe "Macro Run"
+        [ test "simple run" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "qqia", Escape, Keys "q@q" ]
+
+                    line =
+                        getLine 0 lines
+                in
+                    Expect.equal line "aa"
+        ]
 
 
 macroBufferTests : Test

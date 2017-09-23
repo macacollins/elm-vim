@@ -11,6 +11,12 @@ import Modes.MacroRecord exposing (macroRecordModeUpdate)
 import Keyboard exposing (KeyCode)
 
 
+-- the below should get refactored
+
+import Macro.ActionEntry exposing (ActionEntry(..))
+import Macro.Model exposing (getMacro)
+
+
 update : Msg -> Model -> ( Model, Cmd msg )
 update msg model =
     case msg of
@@ -38,6 +44,10 @@ updateKeyInput keyPress mode model =
         Search ->
             searchModeUpdate model keyPress
 
+        MacroExecute ->
+            -- not sure how to do this without introducing a circular reference :D
+            macroExecuteModeUpdate model keyPress
+
         Macro inner ->
             let
                 -- future bug if we start returning cmds
@@ -63,3 +73,61 @@ translateArrowKeys input =
         106
     else
         0
+
+
+macroExecuteModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
+macroExecuteModeUpdate model keyPress =
+    let
+        targetMacro =
+            getMacro
+                (Char.fromCode keyPress)
+                model.macroModel
+    in
+        applyActions { model | mode = Control } targetMacro ! []
+
+
+
+-- WARNING!!! The below is copy / pasted from Actions. need to fix it up
+
+
+applyActions : Model -> List ActionEntry -> Model
+applyActions model actions =
+    List.foldl enterKeySequence model actions
+
+
+enterKeySequence : ActionEntry -> Model -> Model
+enterKeySequence actionEntry model =
+    let
+        codes =
+            getCodeList actionEntry
+
+        applyKey : KeyCode -> Model -> Model
+        applyKey code model =
+            let
+                ( newModel, _ ) =
+                    update (KeyInput code) model
+            in
+                newModel
+    in
+        List.foldr applyKey model codes
+
+
+getCodeList : ActionEntry -> List KeyCode
+getCodeList actionEntry =
+    case actionEntry of
+        Enter ->
+            [ 13 ]
+
+        Escape ->
+            [ 27 ]
+
+        Backspace ->
+            [ 8 ]
+
+        Keys keys ->
+            let
+                addCodeAndRecur : Char -> List KeyCode -> List KeyCode
+                addCodeAndRecur character resultList =
+                    Char.toCode character :: resultList
+            in
+                String.foldl addCodeAndRecur [] keys
