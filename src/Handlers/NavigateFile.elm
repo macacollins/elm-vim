@@ -1,6 +1,7 @@
 module Handlers.NavigateFile exposing (..)
 
 import Model exposing (Model)
+import Util.ListUtils exposing (getLine)
 
 
 handleG : Model -> Model
@@ -15,8 +16,15 @@ handleG model =
                 newCursorY - 30
             else
                 0
+
+        newCursorX =
+            String.length <| getLine newCursorY model.lines
     in
-        { model | cursorY = newCursorY, firstLine = newFirstLine }
+        { model
+            | cursorY = newCursorY
+            , firstLine = newFirstLine
+            , cursorX = newCursorX
+        }
 
 
 handleLittleG : Model -> Model

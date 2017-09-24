@@ -51,9 +51,16 @@ testG =
                 \_ ->
                     let
                         { cursorY } =
-                            newStateAfterActions [ Keys "i", Enter, Enter, Enter, Escape, Keys "G" ]
+                            newStateAfterActions [ Keys "iaaaaaa", Enter, Enter, Enter, Escape, Keys "ggG" ]
                     in
                         Expect.equal cursorY 3
+            , test "Big G moves cursor X to the last position on the last line" <|
+                \_ ->
+                    let
+                        { cursorX } =
+                            newStateAfterActions [ Keys "iaaaaaa", Enter, Enter, Enter, Keys "aaa", Escape, Keys "ggG" ]
+                    in
+                        Expect.equal cursorX 3
             , test "When the window has few lines, the first line stays at 0" <|
                 \_ ->
                     let
@@ -96,6 +103,13 @@ testLittleG =
                             modelWith100LinesOneG
                     in
                         Expect.equal firstLine 70
+            , test "move cursorX back to 0!" <|
+                \_ ->
+                    let
+                        { cursorX } =
+                            newStateAfterActions [ Keys "iaaaaaa", Enter, Enter, Enter, Keys "aaaaa", Escape, Keys "gg" ]
+                    in
+                        Expect.equal cursorX 0
             , test "One g doesn't move the cursorY ." <|
                 \_ ->
                     let
