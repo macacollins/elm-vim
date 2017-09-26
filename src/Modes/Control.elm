@@ -14,6 +14,7 @@ import Handlers.Yank exposing (..)
 import Handlers.Navigation exposing (..)
 import Handlers.PreviousWord exposing (..)
 import Handlers.NextWord exposing (..)
+import Handlers.JoinLines exposing (joinLines)
 import Handlers.NavigateFile exposing (..)
 import Handlers.NextSearchResult exposing (..)
 import Handlers.LastSearchResults exposing (..)
@@ -43,6 +44,10 @@ controlModeUpdate model keyCode =
                 106 ->
                     -- j
                     handleDown model
+
+                74 ->
+                    -- J
+                    joinLines model
 
                 107 ->
                     -- k
