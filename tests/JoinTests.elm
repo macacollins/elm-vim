@@ -35,8 +35,11 @@ capitalJTests =
         , test "truncate spaces" <|
             \_ ->
                 let
+                    lotsOfSpace =
+                        "                         b"
+
                     { lines } =
-                        newStateAfterActions [ Keys "ia", Enter, Keys "                         b", Escape, Keys "ggJ" ]
+                        newStateAfterActions [ Keys "ia", Enter, Keys lotsOfSpace, Escape, Keys "ggJ" ]
 
                     line =
                         getLine 0 lines

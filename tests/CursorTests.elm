@@ -21,6 +21,22 @@ testBang =
         ]
 
 
+testH : Test
+testH =
+    describe "Testing the h key"
+        [ test "takes cursorY to the top of the screen" <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions <|
+                            [ Keys "i" ]
+                                ++ (List.repeat 35 Enter)
+                                ++ [ Escape, Keys "H" ]
+                in
+                    Expect.equal cursorY 5
+        ]
+
+
 testG : Test
 testG =
     let

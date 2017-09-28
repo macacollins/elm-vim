@@ -6,6 +6,7 @@ import List exposing (..)
 import Char
 import Mode exposing (Mode(..))
 import Handlers.DeleteCharacter exposing (..)
+import Handlers.ScreenMovement exposing (..)
 import Handlers.Delete exposing (..)
 import Handlers.Undo exposing (..)
 import Handlers.Redo exposing (..)
@@ -40,6 +41,10 @@ controlModeUpdate model keyCode =
                 104 ->
                     -- h
                     handleLeft model
+
+                72 ->
+                    -- H
+                    handleCapitalH model
 
                 106 ->
                     -- j
