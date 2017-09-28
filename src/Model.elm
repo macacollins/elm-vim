@@ -17,6 +17,7 @@ type alias Model =
     , searchString : String
     , searchStringBuffer : String
     , macroModel : MacroModel
+    , screenHeight : Int
     }
 
 
@@ -51,3 +52,4 @@ initialModel =
         ""
         ""
         initialMacroModel
+        30

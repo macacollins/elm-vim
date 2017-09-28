@@ -3,6 +3,7 @@ module Modes.Control exposing (controlModeUpdate)
 import Model exposing (..)
 import Keyboard exposing (KeyCode)
 import List exposing (..)
+import Dict exposing (Dict)
 import Char
 import Mode exposing (Mode(..))
 import Handlers.DeleteCharacter exposing (..)
@@ -23,147 +24,59 @@ import Util.ListUtils exposing (..)
 import History exposing (addHistory)
 
 
+-- TODO need to make this configurable
+
+
+dict : Dict Char (Model -> Model)
+dict =
+    Dict.empty
+        -- moveCursor
+        |> Dict.insert 'l' handleRight
+        |> Dict.insert 'h' handleLeft
+        |> Dict.insert 'j' handleDown
+        |> Dict.insert 'k' handleUp
+        |> Dict.insert 'b' handleB
+        |> Dict.insert 'w' handleW
+        |> Dict.insert 'H' moveToTopOfScreen
+        |> Dict.insert 'M' moveToMiddleOfScreen
+        -- text manipulation
+        |> Dict.insert 'J' joinLines
+        |> Dict.insert 'd' handleD
+        |> Dict.insert 'i' (\model -> addHistory model { model | mode = Insert })
+        |> Dict.insert 'q' (\model -> { model | mode = Macro Control })
+        |> Dict.insert '@' (\model -> { model | mode = MacroExecute })
+        |> Dict.insert 'x' (\model -> addHistory model <| handleX model)
+        |> Dict.insert 'n' (\model -> handleN model)
+        |> Dict.insert 'N' handleCapitalN
+        |> Dict.insert 'O' handleO
+        |> Dict.insert 'o' handleo
+        |> Dict.insert 'p' (\model -> addHistory model <| handleP model)
+        |> Dict.insert 'y' handleY
+        |> Dict.insert '0' handle0
+        |> Dict.insert 'G' handleG
+        |> Dict.insert 'g' handleLittleG
+        |> Dict.insert '$' handleDollar
+        |> Dict.insert 'u' handleU
+        |> Dict.insert 'R' handleR
+        |> Dict.insert '/' (\model -> { model | mode = Search })
+
+
 controlModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
 controlModeUpdate model keyCode =
     let
-        trash =
-            Debug.log "Pressed" keyCode
-
-        { lines, cursorX, cursorY } =
-            model
+        default =
+            if 48 <= keyCode && keyCode <= 57 then
+                { model | inProgress = (Char.fromCode keyCode) :: model.inProgress }
+            else
+                model
 
         newModel =
-            case keyCode of
-                108 ->
-                    -- l
-                    handleRight model
+            case Dict.get (Char.fromCode keyCode) dict of
+                Just theFunction ->
+                    theFunction model
 
-                104 ->
-                    -- h
-                    handleLeft model
-
-                72 ->
-                    -- H
-                    handleCapitalH model
-
-                106 ->
-                    -- j
-                    handleDown model
-
-                74 ->
-                    -- J
-                    joinLines model
-
-                107 ->
-                    -- k
-                    handleUp model
-
-                100 ->
-                    -- d
-                    handleD model
-
-                105 ->
-                    -- i
-                    addHistory model { model | mode = Insert }
-
-                113 ->
-                    --q
-                    { model | mode = Macro Control }
-
-                64 ->
-                    --q
-                    { model | mode = MacroExecute }
-
-                120 ->
-                    -- x
-                    addHistory model <| handleX model
-
-                110 ->
-                    -- n
-                    handleN model
-
-                78 ->
-                    --N
-                    handleCapitalN model
-
-                79 ->
-                    -- O
-                    let
-                        updatedLines =
-                            insertAtIndex (model.cursorY) lines ""
-                    in
-                        addHistory model
-                            { model
-                                | mode = Insert
-                                , lines = updatedLines
-                                , cursorX = 0
-                            }
-
-                111 ->
-                    -- o
-                    let
-                        newCursorY =
-                            model.cursorY + 1
-
-                        updatedLines =
-                            insertAtIndex (model.cursorY + 1) lines ""
-                    in
-                        addHistory model
-                            { model
-                                | mode = Insert
-                                , cursorY = newCursorY
-                                , cursorX = 0
-                                , lines = updatedLines
-                            }
-
-                119 ->
-                    handleW model
-
-                112 ->
-                    -- TODO shake out how this works when the paste buffer is empty.
-                    -- It's fine for now... just a little unintuitive
-                    addHistory model <|
-                        handleP model
-
-                121 ->
-                    -- y
-                    handleY model
-
-                98 ->
-                    handleB model
-
-                48 ->
-                    -- 0
-                    if List.length (List.filter Char.isDigit model.inProgress) > 0 then
-                        { model | inProgress = '0' :: model.inProgress }
-                    else
-                        { model | cursorX = 0 }
-
-                36 ->
-                    -- $
-                    { model | cursorX = String.length <| getLine model.cursorY model.lines }
-
-                71 ->
-                    handleG model
-
-                103 ->
-                    handleLittleG model
-
-                117 ->
-                    handleU model
-
-                82 ->
-                    handleR model
-
-                47 ->
-                    -- /
-                    { model | mode = Search }
-
-                _ ->
-                    if 48 <= keyCode && keyCode <= 57 then
-                        { model | inProgress = (Char.fromCode keyCode) :: model.inProgress }
-                    else
-                        model
+                Nothing ->
+                    default
     in
         ( newModel, Cmd.none )
 
@@ -171,3 +84,44 @@ controlModeUpdate model keyCode =
 addHistory : Model -> Model -> Model
 addHistory lastModel newModel =
     { newModel | pastStates = getState lastModel :: lastModel.pastStates }
+
+
+handleO model =
+    let
+        updatedLines =
+            insertAtIndex (model.cursorY) model.lines ""
+    in
+        addHistory model
+            { model
+                | mode = Insert
+                , lines = updatedLines
+                , cursorX = 0
+            }
+
+
+handleo model =
+    let
+        newCursorY =
+            model.cursorY + 1
+
+        updatedLines =
+            insertAtIndex (model.cursorY + 1) model.lines ""
+    in
+        addHistory model
+            { model
+                | mode = Insert
+                , cursorY = newCursorY
+                , cursorX = 0
+                , lines = updatedLines
+            }
+
+
+handle0 model =
+    if List.length (List.filter Char.isDigit model.inProgress) > 0 then
+        { model | inProgress = '0' :: model.inProgress }
+    else
+        { model | cursorX = 0 }
+
+
+handleDollar model =
+    { model | cursorX = String.length <| getLine model.cursorY model.lines }
