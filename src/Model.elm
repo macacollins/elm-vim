@@ -1,4 +1,4 @@
-module Model exposing (..)
+module Model exposing (PasteBuffer(..), Model, State, getState, initialModel)
 
 import Mode exposing (Mode(..))
 import Macro.Model exposing (MacroModel, initialMacroModel)
@@ -10,7 +10,7 @@ type alias Model =
     , cursorY : Int
     , mode : Mode
     , inProgress : List Char
-    , buffer : List String
+    , buffer : PasteBuffer
     , firstLine : Int
     , pastStates : List State
     , futureStates : List State
@@ -29,6 +29,11 @@ type alias State =
     }
 
 
+type PasteBuffer
+    = LinesBuffer (List String)
+    | InlineBuffer (List String)
+
+
 getState : Model -> State
 getState model =
     State
@@ -38,6 +43,10 @@ getState model =
         model.firstLine
 
 
+
+-- TODO move this to the other syntax with named params
+
+
 initialModel =
     Model
         (List.repeat 1 "")
@@ -45,7 +54,7 @@ initialModel =
         0
         Control
         []
-        []
+        (LinesBuffer [])
         0
         []
         []

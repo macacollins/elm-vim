@@ -6,6 +6,7 @@ import Test exposing (..)
 import Macro.Actions exposing (newStateAfterActions)
 import Macro.ActionEntry exposing (ActionEntry(..))
 import List exposing (..)
+import Model exposing (PasteBuffer(..))
 import Util.ListUtils exposing (..)
 
 
@@ -39,7 +40,7 @@ dTests =
                     { buffer } =
                         newStateAfterActions [ Keys "ia", Escape, Keys "dd" ]
                 in
-                    Expect.equal buffer [ "a" ]
+                    Expect.equal buffer <| LinesBuffer [ "a" ]
         , test "2 key presses doesn't remove the last line" <|
             \_ ->
                 let

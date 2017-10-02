@@ -1,6 +1,6 @@
 module Handlers.Delete exposing (handleD)
 
-import Model exposing (Model)
+import Model exposing (Model, PasteBuffer(..))
 import List
 import Util.ListUtils exposing (..)
 import History exposing (getUpdatedHistory)
@@ -34,10 +34,10 @@ handleD model =
         ( newBuffer, newPastStates ) =
             case removed of
                 Just thing ->
-                    ( thing, getUpdatedHistory model )
+                    ( LinesBuffer thing, getUpdatedHistory model )
 
                 Nothing ->
-                    ( [ "" ], model.pastStates )
+                    ( LinesBuffer [ "" ], model.pastStates )
     in
         { model
             | inProgress = newInProgress

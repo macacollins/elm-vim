@@ -58,6 +58,7 @@ dict =
         |> Dict.insert '$' handleDollar
         |> Dict.insert 'u' handleU
         |> Dict.insert 'R' handleR
+        |> Dict.insert 'X' handleBackspace
         |> Dict.insert '/' (\model -> { model | mode = Search })
 
 

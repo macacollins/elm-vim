@@ -1,10 +1,13 @@
 module Handlers.Yank exposing (..)
 
-import Model exposing (Model)
+import Model exposing (Model, PasteBuffer(..))
 import List
 import Util.ListUtils exposing (..)
 import Util.ModifierUtils exposing (..)
 import History exposing (getUpdatedHistory)
+
+
+-- TODO handle normal words
 
 
 handleY : Model -> Model
@@ -25,7 +28,7 @@ handleY model =
     in
         if actuallyYank then
             { model
-                | buffer = newBuffer
+                | buffer = LinesBuffer newBuffer
                 , inProgress = newInProgress
             }
         else
