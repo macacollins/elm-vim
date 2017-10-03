@@ -67,9 +67,33 @@ testVisualMode =
                 let
                     { buffer } =
                         newStateAfterActions
-                            [ Keys "ia b c d", Escape, Keys "0vwx" ]
+                            [ Keys "iaaabb", Enter, Keys "bbbbc", Escape, Keys "gglllvjx" ]
                 in
-                    Expect.equal buffer <| InlineBuffer [ "a b" ]
+                    Expect.equal buffer <| InlineBuffer [ "bb", "bbbb" ]
+        , test "remove multiple lines properly" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions
+                            [ Keys "iaaabb", Enter, Keys "bbbbc", Escape, Keys "gglllvjx" ]
+                in
+                    Expect.equal lines [ "aaac" ]
+        , test "buffer 3 lines properly after x" <|
+            \_ ->
+                let
+                    { buffer } =
+                        newStateAfterActions
+                            [ Keys "iaaabb", Enter, Keys "bbbbb", Enter, Keys "bbbbc", Escape, Keys "gglllvjjx" ]
+                in
+                    Expect.equal buffer <| InlineBuffer [ "bb", "bbbbb", "bbbb" ]
+        , test "remove 3 lines properly" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions
+                            [ Keys "iaaabb", Enter, Keys "bbbbb", Enter, Keys "bbbbc", Escape, Keys "gglllvjjx" ]
+                in
+                    Expect.equal lines [ "aaac" ]
         , test "Test with y." <|
             \_ ->
                 let

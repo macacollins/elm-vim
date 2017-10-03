@@ -63,22 +63,18 @@ handleVisualCut model =
 
         startLines =
             model.lines
-                |> List.take startY
+                |> List.take (startY + 1)
                 |> List.reverse
-                |> Debug.log "Start Lines"
 
         reversedStartLinesAfterMutation =
             mutateAtIndex 0 startLines (\line -> String.left startX line)
-                |> Debug.log "reversed after mutation"
 
         endLines =
             model.lines
                 |> List.drop endY
-                |> Debug.log "End lines"
 
         endLinesAfterMutation =
             mutateAtIndex 0 endLines (\line -> String.dropLeft (endX + 1) line)
-                |> Debug.log "End lines after mutation"
 
         combined =
             case endLinesAfterMutation of
@@ -88,15 +84,12 @@ handleVisualCut model =
                             (List.reverse startRest)
                                 ++ [ startHead ++ endHead ]
                                 ++ endRest
-                                |> Debug.log "normal case. all catted up"
 
                         _ ->
                             endLinesAfterMutation
-                                |> Debug.log "reversed start lines empty"
 
                 _ ->
                     model.lines
-                        |> Debug.log "end lines empty"
     in
         { model | mode = Control, lines = combined, buffer = InlineBuffer croppedTargetLines }
 
@@ -111,24 +104,46 @@ getVisualCopyBuffer model =
             model.lines
                 |> List.drop startY
                 |> List.take (endY - startY + 1)
-                |> Debug.log "fulltargetlines"
 
         croppedTargetLines =
-            Debug.log "cropped: " <|
-                case fullTargetLines of
-                    single :: [] ->
-                        let
-                            updatedLine =
-                                single
-                                    |> String.dropLeft startX
-                                    |> String.dropRight ((String.length single) - endX - 1)
-                        in
-                            [ updatedLine ]
+            case fullTargetLines of
+                first :: second :: rest ->
+                    let
+                        updatedLine =
+                            first
+                                |> String.dropLeft startX
+                    in
+                        updatedLine :: second :: rest
 
-                    _ ->
-                        fullTargetLines
+                single :: [] ->
+                    let
+                        updatedLine =
+                            single
+                                |> String.dropLeft startX
+                                |> String.dropRight ((String.length single) - endX - 1)
+                    in
+                        [ updatedLine ]
+
+                [] ->
+                    fullTargetLines
+
+        final =
+            case List.reverse croppedTargetLines of
+                first :: second :: rest ->
+                    let
+                        updatedLine =
+                            first
+                                |> String.left (endX + 1)
+                    in
+                        updatedLine
+                            :: second
+                            :: rest
+                            |> List.reverse
+
+                _ ->
+                    croppedTargetLines
     in
-        croppedTargetLines
+        final
 
 
 handleVisualCopy : Model -> Model
