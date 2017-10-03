@@ -5,6 +5,7 @@ import Msg exposing (Msg(..))
 import Model exposing (Model)
 import Mode exposing (Mode(..))
 import Modes.Control exposing (controlModeUpdate)
+import Modes.Visual exposing (visualModeUpdate)
 import Modes.Insert exposing (insertModeUpdate)
 import Modes.Search exposing (searchModeUpdate)
 import Modes.MacroRecord exposing (macroRecordModeUpdate)
@@ -45,8 +46,11 @@ updateKeyInput keyPress mode model =
             searchModeUpdate model keyPress
 
         MacroExecute ->
-            -- not sure how to do this without introducing a circular reference :D
+            -- not sure how to do this in multiple files without introducing a circular reference :D
             macroExecuteModeUpdate model keyPress
+
+        Visual _ _ ->
+            visualModeUpdate model keyPress
 
         Macro inner ->
             let

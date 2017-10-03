@@ -14,10 +14,25 @@ handleP model =
                     insertMultiple (model.cursorY + 1) model.lines buffer
 
                 InlineBuffer buffer ->
-                    insertMultiple (model.cursorY + 1) model.lines buffer
+                    insertInline model buffer
     in
         { model
             | lines = newLines
             , cursorX = 0
             , cursorY = model.cursorY + 1
         }
+
+
+insertInline : Model -> List String -> List String
+insertInline { lines, cursorX, cursorY } buffer =
+    case buffer of
+        head :: rest ->
+            mutateAtIndex cursorY lines (\line -> (String.left cursorX line) ++ head)
+
+        _ ->
+            lines
+
+
+splitLine : String -> Int -> ( String, String )
+splitLine string index =
+    ( String.left index string, String.dropLeft index string )

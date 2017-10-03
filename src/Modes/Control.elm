@@ -59,6 +59,7 @@ dict =
         |> Dict.insert 'u' handleU
         |> Dict.insert 'R' handleR
         |> Dict.insert 'X' handleBackspace
+        |> Dict.insert 'v' (\model -> { model | mode = Visual model.cursorX model.cursorY })
         |> Dict.insert '/' (\model -> { model | mode = Search })
 
 
