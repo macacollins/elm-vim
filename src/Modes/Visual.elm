@@ -162,12 +162,11 @@ getStartAndEnd model =
                 _ ->
                     Debug.log "We weren't in visual mode in the visual mode update file." ( 0, 0 )
     in
-        Debug.log "Start and end" <|
-            if model.cursorY < visualY then
-                ( model.cursorX, model.cursorY, visualX, visualY )
-            else if visualY < model.cursorY then
-                ( visualX, visualY, model.cursorX, model.cursorY )
-            else if (visualX < model.cursorX) then
-                ( visualX, visualY, model.cursorX, model.cursorY )
-            else
-                ( model.cursorX, model.cursorY, visualX, visualY )
+        if model.cursorY < visualY then
+            ( model.cursorX - 1, model.cursorY, visualX - 1, visualY )
+        else if visualY < model.cursorY then
+            ( visualX, visualY, model.cursorX, model.cursorY )
+        else if (visualX < model.cursorX) then
+            ( visualX, visualY, model.cursorX, model.cursorY )
+        else
+            ( model.cursorX - 1, model.cursorY, visualX, visualY )

@@ -94,6 +94,38 @@ testVisualMode =
                             [ Keys "iaaabb", Enter, Keys "bbbbb", Enter, Keys "bbbbc", Escape, Keys "gglllvjjx" ]
                 in
                     Expect.equal lines [ "aaac" ]
+        , test "do multiple lines properly in reverse" <|
+            \_ ->
+                let
+                    { buffer } =
+                        newStateAfterActions
+                            [ Keys "iaaabb", Enter, Keys "bbbbb", Enter, Keys "bbbbc", Escape, Keys "hvkkx" ]
+                in
+                    Expect.equal buffer <| InlineBuffer [ "bb", "bbbbb", "bbbb" ]
+        , test "remove 3 lines properly in reverse" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions
+                            [ Keys "iaaabb", Enter, Keys "bbbbb", Enter, Keys "bbbbc", Escape, Keys "hvkkx" ]
+                in
+                    Expect.equal lines [ "aaac" ]
+        , test "buffer properly going backwards on one line" <|
+            \_ ->
+                let
+                    { buffer } =
+                        newStateAfterActions
+                            [ Keys "iaaabb", Escape, Keys "hvx" ]
+                in
+                    Expect.equal buffer <| InlineBuffer [ "bb" ]
+        , test "remove text properly going backwards on a single line" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions
+                            [ Keys "iaaabb", Escape, Keys "hvx" ]
+                in
+                    Expect.equal lines [ "aaa" ]
         , test "Test with y." <|
             \_ ->
                 let
