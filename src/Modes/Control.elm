@@ -11,7 +11,7 @@ import Handlers.ScreenMovement exposing (..)
 import Handlers.Delete exposing (..)
 import Handlers.Undo exposing (..)
 import Handlers.Redo exposing (..)
-import Handlers.Paste exposing (handleP)
+import Handlers.Paste exposing (..)
 import Handlers.Yank exposing (..)
 import Handlers.Navigation exposing (..)
 import Handlers.PreviousWord exposing (..)
@@ -50,7 +50,8 @@ dict =
         |> Dict.insert 'N' handleCapitalN
         |> Dict.insert 'O' handleO
         |> Dict.insert 'o' handleo
-        |> Dict.insert 'p' (\model -> addHistory model <| handleP model)
+        |> Dict.insert 'p' (\model -> addHistory model <| handlePaste model)
+        |> Dict.insert 'P' (\model -> addHistory model <| handlePasteBefore model)
         |> Dict.insert 'y' handleY
         |> Dict.insert '0' handle0
         |> Dict.insert 'G' handleG

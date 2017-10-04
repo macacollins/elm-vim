@@ -70,6 +70,13 @@ testVisualMode =
                             [ Keys "iaaabb", Enter, Keys "bbbbc", Escape, Keys "gglllvjx" ]
                 in
                     Expect.equal buffer <| InlineBuffer [ "bb", "bbbb" ]
+        , test "Load a partial buffer properly backwards with multiple lines" <|
+            \_ ->
+                let
+                    { buffer } =
+                        newStateAfterActions [ Keys "iaaabb", Enter, Keys "bbbcc", Enter, Keys "cccdd", Escape, Keys "0llvklx0p" ]
+                in
+                    Expect.equal buffer <| InlineBuffer [ "cc", "ccc" ]
         , test "remove multiple lines properly" <|
             \_ ->
                 let

@@ -1,12 +1,12 @@
-module Handlers.Paste exposing (handleP)
+module Handlers.Paste exposing (handlePaste, handlePasteBefore)
 
 import Model exposing (..)
 import List
 import Util.ListUtils exposing (..)
 
 
-handleP : Model -> Model
-handleP model =
+handlePaste : Model -> Model
+handlePaste model =
     let
         newLines =
             case model.buffer of
@@ -23,42 +23,79 @@ handleP model =
         }
 
 
+handlePasteBefore : Model -> Model
+handlePasteBefore model =
+    let
+        newLines =
+            case model.buffer of
+                LinesBuffer buffer ->
+                    insertMultiple model.cursorY model.lines buffer
+
+                InlineBuffer buffer ->
+                    insertBeforeInline model buffer
+    in
+        { model
+            | lines = newLines
+            , cursorX = 0
+        }
+
+
+insertBeforeInline : Model -> List String -> List String
+insertBeforeInline { lines, cursorX, cursorY } buffer =
+    case buffer of
+        head :: second :: rest ->
+            let
+                insertLine =
+                    getLine cursorY lines
+
+                ( left, right ) =
+                    splitLine insertLine (cursorX - 1)
+
+                withLineBefore =
+                    mutateAtIndex cursorY lines (\_ -> left ++ head)
+
+                withLinesInserted =
+                    insertMultiple (cursorY + 1) withLineBefore (second :: rest)
+
+                lastLineIndex =
+                    cursorY + List.length buffer - 1
+
+                withLineAfter =
+                    mutateAtIndex lastLineIndex withLinesInserted (\line -> line ++ right)
+            in
+                withLineAfter
+
+        head :: [] ->
+            (mutateAtIndex cursorY lines (\line -> (String.left cursorX line) ++ head))
+
+        _ ->
+            lines
+
+
 insertInline : Model -> List String -> List String
 insertInline { lines, cursorX, cursorY } buffer =
     case buffer of
         head :: second :: rest ->
             let
-                trash =
-                    Debug.log "buffer" buffer
-
-                trash2 =
-                    Debug.log "lines" lines
-
                 insertLine =
                     getLine cursorY lines
-                        |> Debug.log "Mutating"
 
                 ( left, right ) =
-                    splitLine insertLine (cursorY - 1)
-                        |> Debug.log "Left and Right"
+                    splitLine insertLine (cursorX + 1)
 
                 withLineBefore =
                     mutateAtIndex cursorY lines (\_ -> left ++ head)
-                        |> Debug.log "withLineBefore"
 
                 withLinesInserted =
                     insertMultiple (cursorY + 1) withLineBefore (second :: rest)
-                        |> Debug.log "withLinesInserted"
 
                 lastLineIndex =
                     cursorY
                         + List.length buffer
                         - 1
-                        |> Debug.log "lastLineIndex"
 
                 withLineAfter =
                     mutateAtIndex lastLineIndex withLinesInserted (\line -> line ++ right)
-                        |> Debug.log "withLineAfter"
             in
                 withLineAfter
 
@@ -67,8 +104,3 @@ insertInline { lines, cursorX, cursorY } buffer =
 
         _ ->
             lines
-
-
-splitLine : String -> Int -> ( String, String )
-splitLine string index =
-    ( String.left (index + 1) string, String.dropLeft (index + 1) string )

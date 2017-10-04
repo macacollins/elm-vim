@@ -34,6 +34,11 @@ removeAtIndex index list =
             ( newList, removedItem )
 
 
+splitLine : String -> Int -> ( String, String )
+splitLine string index =
+    ( String.left index string, String.dropLeft index string )
+
+
 removeSlice : Int -> Int -> List String -> ( List String, Maybe (List String) )
 removeSlice start end list =
     let

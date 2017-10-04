@@ -12,6 +12,47 @@ import Model exposing (PasteBuffer(..))
 -- TODO also handle capital P. It's already crossed off the list :D
 
 
+pasteBeforeTests : Test
+pasteBeforeTests =
+    describe "Paste before"
+        [ test "Basic paste." <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "iaa", Escape, Keys "ddP" ]
+                in
+                    Expect.equal (getLine 0 lines) "aa"
+        , test "paste makes an extra line." <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "iaa", Escape, Keys "ddP" ]
+                in
+                    Expect.equal lines [ "aa", "" ]
+        , test "paste cursor y." <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions [ Keys "iaa", Escape, Keys "ddP" ]
+                in
+                    Expect.equal cursorY 0
+        , test "paste cursor x." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions [ Keys "iaa", Escape, Keys "ddP" ]
+                in
+                    Expect.equal cursorX 0
+        , test "paste a partial buffer properly" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "iaaabb", Enter, Keys "bbbcc", Enter, Keys "cccdd", Escape, Keys "0llvklx0P" ]
+                in
+                    Expect.equal lines [ "aaabb", "cc", "cccbbbdd" ]
+        ]
+
+
 pTests : Test
 pTests =
     describe "basic paste"
