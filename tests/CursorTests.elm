@@ -8,6 +8,25 @@ import Macro.ActionEntry exposing (ActionEntry(..))
 import List
 
 
+testCursorMovesBackAfterExitingInsert =
+    describe "Testing that the cursor moves back"
+        [ test "it moves back by one when exiting insert mode" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions [ Keys "iaaaaa", Escape ]
+                in
+                    Expect.equal cursorX 4
+        , test "It doesn't move back by one if at 0." <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions [ Keys "i", Escape ]
+                in
+                    Expect.equal cursorX 0
+        ]
+
+
 testBang : Test
 testBang =
     describe "Test my bangs."
@@ -17,7 +36,7 @@ testBang =
                     { cursorX } =
                         newStateAfterActions [ Keys "iaaaaa", Escape, Keys "hhhhhhhhhhhhhh$" ]
                 in
-                    Expect.equal cursorX 5
+                    Expect.equal cursorX 4
         ]
 
 
@@ -204,7 +223,7 @@ testCursor =
                         newStateAfterActions
                             [ Keys "iaaaaa", Escape, Keys "2h" ]
                 in
-                    Expect.equal cursorX 3
+                    Expect.equal cursorX 2
         , test "h resets the inProgress buffer." <|
             \_ ->
                 let
@@ -310,7 +329,7 @@ lTests =
                         newStateAfterActions
                             [ Keys "iaaa", Enter, Enter, Keys "aaa", Escape, Keys "kk" ]
                 in
-                    Expect.equal cursorX 3
+                    Expect.equal cursorX 2
         ]
 
 

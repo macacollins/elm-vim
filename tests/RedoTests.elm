@@ -33,7 +33,7 @@ basicTest =
                     { cursorX } =
                         newStateAfterActions [ Keys "iHello world.", Enter, Keys "heh", Escape, Keys "uR" ]
                 in
-                    Expect.equal cursorX 3
+                    Expect.equal cursorX 2
         , test "Redo when text is deleted with dd." <|
             \_ ->
                 let

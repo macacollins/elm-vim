@@ -12,7 +12,7 @@ handleNewLine model =
             (model.cursorY + 1)
 
         updatedLines =
-            insertAtIndex sliceIndex (Debug.log "Updating lines" model.lines) ""
+            insertAtIndex sliceIndex model.lines ""
 
         newCursorY =
             model.cursorY + 1

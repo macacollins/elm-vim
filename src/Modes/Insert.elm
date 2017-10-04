@@ -12,14 +12,18 @@ import History exposing (addHistory)
 insertModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
 insertModeUpdate model keyCode =
     let
-        trash =
-            Debug.log "Pressed" keyCode
-
         newModel =
             case keyCode of
                 27 ->
                     -- Escape key
-                    { model | mode = Control }
+                    { model
+                        | mode = Control
+                        , cursorX =
+                            if model.cursorX > 0 then
+                                model.cursorX - 1
+                            else
+                                0
+                    }
 
                 13 ->
                     -- Enter key

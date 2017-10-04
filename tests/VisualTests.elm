@@ -36,7 +36,7 @@ testVisualModeSwitching =
                         newStateAfterActions
                             [ Keys "iaaaaa", Escape, Keys "v" ]
                 in
-                    Expect.equal mode <| Visual 5 0
+                    Expect.equal mode <| Visual 4 0
         ]
 
 
@@ -115,7 +115,7 @@ testVisualMode =
                 let
                     { buffer } =
                         newStateAfterActions
-                            [ Keys "iaaabb", Escape, Keys "hvx" ]
+                            [ Keys "iaaabb", Escape, Keys "vhx" ]
                 in
                     Expect.equal buffer <| InlineBuffer [ "bb" ]
         , test "remove text properly going backwards on a single line" <|
@@ -125,7 +125,7 @@ testVisualMode =
                         newStateAfterActions
                             [ Keys "iaaabb", Escape, Keys "hvx" ]
                 in
-                    Expect.equal lines [ "aaa" ]
+                    Expect.equal lines [ "aaab" ]
         , test "Test with y." <|
             \_ ->
                 let

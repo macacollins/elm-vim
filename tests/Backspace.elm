@@ -16,7 +16,7 @@ capitalXTests =
             \_ ->
                 let
                     { lines } =
-                        newStateAfterActions [ Keys "iabc", Escape, Keys "hX" ]
+                        newStateAfterActions [ Keys "iabc", Escape, Keys "X" ]
                 in
                     Expect.equal lines [ "ac" ]
         , test "Move cursorX back by one" <|

@@ -6,6 +6,10 @@ import Test exposing (..)
 import Macro.Actions exposing (newStateAfterActions)
 import Macro.ActionEntry exposing (ActionEntry(..))
 import Util.ListUtils exposing (..)
+import Model exposing (PasteBuffer(..))
+
+
+-- TODO also handle capital P. It's already crossed off the list :D
 
 
 pTests : Test
@@ -32,4 +36,18 @@ pTests =
                         newStateAfterActions [ Keys "iaa", Escape, Keys "ddp" ]
                 in
                     Expect.equal cursorX 0
+        , test "Load a partial buffer properly" <|
+            \_ ->
+                let
+                    { buffer } =
+                        newStateAfterActions [ Keys "iaaabb", Enter, Keys "bbbcc", Enter, Keys "cccdd", Escape, Keys "0llvklx0p" ]
+                in
+                    Expect.equal buffer <| InlineBuffer [ "cc", "ccc" ]
+        , test "paste a partial buffer properly" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "iaaabb", Enter, Keys "bbbcc", Enter, Keys "cccdd", Escape, Keys "0llvklx0p" ]
+                in
+                    Expect.equal lines [ "aaabb", "bcc", "cccbbdd" ]
         ]

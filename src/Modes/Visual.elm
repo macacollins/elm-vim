@@ -57,6 +57,7 @@ handleVisualCut model =
     let
         croppedTargetLines =
             getVisualCopyBuffer model
+                |> Debug.log "Buffer to be"
 
         ( startX, startY, endX, endY ) =
             getStartAndEnd model
@@ -110,8 +111,7 @@ getVisualCopyBuffer model =
                 first :: second :: rest ->
                     let
                         updatedLine =
-                            first
-                                |> String.dropLeft startX
+                            String.dropLeft startX first
                     in
                         updatedLine :: second :: rest
 
@@ -163,10 +163,10 @@ getStartAndEnd model =
                     Debug.log "We weren't in visual mode in the visual mode update file." ( 0, 0 )
     in
         if model.cursorY < visualY then
-            ( model.cursorX - 1, model.cursorY, visualX - 1, visualY )
+            ( model.cursorX, model.cursorY, visualX, visualY )
         else if visualY < model.cursorY then
             ( visualX, visualY, model.cursorX, model.cursorY )
         else if (visualX < model.cursorX) then
             ( visualX, visualY, model.cursorX, model.cursorY )
         else
-            ( model.cursorX - 1, model.cursorY, visualX, visualY )
+            ( model.cursorX, model.cursorY, visualX, visualY )

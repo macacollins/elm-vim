@@ -126,4 +126,14 @@ handle0 model =
 
 
 handleDollar model =
-    { model | cursorX = String.length <| getLine model.cursorY model.lines }
+    let
+        length =
+            String.length <| getLine model.cursorY model.lines
+
+        zeroSafeLength =
+            if length == 0 then
+                0
+            else
+                length - 1
+    in
+        { model | cursorX = zeroSafeLength }

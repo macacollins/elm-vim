@@ -1,5 +1,7 @@
 Pick one!
 
+make paste work better for visual mode
+
 highlighting for search
 add numbers to Macros
 relative line numbers
