@@ -3,10 +3,10 @@ module PasteTests exposing (..)
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Test exposing (..)
-import Macro.Actions exposing (newStateAfterActions)
-import Macro.ActionEntry exposing (ActionEntry(..))
 import Util.ListUtils exposing (..)
 import Model exposing (PasteBuffer(..))
+import Macro.Actions exposing (newStateAfterActions)
+import Macro.ActionEntry exposing (ActionEntry(..))
 
 
 -- TODO also handle capital P. It's already crossed off the list :D

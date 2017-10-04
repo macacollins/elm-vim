@@ -2,13 +2,17 @@ module Handlers.NavigateFile exposing (..)
 
 import Model exposing (Model)
 import Util.ListUtils exposing (getLine)
+import Util.ModifierUtils exposing (..)
 
 
 handleG : Model -> Model
 handleG model =
     let
-        newCursorY =
+        defaultCursorY =
             (List.length model.lines) - 1
+
+        defaultCursorX =
+            String.length <| getLine defaultCursorY model.lines
 
         newFirstLine =
             -- TODO update when we page in a more mature fashion
@@ -17,8 +21,20 @@ handleG model =
             else
                 0
 
-        newCursorX =
-            String.length <| getLine newCursorY model.lines
+        numberModifier =
+            getNumberModifier model
+
+        actualModifierNumber =
+            if numberModifier > List.length model.lines then
+                defaultCursorY
+            else
+                numberModifier
+
+        ( newCursorX, newCursorY ) =
+            if hasNumberModifier model then
+                ( 0, actualModifierNumber )
+            else
+                ( defaultCursorX, defaultCursorY )
     in
         { model
             | cursorY = newCursorY
