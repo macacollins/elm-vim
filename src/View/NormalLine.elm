@@ -3,15 +3,26 @@ module View.NormalLine exposing (getNormalLineHTML)
 import Model exposing (Model)
 import Html exposing (..)
 import Html.Attributes exposing (class, id)
-import View.Util exposing (..)
 import Html.Attributes exposing (property, attribute)
+import View.Util exposing (..)
+import View.RenderLineWithCursor exposing (renderLineWithCursor)
+import Mode exposing (Mode(..))
+import View.VisualLine exposing (getVisualTextContents)
 
 
 getNormalLineHTML : Model -> Int -> String -> Html msg
 getNormalLineHTML model index line =
     let
-        className =
-            "normalLine"
+        textContents =
+            case model.mode of
+                Visual _ _ ->
+                    getVisualTextContents model index line
+
+                _ ->
+                    if model.cursorY == actualIndex then
+                        renderLineWithCursor model index line
+                    else
+                        replaceSpaceWithNbsp line
 
         actualIndex =
             index + model.firstLine
@@ -21,38 +32,8 @@ getNormalLineHTML model index line =
 
         paddedIndex =
             String.padLeft padding '0' <| toString actualIndex
-
-        textContents =
-            if model.cursorY == actualIndex then
-                if String.length line == 0 then
-                    span [ id "cursor" ] [ text "_" ]
-                else
-                    let
-                        before =
-                            String.slice 0 model.cursorX line
-
-                        maybeMiddle =
-                            String.slice model.cursorX (model.cursorX + 1) line
-
-                        after =
-                            String.slice (model.cursorX + 1) (String.length line + 1) line
-
-                        middle =
-                            Debug.log "Cursor Text" <|
-                                if String.length maybeMiddle == 0 then
-                                    "_"
-                                else
-                                    maybeMiddle
-                    in
-                        span []
-                            [ replaceSpaceWithNbsp before
-                            , span [ id "cursor" ] [ text <| middle ]
-                            , replaceSpaceWithNbsp after
-                            ]
-            else
-                replaceSpaceWithNbsp line
     in
-        div [ class className ]
+        div [ class "normalLine" ]
             [ span [ class "lineNumber" ] [ text paddedIndex ]
             , textContents
             ]

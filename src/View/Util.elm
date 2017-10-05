@@ -9,6 +9,11 @@ replaceSpaceWithNbsp input =
     span [ class "line-container" ] <| processString input <| Space 0
 
 
+replaceSpaceWithNbspAndClass : String -> String -> Html msg
+replaceSpaceWithNbspAndClass input className =
+    span [ class ("line-container " ++ className) ] <| processString input <| Space 0
+
+
 type InProgress
     = Space Int
     | Characters String

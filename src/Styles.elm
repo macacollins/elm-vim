@@ -8,6 +8,10 @@ main {
   color : #333;
 }
 
+.visual {
+  background-color: aqua;
+}
+
 .selectedLine {
   background-color: #ADADAD;
 }

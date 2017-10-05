@@ -9,6 +9,7 @@ import History exposing (addHistory)
 import Util.Search exposing (searchTo)
 import Modes.Control exposing (controlModeUpdate)
 import Util.ListUtils exposing (..)
+import Util.VisualUtils exposing (..)
 
 
 -- TODO update all these
@@ -149,24 +150,3 @@ getVisualCopyBuffer model =
 handleVisualCopy : Model -> Model
 handleVisualCopy model =
     { model | mode = Control, buffer = InlineBuffer <| getVisualCopyBuffer model }
-
-
-getStartAndEnd : Model -> ( Int, Int, Int, Int )
-getStartAndEnd model =
-    let
-        ( visualX, visualY ) =
-            case model.mode of
-                Visual x y ->
-                    ( x, y )
-
-                _ ->
-                    Debug.log "We weren't in visual mode in the visual mode update file." ( 0, 0 )
-    in
-        if model.cursorY < visualY then
-            ( model.cursorX, model.cursorY, visualX, visualY )
-        else if visualY < model.cursorY then
-            ( visualX, visualY, model.cursorX, model.cursorY )
-        else if (visualX < model.cursorX) then
-            ( visualX, visualY, model.cursorX, model.cursorY )
-        else
-            ( model.cursorX, model.cursorY, visualX, visualY )
