@@ -7,20 +7,20 @@ import Util.ListUtils exposing (..)
 
 handlePaste : Model -> Model
 handlePaste model =
-    let
-        newLines =
-            case model.buffer of
-                LinesBuffer buffer ->
-                    insertMultiple (model.cursorY + 1) model.lines buffer
+    case model.buffer of
+        LinesBuffer buffer ->
+            { model
+                | lines = insertMultiple (model.cursorY + 1) model.lines buffer
+                , cursorX = 0
+                , cursorY =
+                    if List.isEmpty buffer then
+                        model.cursorY
+                    else
+                        model.cursorY + 1
+            }
 
-                InlineBuffer buffer ->
-                    insertInline model buffer
-    in
-        { model
-            | lines = newLines
-            , cursorX = 0
-            , cursorY = model.cursorY + 1
-        }
+        InlineBuffer buffer ->
+            insertInline model buffer
 
 
 handlePasteBefore : Model -> Model
@@ -66,17 +66,24 @@ insertBeforeInline { lines, cursorX, cursorY } buffer =
                 withLineAfter
 
         head :: [] ->
-            (mutateAtIndex cursorY lines (\line -> (String.left cursorX line) ++ head))
+            let
+                ( left, right ) =
+                    splitLine (getLine cursorY lines) (cursorX - 1)
+            in
+                (mutateAtIndex cursorY lines (\line -> left ++ head ++ right))
 
         _ ->
             lines
 
 
-insertInline : Model -> List String -> List String
-insertInline { lines, cursorX, cursorY } buffer =
+insertInline : Model -> List String -> Model
+insertInline model buffer =
     case buffer of
         head :: second :: rest ->
             let
+                { cursorX, cursorY, lines } =
+                    model
+
                 insertLine =
                     getLine cursorY lines
 
@@ -97,10 +104,26 @@ insertInline { lines, cursorX, cursorY } buffer =
                 withLineAfter =
                     mutateAtIndex lastLineIndex withLinesInserted (\line -> line ++ right)
             in
-                withLineAfter
+                { model
+                    | lines = withLineAfter
+                    , cursorY = lastLineIndex
+                }
 
         head :: [] ->
-            (mutateAtIndex cursorY lines (\line -> (String.left (cursorX + 1) line) ++ head))
+            let
+                line =
+                    getLine model.cursorY model.lines
+
+                newLines =
+                    (mutateAtIndex model.cursorY model.lines (\line -> (String.left (model.cursorX + 1) line) ++ head ++ (String.dropLeft (model.cursorX + 1) line)))
+
+                newCursorX =
+                    model.cursorX + (String.length head) - 1
+            in
+                { model
+                    | lines = newLines
+                    , cursorX = newCursorX
+                }
 
         _ ->
-            lines
+            model

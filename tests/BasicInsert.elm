@@ -9,14 +9,6 @@ import List
 import Util.ListUtils exposing (..)
 
 
-canary : Test
-canary =
-    describe "The test suite"
-        [ test "Is it running?" <|
-            \_ -> Expect.equal 1 1
-        ]
-
-
 testBasicInsert : Test
 testBasicInsert =
     describe "Basic Inserts"

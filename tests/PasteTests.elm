@@ -36,6 +36,13 @@ pasteBeforeTests =
                         newStateAfterActions [ Keys "iaa", Escape, Keys "ddP" ]
                 in
                     Expect.equal cursorY 0
+        , test "paste partial buffer before maintains existing lines" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "iaa", Escape, Keys "0DpppP" ]
+                in
+                    Expect.equal lines [ "aaaaaaaa" ]
         , test "paste cursor x." <|
             \_ ->
                 let
@@ -63,6 +70,13 @@ pTests =
                         newStateAfterActions [ Keys "iaa", Escape, Keys "ddp" ]
                 in
                     Expect.equal (getLine 1 lines) "aa"
+        , test "paste in empty lines with empty buffer doesn't do anything" <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions [ Keys "p" ]
+                in
+                    Expect.equal cursorY 0
         , test "paste cursor y." <|
             \_ ->
                 let
@@ -91,4 +105,25 @@ pTests =
                         newStateAfterActions [ Keys "iaaabb", Enter, Keys "bbbcc", Enter, Keys "cccdd", Escape, Keys "0llvklx0p" ]
                 in
                     Expect.equal lines [ "aaabb", "bcc", "cccbbdd" ]
+        , test "pasting a single line doesn't move the cursor down past the end" <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions [ Keys "iaaabb", Escape, Keys "0Dp" ]
+                in
+                    Expect.equal cursorY 0
+        , test "pasting a single line " <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions [ Keys "iaaabb", Escape, Keys "0Dp" ]
+                in
+                    Expect.equal cursorX 4
+        , test "pasting a single line preserves the second part of the line" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "iaaabb", Escape, Keys "0Dp0p" ]
+                in
+                    Expect.equal lines [ "aaaabbaabb" ]
         ]
