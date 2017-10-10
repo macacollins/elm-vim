@@ -20,6 +20,7 @@ import Handlers.JoinLines exposing (joinLines)
 import Handlers.NavigateFile exposing (..)
 import Handlers.NextSearchResult exposing (..)
 import Handlers.LastSearchResults exposing (..)
+import Handlers.DeleteToEndOfLine exposing (..)
 import Util.ListUtils exposing (..)
 import History exposing (addHistory)
 
@@ -43,6 +44,7 @@ dict =
         -- text manipulation
         |> Dict.insert 'J' joinLines
         |> Dict.insert 'd' handleD
+        |> Dict.insert 'D' deleteToEndOfLine
         |> Dict.insert 'i' (\model -> addHistory model { model | mode = Insert })
         |> Dict.insert 'q' (\model -> { model | mode = Macro Control })
         |> Dict.insert '@' (\model -> { model | mode = MacroExecute })
@@ -120,6 +122,7 @@ handleo model =
             }
 
 
+handle0 : Model -> Model
 handle0 model =
     if List.length (List.filter Char.isDigit model.inProgress) > 0 then
         { model | inProgress = '0' :: model.inProgress }
@@ -127,7 +130,20 @@ handle0 model =
         { model | cursorX = 0 }
 
 
+handleDollar : Model -> Model
 handleDollar model =
+    if List.member 'd' model.inProgress then
+        let
+            updatedModel =
+                deleteToEndOfLine model
+        in
+            { updatedModel | inProgress = [] }
+    else
+        navigateToEndOfLine model
+
+
+navigateToEndOfLine : Model -> Model
+navigateToEndOfLine model =
     let
         length =
             String.length <| getLine model.cursorY model.lines

@@ -10,6 +10,46 @@ import Model exposing (PasteBuffer(..))
 import Util.ListUtils exposing (..)
 
 
+deleteToEndOfLineWithDollarTests : Test
+deleteToEndOfLineWithDollarTests =
+    describe "Testing d$"
+        [ test "d$ deletes the contents after the cursor" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "iaaaaabbbbbccccc", Escape, Keys "hhhhhhhd$" ]
+                in
+                    Expect.equal lines [ "aaaaabb" ]
+        , test "d$ copies the text it deletes" <|
+            \_ ->
+                let
+                    { buffer } =
+                        newStateAfterActions [ Keys "iaaaaabbbbbccccc", Escape, Keys "hhhhhhhd$" ]
+                in
+                    Expect.equal buffer (InlineBuffer [ "bbbccccc" ])
+        ]
+
+
+deleteToEndOfLineWithCapitalDTests : Test
+deleteToEndOfLineWithCapitalDTests =
+    describe "Testing D"
+        [ test "D deletes the contents after the cursor" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "iaaaaabbbbbccccc", Escape, Keys "hhhhhhhD" ]
+                in
+                    Expect.equal lines [ "aaaaabb" ]
+        , test "D copies the text it deletes" <|
+            \_ ->
+                let
+                    { buffer } =
+                        newStateAfterActions [ Keys "iaaaaabbbbbccccc", Escape, Keys "hhhhhhhD" ]
+                in
+                    Expect.equal buffer (InlineBuffer [ "bbbccccc" ])
+        ]
+
+
 dTests : Test
 dTests =
     describe "The d key"
