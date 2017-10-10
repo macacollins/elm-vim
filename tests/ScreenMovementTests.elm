@@ -42,3 +42,23 @@ testM =
                 in
                     Expect.equal cursorY 4
         ]
+
+
+testL : Test
+testL =
+    describe "Test moving to the bottom of the screen."
+        [ test "case with more than model.screenHeight goes to start + model.screenHeight" <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions <| [ Keys "i" ] ++ (List.repeat 300 Enter) ++ [ Escape, Keys "ggL" ]
+                in
+                    Expect.equal cursorY 30
+        , test "with fewer than model.screenHeight, go to last line" <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions <| [ Keys "i" ] ++ (List.repeat 3 Enter) ++ [ Escape, Keys "ggL" ]
+                in
+                    Expect.equal cursorY 3
+        ]

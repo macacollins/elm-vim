@@ -38,6 +38,7 @@ dict =
         |> Dict.insert 'b' handleB
         |> Dict.insert 'w' handleW
         |> Dict.insert 'H' moveToTopOfScreen
+        |> Dict.insert 'L' moveToBottomOfScreen
         |> Dict.insert 'M' moveToMiddleOfScreen
         -- text manipulation
         |> Dict.insert 'J' joinLines
