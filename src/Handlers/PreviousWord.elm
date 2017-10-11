@@ -10,6 +10,7 @@ handleB model =
     handleBInner model (getNumberModifier model)
 
 
+handleBInner : Model -> Int -> Model
 handleBInner model countDown =
     let
         { cursorY, cursorX, lines } =
@@ -74,8 +75,13 @@ goToLastNonEmptyLine lines cursorY =
     let
         line =
             getLine cursorY lines
+
+        allPreviousLinesEmpty =
+            List.all (\line -> String.trim line == "") (List.take (cursorY + 1) lines)
     in
-        if String.trim line == "" then
+        if allPreviousLinesEmpty then
+            ( 0, cursorY )
+        else if String.trim line == "" then
             goToLastNonEmptyLine lines (cursorY - 1)
         else
             ( calculateLastWordStart line, cursorY )

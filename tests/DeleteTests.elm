@@ -30,6 +30,110 @@ deleteToEndOfLineWithDollarTests =
         ]
 
 
+deleteWordsTests : Test
+deleteWordsTests =
+    describe "Testing dw"
+        [ test "dw deletes one word" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "ione two three four", Escape, Keys "0dw" ]
+                in
+                    Expect.equal lines [ "two three four" ]
+        , test "dw copies the deleted word" <|
+            \_ ->
+                let
+                    { buffer } =
+                        newStateAfterActions [ Keys "ione two three four", Escape, Keys "0dw" ]
+                in
+                    Expect.equal buffer <| InlineBuffer [ "one " ]
+        , test "dw leaves the cursor where it was" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions [ Keys "ione two three four", Escape, Keys "0dw" ]
+                in
+                    Expect.equal cursorX 0
+        , test "3dw deletes 3 words" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "ione two three four", Escape, Keys "03dw" ]
+                in
+                    Expect.equal lines [ "four" ]
+        , test "3dw copies the deleted words" <|
+            \_ ->
+                let
+                    { buffer } =
+                        newStateAfterActions [ Keys "ione two three four", Escape, Keys "03dw" ]
+                in
+                    Expect.equal buffer <| InlineBuffer [ "one two three " ]
+        , test "3dw clears inProgress" <|
+            \_ ->
+                let
+                    { inProgress } =
+                        newStateAfterActions [ Keys "ione two three four", Escape, Keys "03dw" ]
+                in
+                    Expect.equal inProgress []
+        , test "3dw leaves the cursor where it was" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions [ Keys "ione two three four", Escape, Keys "03dw" ]
+                in
+                    Expect.equal cursorX 0
+        , test "5dw leaves cursorX where it was over multiple lines" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions [ Keys "ione two three", Enter, Keys "four five six", Escape, Keys "0k4dw" ]
+                in
+                    Expect.equal cursorX 0
+        , test "5dw deletes words over multiple lines" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "ione two three", Enter, Keys "four five six", Escape, Keys "0k4dw" ]
+                in
+                    Expect.equal lines [ "five six" ]
+        , test "5dw copies words into the buffer" <|
+            \_ ->
+                let
+                    { buffer } =
+                        newStateAfterActions [ Keys "ione two three", Enter, Keys "four five six", Escape, Keys "0k4dw" ]
+                in
+                    Expect.equal buffer <| InlineBuffer [ "one two three", "four " ]
+        , test "only delete to the next word boundary" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "i one two three", Escape, Keys "0dw" ]
+                in
+                    Expect.equal lines [ "one two three" ]
+        , test "do copy when there's only whitespace" <|
+            \_ ->
+                let
+                    { buffer } =
+                        newStateAfterActions [ Keys "i one two three", Escape, Keys "0dw" ]
+                in
+                    Expect.equal buffer <| InlineBuffer [ " " ]
+        , test "over multiple empty lines, dw only takes one line" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "i", Enter, Enter, Enter, Escape, Keys "ggdw" ]
+                in
+                    Expect.equal lines [ "", "", "" ]
+        , test "multiple dw is the same as dd over empty lines" <|
+            \_ ->
+                let
+                    { lines } =
+                        newStateAfterActions [ Keys "i", Enter, Enter, Enter, Escape, Keys "gg2dw" ]
+                in
+                    Expect.equal lines [ "", "" ]
+        ]
+
+
 deleteToEndOfLineWithCapitalDTests : Test
 deleteToEndOfLineWithCapitalDTests =
     describe "Testing D"
@@ -88,6 +192,13 @@ dTests =
                         newStateAfterActions [ Keys "dd" ]
                 in
                     Expect.equal (List.length lines) 1
+        , test "after deleting past the end of the buffer, cursorY pops up by one" <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions [ Keys "i", Enter, Enter, Escape, Keys "k200dd" ]
+                in
+                    Expect.equal cursorY 0
         ]
 
 

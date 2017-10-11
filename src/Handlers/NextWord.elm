@@ -3,14 +3,40 @@ module Handlers.NextWord exposing (handleW)
 import Model exposing (Model)
 import Util.ListUtils exposing (getLine)
 import Util.ModifierUtils exposing (..)
+import Handlers.CutSegment exposing (cutSegment)
+import Mode exposing (Mode(Visual))
+import Handlers.Navigation exposing (handleLeft)
 
 
--- one test case at a time
+{-
+   This is problematic because it's tightly coupled. The cutSegment utility needs refactoring
+   this pretends we're in visual mode and executing a cut, but the rules might not be identical.
+   Let's write a ton of unit tests and see if this is actually feasible or no
+-}
 
 
 handleW : Model -> Model
 handleW model =
-    handleWInner model (getNumberModifier model)
+    let
+        basicUpdatedModel =
+            handleWInner model (getNumberModifier model)
+
+        leftedModel =
+            handleLeft basicUpdatedModel
+
+        modifiedModelWithVisualModeHack =
+            { model
+                | mode = Visual leftedModel.cursorX leftedModel.cursorY
+            }
+    in
+        if List.member 'd' model.inProgress then
+            let
+                cutSegmentModel =
+                    cutSegment modifiedModelWithVisualModeHack
+            in
+                { cutSegmentModel | inProgress = [] }
+        else
+            basicUpdatedModel
 
 
 handleWInner : Model -> Int -> Model
@@ -72,8 +98,13 @@ goToNextNonEmptyLine lines cursorY =
     let
         line =
             getLine cursorY lines
+
+        restOfLinesAreEmpty =
+            List.all (\line -> String.trim line == "") (List.drop cursorY lines)
     in
-        if String.trim line == "" then
+        if restOfLinesAreEmpty then
+            ( 0, cursorY )
+        else if String.trim line == "" then
             goToNextNonEmptyLine lines (cursorY + 1)
         else
             ( 0, cursorY )

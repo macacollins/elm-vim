@@ -63,9 +63,8 @@ handleBackspaceLine model =
         transform line =
             case removedLine of
                 Just justLine ->
-                    Debug.log "concatting!" <|
-                        line
-                            ++ justLine
+                    line
+                        ++ justLine
 
                 Nothing ->
                     Debug.log "removed line was Nothing." <|

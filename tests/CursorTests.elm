@@ -455,6 +455,14 @@ wTests =
                             [ Keys "iaaaaa", Escape, Keys "hhhhhhhhhhhhhhhhhw" ]
                 in
                     Expect.equal cursorX 5
+        , test "w doesn't cause an infinite loop" <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions
+                            [ Keys "i", Enter, Enter, Enter, Escape, Keys "ggw" ]
+                in
+                    Expect.equal cursorY 1
         , test "test behavior of w with a cursor past the end of the line" <|
             \_ ->
                 let
@@ -517,6 +525,14 @@ bTests =
                             [ Keys "iaaa aaa aaa", Escape, Keys "b" ]
                 in
                     Expect.equal cursorX 8
+        , test "b doesn't crash the program in an empty file" <|
+            \_ ->
+                let
+                    { cursorY } =
+                        newStateAfterActions
+                            [ Keys "i", Enter, Enter, Escape, Keys "b" ]
+                in
+                    Expect.equal cursorY 1
         , test "This is another test" <|
             \_ ->
                 let

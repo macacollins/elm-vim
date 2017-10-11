@@ -38,10 +38,17 @@ handleD model =
 
                 Nothing ->
                     ( LinesBuffer [ "" ], model.pastStates )
+
+        updatedCursorY =
+            if model.cursorY > List.length actualLines - 1 then
+                List.length actualLines - 1
+            else
+                model.cursorY
     in
         { model
             | inProgress = newInProgress
             , lines = actualLines
             , buffer = newBuffer
             , pastStates = newPastStates
+            , cursorY = updatedCursorY
         }
