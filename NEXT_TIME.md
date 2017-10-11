@@ -1,6 +1,10 @@
 Pick one!
 
-make paste work better for visual mode
+add redo / undo support for d(wbhjkl)
+add dh and dl
+fix visual mode when it's all on one line
+
+add y for hjklbw
 
 highlighting for search
 add numbers to Macros

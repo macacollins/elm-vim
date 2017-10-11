@@ -39,6 +39,10 @@ splitLine string index =
     ( String.left index string, String.dropLeft index string )
 
 
+
+-- TODO change this API; we always remove stuff
+
+
 removeSlice : Int -> Int -> List String -> ( List String, Maybe (List String) )
 removeSlice start end list =
     let
@@ -47,6 +51,9 @@ removeSlice start end list =
                 end
             else
                 List.length list
+
+        deleteme =
+            start
 
         startPart =
             List.take start list

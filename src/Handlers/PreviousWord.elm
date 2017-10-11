@@ -3,11 +3,38 @@ module Handlers.PreviousWord exposing (..)
 import Model exposing (Model)
 import Util.ListUtils exposing (getLine)
 import Util.ModifierUtils exposing (..)
+import Handlers.CutSegment exposing (cutSegment)
+import Mode exposing (Mode(Visual))
+import Handlers.Navigation exposing (handleLeft)
 
 
 handleB : Model -> Model
 handleB model =
-    handleBInner model (getNumberModifier model)
+    let
+        basicUpdatedModel =
+            handleBInner model (getNumberModifier model)
+
+        leftedModel =
+            model
+
+        leftUpdated =
+            handleBInner leftedModel (getNumberModifier model)
+
+        modifiedModelWithVisualModeHack =
+            { model
+                | mode = Visual (leftedModel.cursorX - 1) leftedModel.cursorY
+                , cursorX = leftUpdated.cursorX
+                , cursorY = leftUpdated.cursorY
+            }
+    in
+        if List.member 'd' model.inProgress then
+            let
+                cutSegmentModel =
+                    cutSegment modifiedModelWithVisualModeHack
+            in
+                { cutSegmentModel | inProgress = [] }
+        else
+            basicUpdatedModel
 
 
 handleBInner : Model -> Int -> Model

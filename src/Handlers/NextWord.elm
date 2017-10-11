@@ -4,8 +4,8 @@ import Model exposing (Model)
 import Util.ListUtils exposing (getLine)
 import Util.ModifierUtils exposing (..)
 import Handlers.CutSegment exposing (cutSegment)
-import Mode exposing (Mode(Visual))
 import Handlers.Navigation exposing (handleLeft)
+import Mode exposing (Mode(Visual))
 
 
 {-
