@@ -1,4 +1,4 @@
-module Handlers.NewLine exposing (handleNewLine)
+module Control.NewLine exposing (handleNewLine)
 
 import Model exposing (Model)
 import List exposing (..)

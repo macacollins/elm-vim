@@ -1,4 +1,4 @@
-module Handlers.Redo exposing (..)
+module Control.Redo exposing (..)
 
 import Model exposing (Model)
 import History exposing (..)

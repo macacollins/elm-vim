@@ -1,4 +1,4 @@
-module Handlers.Paste exposing (handlePaste, handlePasteBefore)
+module Control.Paste exposing (handlePaste, handlePasteBefore)
 
 import Model exposing (..)
 import List

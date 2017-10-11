@@ -1,4 +1,4 @@
-module Handlers.DeleteToEndOfLine exposing (deleteToEndOfLine)
+module Control.DeleteToEndOfLine exposing (deleteToEndOfLine)
 
 import Model exposing (Model, PasteBuffer(..))
 import Util.ListUtils exposing (mutateAtIndex, getLine)

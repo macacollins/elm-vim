@@ -1,10 +1,10 @@
-module Handlers.NextWord exposing (handleW)
+module Control.NextWord exposing (handleW)
 
 import Model exposing (Model)
 import Util.ListUtils exposing (getLine)
 import Util.ModifierUtils exposing (..)
-import Handlers.CutSegment exposing (cutSegment)
-import Handlers.Navigation exposing (handleLeft)
+import Control.CutSegment exposing (cutSegment)
+import Control.Navigation exposing (handleLeft)
 import Mode exposing (Mode(Visual))
 
 

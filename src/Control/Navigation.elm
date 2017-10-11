@@ -1,4 +1,4 @@
-module Handlers.Navigation exposing (handleUp, handleDown, handleLeft, handleRight)
+module Control.Navigation exposing (handleUp, handleDown, handleLeft, handleRight)
 
 import Model exposing (Model, PasteBuffer(..))
 import Util.ListUtils exposing (getLine, removeSlice)

@@ -1,4 +1,4 @@
-module Handlers.InsertCharacter exposing (handleInsertCharacter)
+module Control.InsertCharacter exposing (handleInsertCharacter)
 
 import List exposing (..)
 import Char

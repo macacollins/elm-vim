@@ -1,4 +1,4 @@
-module Handlers.JoinLines exposing (joinLines)
+module Control.JoinLines exposing (joinLines)
 
 import Util.ListUtils exposing (getLine, removeAtIndex, mutateAtIndex)
 import Model exposing (Model)

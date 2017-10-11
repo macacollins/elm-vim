@@ -1,4 +1,4 @@
-module Handlers.Undo exposing (..)
+module Control.Undo exposing (..)
 
 import Model exposing (..)
 import History exposing (..)

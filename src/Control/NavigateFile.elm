@@ -1,4 +1,4 @@
-module Handlers.NavigateFile exposing (..)
+module Control.NavigateFile exposing (..)
 
 import Model exposing (Model)
 import Util.ListUtils exposing (getLine)

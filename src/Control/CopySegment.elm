@@ -1,4 +1,4 @@
-module Handlers.CopySegment exposing (getSegmentCopyBuffer)
+module Control.CopySegment exposing (getSegmentCopyBuffer)
 
 import Util.VisualUtils exposing (..)
 import Util.ListUtils exposing (..)

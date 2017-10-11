@@ -7,6 +7,8 @@ import Mode exposing (Mode(..))
 import Modes.Control exposing (controlModeUpdate)
 import Modes.Visual exposing (visualModeUpdate)
 import Modes.Insert exposing (insertModeUpdate)
+import Modes.Yank exposing (yankModeUpdate)
+import Modes.Delete exposing (deleteModeUpdate)
 import Modes.Search exposing (searchModeUpdate)
 import Modes.MacroRecord exposing (macroRecordModeUpdate)
 import Keyboard exposing (KeyCode)
@@ -41,6 +43,12 @@ updateKeyInput keyPress mode model =
 
         Control ->
             controlModeUpdate model keyPress
+
+        Yank ->
+            yankModeUpdate model keyPress
+
+        Delete ->
+            deleteModeUpdate model keyPress
 
         Search ->
             searchModeUpdate model keyPress

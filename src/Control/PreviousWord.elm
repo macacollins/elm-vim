@@ -1,11 +1,11 @@
-module Handlers.PreviousWord exposing (..)
+module Control.PreviousWord exposing (..)
 
 import Model exposing (Model)
 import Util.ListUtils exposing (getLine)
 import Util.ModifierUtils exposing (..)
-import Handlers.CutSegment exposing (cutSegment)
+import Control.CutSegment exposing (cutSegment)
 import Mode exposing (Mode(Visual))
-import Handlers.Navigation exposing (handleLeft)
+import Control.Navigation exposing (handleLeft)
 
 
 handleB : Model -> Model

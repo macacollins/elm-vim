@@ -1,4 +1,4 @@
-module Handlers.Delete exposing (handleD)
+module Control.Delete exposing (handleD)
 
 import Model exposing (Model, PasteBuffer(..))
 import List

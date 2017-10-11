@@ -6,8 +6,8 @@ import Keyboard exposing (KeyCode)
 import Char
 import Mode exposing (Mode(..))
 import Modes.Control exposing (controlModeUpdate)
-import Handlers.CutSegment exposing (cutSegment)
-import Handlers.CopySegment exposing (getSegmentCopyBuffer)
+import Control.CutSegment exposing (cutSegment)
+import Control.CopySegment exposing (getSegmentCopyBuffer)
 
 
 visualModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )

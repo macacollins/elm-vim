@@ -1,7 +1,7 @@
-module Handlers.CutSegment exposing (cutSegment)
+module Control.CutSegment exposing (cutSegment)
 
 import Model exposing (Model, PasteBuffer(..))
-import Handlers.CopySegment exposing (getSegmentCopyBuffer)
+import Control.CopySegment exposing (getSegmentCopyBuffer)
 import Util.VisualUtils exposing (..)
 import Util.ListUtils exposing (..)
 import Mode exposing (Mode(Control))

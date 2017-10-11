@@ -1,4 +1,4 @@
-module Handlers.ScreenMovement exposing (..)
+module Control.ScreenMovement exposing (..)
 
 import Model exposing (Model)
 

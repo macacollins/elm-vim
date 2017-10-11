@@ -1,4 +1,4 @@
-module Handlers.Yank exposing (..)
+module Control.Yank exposing (..)
 
 import Model exposing (Model, PasteBuffer(..))
 import List

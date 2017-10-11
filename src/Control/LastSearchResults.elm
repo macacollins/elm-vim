@@ -1,4 +1,4 @@
-module Handlers.LastSearchResults exposing (handleCapitalN)
+module Control.LastSearchResults exposing (handleCapitalN)
 
 import Model exposing (Model)
 import Util.Search exposing (searchBackwards)

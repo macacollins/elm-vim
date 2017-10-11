@@ -3,9 +3,9 @@ module Modes.Insert exposing (insertModeUpdate)
 import Model exposing (Model)
 import Keyboard exposing (KeyCode)
 import Mode exposing (Mode(Control))
-import Handlers.NewLine exposing (handleNewLine)
-import Handlers.InsertCharacter exposing (handleInsertCharacter)
-import Handlers.DeleteCharacter exposing (handleBackspace)
+import Control.NewLine exposing (handleNewLine)
+import Control.InsertCharacter exposing (handleInsertCharacter)
+import Control.DeleteCharacter exposing (handleBackspace)
 import History exposing (addHistory)
 
 

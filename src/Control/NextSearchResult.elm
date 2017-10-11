@@ -1,4 +1,4 @@
-module Handlers.NextSearchResult exposing (handleN)
+module Control.NextSearchResult exposing (handleN)
 
 import Model exposing (Model)
 import Util.Search exposing (searchTo)
