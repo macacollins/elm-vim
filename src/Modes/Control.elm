@@ -37,7 +37,7 @@ dict =
         |> Dict.insert 'j' handleDown
         |> Dict.insert 'k' handleUp
         |> Dict.insert 'b' handleB
-        |> Dict.insert 'w' handleW
+        |> Dict.insert 'w' navigateToNextWord
         |> Dict.insert 'H' moveToTopOfScreen
         |> Dict.insert 'L' moveToBottomOfScreen
         |> Dict.insert 'M' moveToMiddleOfScreen

@@ -1,4 +1,4 @@
-module Control.NextWord exposing (handleW, deleteToNextWord)
+module Control.NextWord exposing (navigateToNextWord)
 
 import Model exposing (Model)
 import Util.ListUtils exposing (getLine)
@@ -8,41 +8,13 @@ import Control.Navigation exposing (handleLeft)
 import Mode exposing (Mode(Visual))
 
 
-{-
-   This is problematic because it's tightly coupled. The cutSegment utility needs refactoring
-   this pretends we're in visual mode and executing a cut, but the rules might not be identical.
-   Let's write a ton of unit tests and see if this is actually feasible or no
--}
+navigateToNextWord : Model -> Model
+navigateToNextWord model =
+    navigateToNextWordInner model (getNumberModifier model)
 
 
-deleteToNextWord : Model -> Model
-deleteToNextWord model =
-    let
-        basicUpdatedModel =
-            handleWInner model (getNumberModifier model)
-
-        leftedModel =
-            handleLeft basicUpdatedModel
-
-        modifiedModelWithVisualModeHack =
-            { model
-                | mode = Visual leftedModel.cursorX leftedModel.cursorY
-            }
-    in
-        let
-            cutSegmentModel =
-                cutSegment modifiedModelWithVisualModeHack
-        in
-            { cutSegmentModel | inProgress = [] }
-
-
-handleW : Model -> Model
-handleW model =
-    handleWInner model (getNumberModifier model)
-
-
-handleWInner : Model -> Int -> Model
-handleWInner model numberLeft =
+navigateToNextWordInner : Model -> Int -> Model
+navigateToNextWordInner model numberLeft =
     let
         { cursorY, cursorX, lines } =
             model
@@ -75,7 +47,7 @@ handleWInner model numberLeft =
             { model | cursorX = newCursorX, cursorY = newCursorY }
     in
         if numberLeft > 1 then
-            handleWInner
+            navigateToNextWordInner
                 updatedModel
                 (numberLeft - 1)
         else

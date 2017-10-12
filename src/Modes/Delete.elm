@@ -6,12 +6,11 @@ import Mode exposing (Mode(Control))
 import Delete.Delete exposing (..)
 import Delete.DeleteToEndOfLine exposing (..)
 import Delete.DeleteCharacter exposing (..)
+import Delete.DeleteNavigationKeys exposing (..)
+import Delete.DeleteWords exposing (..)
 import Modes.Control exposing (controlModeUpdate)
 import Char
 import Dict exposing (Dict)
-import Control.Navigation exposing (..)
-import Control.PreviousWord exposing (..)
-import Control.NextWord exposing (..)
 
 
 dict : Dict Char (Model -> Model)
@@ -20,7 +19,7 @@ dict =
         |> Dict.insert 'd' handleD
         -- TODO move this to next word
         |> Dict.insert 'w' deleteToNextWord
-        |> Dict.insert 'b' deleteBackOneWord
+        |> Dict.insert 'b' deleteBackWords
         |> Dict.insert 'j' deleteDown
         |> Dict.insert 'k' deleteUp
         |> Dict.insert '$' deleteToEndOfLine
