@@ -1,11 +1,11 @@
 module Delete.Delete exposing (handleD)
 
 import Model exposing (Model, PasteBuffer(..))
-import List
 import Mode exposing (Mode(..))
+import List
 import Util.ListUtils exposing (..)
-import History exposing (getUpdatedHistory)
 import Util.ModifierUtils exposing (..)
+import History exposing (getUpdatedHistory)
 
 
 handleD : Model -> Model

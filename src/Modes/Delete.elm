@@ -22,6 +22,8 @@ dict =
         |> Dict.insert 'b' deleteBackWords
         |> Dict.insert 'j' deleteDown
         |> Dict.insert 'k' deleteUp
+        |> Dict.insert 'h' deleteLeft
+        |> Dict.insert 'l' deleteRight
         |> Dict.insert '$' deleteToEndOfLine
 
 

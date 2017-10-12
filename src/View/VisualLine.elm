@@ -22,7 +22,12 @@ getVisualTextContents model index line =
         ( startX, startY, endX, endY ) =
             getStartAndEnd model
     in
-        if startY == actualIndex then
+        if startY == actualIndex && endY == actualIndex then
+            if startX == endX then
+                renderLineWithCursor model index line
+            else
+                renderLineWithVisualStartAndEnd model line
+        else if startY == actualIndex then
             renderLineWithVisualStart model index line
         else if startY < actualIndex && actualIndex < endY then
             replaceSpaceWithNbspAndClass line "visual"
@@ -30,6 +35,50 @@ getVisualTextContents model index line =
             renderLineWithVisualEnd model index line
         else
             replaceSpaceWithNbsp line
+
+
+renderLineWithVisualStartAndEnd model line =
+    if String.length line == 0 then
+        span [ id "cursor" ] [ text "_" ]
+    else
+        let
+            ( startX, startY, endX, endY ) =
+                getStartAndEnd model
+
+            before =
+                String.slice 0 startX line
+
+            maybeMiddleStart =
+                String.slice startX (startX + 1) line
+
+            maybeMiddleInner =
+                String.slice (startX + 1) endX line
+
+            maybeMiddleEnd =
+                String.slice endX (endX + 1) line
+
+            after =
+                String.slice (endX + 1) (String.length line + 1) line
+
+            selectedIndexStart =
+                if String.length maybeMiddleStart == 0 then
+                    "_"
+                else
+                    maybeMiddleStart
+
+            selectedIndexEnd =
+                if String.length maybeMiddleEnd == 0 then
+                    "_"
+                else
+                    maybeMiddleEnd
+        in
+            span []
+                [ replaceSpaceWithNbsp before
+                , span [ id "cursor" ] [ text <| selectedIndexStart ]
+                , replaceSpaceWithNbspAndClass maybeMiddleInner "visual"
+                , span [ id "cursor" ] [ text <| selectedIndexEnd ]
+                , replaceSpaceWithNbsp after
+                ]
 
 
 renderLineWithVisualStart model index line =

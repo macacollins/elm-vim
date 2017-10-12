@@ -1,17 +1,52 @@
-module Delete.DeleteNavigationKeys exposing (deleteUp, deleteDown)
+module Delete.DeleteNavigationKeys exposing (deleteUp, deleteDown, deleteLeft, deleteRight)
 
 import Model exposing (Model, PasteBuffer(..))
 import Util.ListUtils exposing (getLine, removeSlice)
 import Util.ModifierUtils exposing (..)
 import Control.Navigation exposing (..)
+import Control.CutSegment exposing (cutSegment)
+import Mode exposing (Mode(..))
+
+
+deleteRight : Model -> Model
+deleteRight model =
+    let
+        { cursorX } =
+            handleRight model
+
+        updatedModel =
+            { model
+                | mode = Visual model.cursorX model.cursorY
+                , cursorX = cursorX - 1
+            }
+    in
+        cutSegment updatedModel
+
+
+deleteLeft : Model -> Model
+deleteLeft model =
+    let
+        { cursorX } =
+            handleLeft model
+
+        numberModifier =
+            getNumberModifier model
+
+        updatedModel =
+            { model
+                | mode = Visual cursorX model.cursorY
+                , cursorX = model.cursorX - 1
+            }
+                |> cutSegment
+    in
+        { updatedModel
+            | cursorX = cursorX
+        }
 
 
 deleteUp : Model -> Model
 deleteUp model =
     let
-        numberModifier =
-            getNumberModifier model
-
         { cursorY } =
             handleUp model
     in
@@ -21,9 +56,6 @@ deleteUp model =
 deleteDown : Model -> Model
 deleteDown model =
     let
-        numberModifier =
-            getNumberModifier model
-
         { cursorY } =
             handleDown model
     in

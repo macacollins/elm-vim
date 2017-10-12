@@ -118,43 +118,40 @@ deleteUpTests =
         ]
 
 
-
-{-
-   deleteLeftTests : Test
-   deleteLeftTests =
-       describe "deleting left"
-           [ describe "single dh" <|
-               let
-                   { lines, cursorX, buffer, cursorY } =
-                       newStateAfterActions [ Keys "i1234", Escape, Keys "dh" ]
-               in
-                   [ test "dh works like backspace" <|
-                       \_ ->
-                           Expect.equal lines [ "124" ]
-                   , test "dh copies the deleted character" <|
-                       \_ ->
-                           Expect.equal buffer <| InlineBuffer [ "3" ]
-                   , test "dh moves cursorX back when deleting the character" <|
-                       \_ ->
-                           Expect.equal cursorX 2
-                   ]
-           , describe "double dh" <|
-               let
-                   { lines, cursorX, buffer, cursorY } =
-                       newStateAfterActions [ Keys "i1234", Escape, Keys "2dh" ]
-               in
-                   [ test "2dh works like backspace twice" <|
-                       \_ ->
-                           Expect.equal lines [ "14" ]
-                   , test "2dh copies the deleted character" <|
-                       \_ ->
-                           Expect.equal buffer <| InlineBuffer [ "23" ]
-                   , test "2dh moves cursorX back when deleting the character" <|
-                       \_ ->
-                           Expect.equal cursorX 1
-                   ]
-           ]
--}
+deleteLeftTests : Test
+deleteLeftTests =
+    describe "deleting left"
+        [ describe "single dh" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1234", Escape, Keys "dh" ]
+            in
+                [ test "dh works like backspace" <|
+                    \_ ->
+                        Expect.equal lines [ "124" ]
+                , test "dh copies the deleted character" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "3" ]
+                , test "dh moves cursorX back when deleting the character" <|
+                    \_ ->
+                        Expect.equal cursorX 2
+                ]
+        , describe "double dh" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1234", Escape, Keys "2dh" ]
+            in
+                [ test "2dh works like backspace twice" <|
+                    \_ ->
+                        Expect.equal lines [ "14" ]
+                , test "2dh copies the deleted character" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "23" ]
+                , test "2dh moves cursorX back when deleting the character" <|
+                    \_ ->
+                        Expect.equal cursorX 1
+                ]
+        ]
 
 
 deleteDownTests : Test
