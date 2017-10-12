@@ -57,7 +57,7 @@ dict =
         |> Dict.insert '0' handle0
         |> Dict.insert 'G' handleG
         |> Dict.insert 'g' handleLittleG
-        |> Dict.insert '$' handleDollar
+        |> Dict.insert '$' navigateToEndOfLine
         |> Dict.insert 'u' handleU
         |> Dict.insert 'R' handleR
         |> Dict.insert 'X' handleBackspace
@@ -128,18 +128,6 @@ handle0 model =
         { model | inProgress = '0' :: model.inProgress }
     else
         { model | cursorX = 0 }
-
-
-handleDollar : Model -> Model
-handleDollar model =
-    if List.member 'd' model.inProgress then
-        let
-            updatedModel =
-                deleteToEndOfLine model
-        in
-            { updatedModel | inProgress = [] }
-    else
-        navigateToEndOfLine model
 
 
 navigateToEndOfLine : Model -> Model
