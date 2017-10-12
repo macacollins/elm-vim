@@ -154,6 +154,42 @@ deleteLeftTests =
         ]
 
 
+deleteRightTests : Test
+deleteRightTests =
+    describe "deleting right"
+        [ describe "single dl" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1234", Escape, Keys "0dl" ]
+            in
+                [ test "dl works like backspace" <|
+                    \_ ->
+                        Expect.equal lines [ "234" ]
+                , test "dl copies the deleted character" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "1" ]
+                , test "dl moves cursorX back when deleting the character" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                ]
+        , describe "double dh" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1234", Escape, Keys "02dl" ]
+            in
+                [ test "2dl works like delete twice" <|
+                    \_ ->
+                        Expect.equal lines [ "34" ]
+                , test "2dl copies the deleted character" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "12" ]
+                , test "2dl keeps cursorX back when deleting the character" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                ]
+        ]
+
+
 deleteDownTests : Test
 deleteDownTests =
     describe "deleting down"

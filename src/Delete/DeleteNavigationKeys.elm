@@ -16,11 +16,14 @@ deleteRight model =
 
         updatedModel =
             { model
-                | mode = Visual model.cursorX model.cursorY
+                | mode = Visual (model.cursorX) model.cursorY
                 , cursorX = cursorX - 1
             }
+                |> cutSegment
     in
-        cutSegment updatedModel
+        { updatedModel
+            | cursorX = model.cursorX
+        }
 
 
 deleteLeft : Model -> Model
@@ -28,9 +31,6 @@ deleteLeft model =
     let
         { cursorX } =
             handleLeft model
-
-        numberModifier =
-            getNumberModifier model
 
         updatedModel =
             { model
