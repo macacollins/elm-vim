@@ -1,7 +1,7 @@
 module Control.CutSegment exposing (cutSegment)
 
 import Model exposing (Model, PasteBuffer(..))
-import Control.CopySegment exposing (getSegmentCopyBuffer)
+import Yank.CopySegment exposing (getSegmentCopyBuffer)
 import Util.VisualUtils exposing (..)
 import Util.ListUtils exposing (..)
 import Mode exposing (Mode(Control))

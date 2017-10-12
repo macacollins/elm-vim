@@ -1,4 +1,4 @@
-module Control.NextWord exposing (handleW)
+module Control.NextWord exposing (handleW, deleteToNextWord)
 
 import Model exposing (Model)
 import Util.ListUtils exposing (getLine)
@@ -15,8 +15,8 @@ import Mode exposing (Mode(Visual))
 -}
 
 
-handleW : Model -> Model
-handleW model =
+deleteToNextWord : Model -> Model
+deleteToNextWord model =
     let
         basicUpdatedModel =
             handleWInner model (getNumberModifier model)
@@ -29,14 +29,16 @@ handleW model =
                 | mode = Visual leftedModel.cursorX leftedModel.cursorY
             }
     in
-        if List.member 'd' model.inProgress then
-            let
-                cutSegmentModel =
-                    cutSegment modifiedModelWithVisualModeHack
-            in
-                { cutSegmentModel | inProgress = [] }
-        else
-            basicUpdatedModel
+        let
+            cutSegmentModel =
+                cutSegment modifiedModelWithVisualModeHack
+        in
+            { cutSegmentModel | inProgress = [] }
+
+
+handleW : Model -> Model
+handleW model =
+    handleWInner model (getNumberModifier model)
 
 
 handleWInner : Model -> Int -> Model

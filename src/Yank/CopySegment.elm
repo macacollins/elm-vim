@@ -1,4 +1,4 @@
-module Control.CopySegment exposing (getSegmentCopyBuffer)
+module Yank.CopySegment exposing (getSegmentCopyBuffer)
 
 import Util.VisualUtils exposing (..)
 import Util.ListUtils exposing (..)

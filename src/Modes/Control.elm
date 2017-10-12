@@ -6,13 +6,13 @@ import List exposing (..)
 import Dict exposing (Dict)
 import Char
 import Mode exposing (Mode(..))
-import Control.DeleteCharacter exposing (..)
+import Delete.DeleteCharacter exposing (..)
 import Control.ScreenMovement exposing (..)
-import Control.Delete exposing (..)
+import Delete.Delete exposing (..)
 import Control.Undo exposing (..)
 import Control.Redo exposing (..)
 import Control.Paste exposing (..)
-import Control.Yank exposing (..)
+import Yank.Yank exposing (..)
 import Control.Navigation exposing (..)
 import Control.PreviousWord exposing (..)
 import Control.NextWord exposing (..)
@@ -20,7 +20,7 @@ import Control.JoinLines exposing (joinLines)
 import Control.NavigateFile exposing (..)
 import Control.NextSearchResult exposing (..)
 import Control.LastSearchResults exposing (..)
-import Control.DeleteToEndOfLine exposing (..)
+import Delete.DeleteToEndOfLine exposing (..)
 import Util.ListUtils exposing (..)
 import History exposing (addHistory)
 
@@ -43,7 +43,6 @@ dict =
         |> Dict.insert 'M' moveToMiddleOfScreen
         -- text manipulation
         |> Dict.insert 'J' joinLines
-        |> Dict.insert 'd' handleD
         |> Dict.insert 'D' deleteToEndOfLine
         |> Dict.insert 'i' (\model -> addHistory model { model | mode = Insert })
         |> Dict.insert 'q' (\model -> { model | mode = Macro Control })
@@ -55,7 +54,6 @@ dict =
         |> Dict.insert 'o' handleo
         |> Dict.insert 'p' (\model -> addHistory model <| handlePaste model)
         |> Dict.insert 'P' (\model -> addHistory model <| handlePasteBefore model)
-        |> Dict.insert 'y' handleY
         |> Dict.insert '0' handle0
         |> Dict.insert 'G' handleG
         |> Dict.insert 'g' handleLittleG
@@ -63,6 +61,8 @@ dict =
         |> Dict.insert 'u' handleU
         |> Dict.insert 'R' handleR
         |> Dict.insert 'X' handleBackspace
+        |> Dict.insert 'y' (\model -> { model | mode = Yank })
+        |> Dict.insert 'd' (\model -> { model | mode = Delete })
         |> Dict.insert 'v' (\model -> { model | mode = Visual model.cursorX model.cursorY })
         |> Dict.insert '/' (\model -> { model | mode = Search })
 

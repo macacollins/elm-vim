@@ -8,12 +8,9 @@ import Mode exposing (Mode(Visual))
 import Control.Navigation exposing (handleLeft)
 
 
-handleB : Model -> Model
-handleB model =
+deleteBackOneWord : Model -> Model
+deleteBackOneWord model =
     let
-        basicUpdatedModel =
-            handleBInner model (getNumberModifier model)
-
         leftedModel =
             model
 
@@ -27,14 +24,16 @@ handleB model =
                 , cursorY = leftUpdated.cursorY
             }
     in
-        if List.member 'd' model.inProgress then
-            let
-                cutSegmentModel =
-                    cutSegment modifiedModelWithVisualModeHack
-            in
-                { cutSegmentModel | inProgress = [] }
-        else
-            basicUpdatedModel
+        let
+            cutSegmentModel =
+                cutSegment modifiedModelWithVisualModeHack
+        in
+            { cutSegmentModel | inProgress = [] }
+
+
+handleB : Model -> Model
+handleB model =
+    handleBInner model (getNumberModifier model)
 
 
 handleBInner : Model -> Int -> Model

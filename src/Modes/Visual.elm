@@ -7,7 +7,7 @@ import Char
 import Mode exposing (Mode(..))
 import Modes.Control exposing (controlModeUpdate)
 import Control.CutSegment exposing (cutSegment)
-import Control.CopySegment exposing (getSegmentCopyBuffer)
+import Yank.CopySegment exposing (getSegmentCopyBuffer)
 
 
 visualModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )

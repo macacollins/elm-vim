@@ -1,4 +1,4 @@
-module Control.DeleteCharacter exposing (handleX, handleBackspace)
+module Delete.DeleteCharacter exposing (handleX, handleBackspace)
 
 import Model exposing (Model)
 import List

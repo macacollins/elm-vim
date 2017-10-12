@@ -1,7 +1,8 @@
-module Control.Delete exposing (handleD)
+module Delete.Delete exposing (handleD)
 
 import Model exposing (Model, PasteBuffer(..))
 import List
+import Mode exposing (Mode(..))
 import Util.ListUtils exposing (..)
 import History exposing (getUpdatedHistory)
 import Util.ModifierUtils exposing (..)
@@ -10,20 +11,11 @@ import Util.ModifierUtils exposing (..)
 handleD : Model -> Model
 handleD model =
     let
-        newInProgress =
-            if List.member 'd' model.inProgress then
-                []
-            else
-                'd' :: model.inProgress
-
         numberModifier =
             getNumberModifier model
 
         ( lines, removed ) =
-            if List.member 'd' model.inProgress then
-                removeSlice model.cursorY (model.cursorY + numberModifier) model.lines
-            else
-                ( model.lines, Nothing )
+            removeSlice model.cursorY (model.cursorY + numberModifier) model.lines
 
         actualLines =
             if lines == [] then
@@ -46,9 +38,10 @@ handleD model =
                 model.cursorY
     in
         { model
-            | inProgress = newInProgress
+            | inProgress = []
             , lines = actualLines
             , buffer = newBuffer
             , pastStates = newPastStates
+            , mode = Control
             , cursorY = updatedCursorY
         }

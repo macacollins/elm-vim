@@ -70,14 +70,14 @@ macroBufferTests =
             \_ ->
                 let
                     { macroModel } =
-                        newStateAfterActions [ Keys "qqab", Enter, Keys "cdq" ]
+                        newStateAfterActions [ Keys "qqab", Enter, Keys "cd", Escape, Keys "q" ]
                 in
                     Expect.equal macroModel.buffer []
         , test "Clear out raw buffer as well" <|
             \_ ->
                 let
                     { macroModel } =
-                        newStateAfterActions [ Keys "qqab", Enter, Keys "cdq" ]
+                        newStateAfterActions [ Keys "qqiab", Enter, Keys "cd", Escape, Keys "q" ]
                 in
                     Expect.equal macroModel.rawBuffer []
         ]

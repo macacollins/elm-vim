@@ -5,7 +5,7 @@ import Keyboard exposing (KeyCode)
 import Mode exposing (Mode(Control))
 import Control.NewLine exposing (handleNewLine)
 import Control.InsertCharacter exposing (handleInsertCharacter)
-import Control.DeleteCharacter exposing (handleBackspace)
+import Delete.DeleteCharacter exposing (handleBackspace)
 import History exposing (addHistory)
 
 

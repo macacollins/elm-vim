@@ -1,8 +1,23 @@
-module Control.Navigation exposing (handleUp, handleDown, handleLeft, handleRight)
+module Control.Navigation exposing (handleUp, handleDown, handleLeft, handleRight, deleteUp, deleteDown)
 
 import Model exposing (Model, PasteBuffer(..))
 import Util.ListUtils exposing (getLine, removeSlice)
 import Util.ModifierUtils exposing (..)
+
+
+deleteUp : Model -> Model
+deleteUp model =
+    let
+        numberModifier =
+            getNumberModifier model
+
+        newCursorY =
+            if numberModifier > model.cursorY then
+                0
+            else
+                model.cursorY - numberModifier
+    in
+        cutLines newCursorY model.cursorY model
 
 
 handleUp : Model -> Model
@@ -23,14 +38,11 @@ handleUp model =
             else
                 model.firstLine
     in
-        if List.member 'd' model.inProgress then
-            cutLines newCursorY model.cursorY model
-        else
-            { model
-                | inProgress = []
-                , cursorY = newCursorY
-                , firstLine = newFirstLine
-            }
+        { model
+            | inProgress = []
+            , cursorY = newCursorY
+            , firstLine = newFirstLine
+        }
 
 
 
@@ -76,6 +88,21 @@ cutLines start finish model =
 
             _ ->
                 model
+
+
+deleteDown : Model -> Model
+deleteDown model =
+    let
+        numberModifier =
+            getNumberModifier model
+
+        newCursorY =
+            if numberModifier + model.cursorY > List.length model.lines - 1 then
+                List.length model.lines - 1
+            else
+                model.cursorY + numberModifier
+    in
+        cutLines model.cursorY newCursorY model
 
 
 handleDown : Model -> Model
