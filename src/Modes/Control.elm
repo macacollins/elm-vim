@@ -8,11 +8,10 @@ import Char
 import Mode exposing (Mode(..))
 import Delete.DeleteCharacter exposing (..)
 import Control.ScreenMovement exposing (..)
-import Delete.Delete exposing (..)
 import Control.Undo exposing (..)
 import Control.Redo exposing (..)
 import Control.Paste exposing (..)
-import Yank.Yank exposing (..)
+import Yank.YankLines exposing (..)
 import Control.Navigation exposing (..)
 import Control.PreviousWord exposing (..)
 import Control.NextWord exposing (..)
@@ -36,7 +35,7 @@ dict =
         |> Dict.insert 'h' handleLeft
         |> Dict.insert 'j' handleDown
         |> Dict.insert 'k' handleUp
-        |> Dict.insert 'b' handleB
+        |> Dict.insert 'b' navigateToLastWord
         |> Dict.insert 'w' navigateToNextWord
         |> Dict.insert 'H' moveToTopOfScreen
         |> Dict.insert 'L' moveToBottomOfScreen
@@ -47,19 +46,19 @@ dict =
         |> Dict.insert 'i' (\model -> addHistory model { model | mode = Insert })
         |> Dict.insert 'q' (\model -> { model | mode = Macro Control })
         |> Dict.insert '@' (\model -> { model | mode = MacroExecute })
-        |> Dict.insert 'x' (\model -> addHistory model <| handleX model)
-        |> Dict.insert 'n' (\model -> handleN model)
-        |> Dict.insert 'N' handleCapitalN
+        |> Dict.insert 'x' (\model -> addHistory model <| deleteCharacterUnderCursor model)
+        |> Dict.insert 'n' navigateToNextSearchResult
+        |> Dict.insert 'N' navigateToLastSearchResult
         |> Dict.insert 'O' handleO
         |> Dict.insert 'o' handleo
         |> Dict.insert 'p' (\model -> addHistory model <| handlePaste model)
         |> Dict.insert 'P' (\model -> addHistory model <| handlePasteBefore model)
-        |> Dict.insert '0' handle0
+        |> Dict.insert '0' navigateToStartOfLine
         |> Dict.insert 'G' handleG
         |> Dict.insert 'g' handleLittleG
         |> Dict.insert '$' navigateToEndOfLine
-        |> Dict.insert 'u' handleU
-        |> Dict.insert 'R' handleR
+        |> Dict.insert 'u' handleUndo
+        |> Dict.insert 'R' handleRedo
         |> Dict.insert 'X' handleBackspace
         |> Dict.insert 'y' (\model -> { model | mode = Yank })
         |> Dict.insert 'd' (\model -> { model | mode = Delete })
@@ -122,8 +121,8 @@ handleo model =
             }
 
 
-handle0 : Model -> Model
-handle0 model =
+navigateToStartOfLine : Model -> Model
+navigateToStartOfLine model =
     if List.length (List.filter Char.isDigit model.inProgress) > 0 then
         { model | inProgress = '0' :: model.inProgress }
     else

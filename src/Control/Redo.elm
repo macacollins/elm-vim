@@ -4,8 +4,8 @@ import Model exposing (Model)
 import History exposing (..)
 
 
-handleR : Model -> Model
-handleR model =
+handleRedo : Model -> Model
+handleRedo model =
     case List.head model.futureStates of
         Just futureState ->
             { model

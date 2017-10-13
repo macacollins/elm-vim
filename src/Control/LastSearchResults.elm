@@ -1,11 +1,11 @@
-module Control.LastSearchResults exposing (handleCapitalN)
+module Control.LastSearchResults exposing (navigateToLastSearchResult)
 
 import Model exposing (Model)
 import Util.Search exposing (searchBackwards)
 
 
-handleCapitalN : Model -> Model
-handleCapitalN model =
+navigateToLastSearchResult : Model -> Model
+navigateToLastSearchResult model =
     case searchBackwards model.searchString model of
         Just updatedModel ->
             updatedModel

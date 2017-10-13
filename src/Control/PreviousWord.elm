@@ -8,13 +8,13 @@ import Mode exposing (Mode(Visual))
 import Control.Navigation exposing (handleLeft)
 
 
-handleB : Model -> Model
-handleB model =
-    handleBInner model (getNumberModifier model)
+navigateToLastWord : Model -> Model
+navigateToLastWord model =
+    navigateToLastWordInner model (getNumberModifier model)
 
 
-handleBInner : Model -> Int -> Model
-handleBInner model countDown =
+navigateToLastWordInner : Model -> Int -> Model
+navigateToLastWordInner model countDown =
     let
         { cursorY, cursorX, lines } =
             model
@@ -52,7 +52,7 @@ handleBInner model countDown =
             { model | cursorX = newCursorX, cursorY = newCursorY }
     in
         if countDown > 1 then
-            handleBInner updatedModel (countDown - 1)
+            navigateToLastWordInner updatedModel (countDown - 1)
         else
             { updatedModel | inProgress = [] }
 

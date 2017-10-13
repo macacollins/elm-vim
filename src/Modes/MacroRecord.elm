@@ -83,6 +83,65 @@ flushBuffer model =
         { macroModel } =
             model
 
+        trash2 =
+            Debug.log
+                ("""
+        , describe "additional test" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions """
+                    ++ (toString macroModel.buffer)
+                    ++ """
+            in
+                [ test "changes lines" <|
+                    \\_ ->
+                        Expect.equal lines [ "" ]
+                , test "copies into buffer" <|
+                    \\_ ->
+                        Expect.equal buffer <| LinesBuffer [ "one two", "three four" ]
+                , test "moves cursorX" <|
+                    \\_ ->
+                        Expect.equal cursorX 0
+                , test "moves cursorY" <|
+                    \\_ ->
+                        Expect.equal cursorY 0
+                ]
+            """
+                )
+                0
+
+        trash =
+            Debug.log
+                ("""
+zTests : Test
+zTests =
+    describe "deleting down"
+        [ describe "single dj" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions """
+                    ++ (toString macroModel.buffer)
+                    ++ """
+            in
+                [ test "dj deletes two lines" <|
+                    \\_ ->
+                        Expect.equal lines [ "" ]
+                , test "dj copies the deleted word" <|
+                    \\_ ->
+                        Expect.equal buffer <| LinesBuffer [ "one two", "three four" ]
+                , test "dj moves cursorX back when deleting 2 lines" <|
+                    \\_ ->
+                        Expect.equal cursorX 0
+                , test "dj moves cursorY back when deleting 2 lines" <|
+                    \\_ ->
+                        Expect.equal cursorY 0
+                ]
+
+          ]
+            """
+                )
+                0
+
         updatedMacroMap =
             case macroModel.bufferChar of
                 Just char ->

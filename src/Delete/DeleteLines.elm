@@ -1,4 +1,4 @@
-module Delete.Delete exposing (handleD)
+module Delete.DeleteLines exposing (deleteLines)
 
 import Model exposing (Model, PasteBuffer(..))
 import Mode exposing (Mode(..))
@@ -8,8 +8,8 @@ import Util.ModifierUtils exposing (..)
 import History exposing (getUpdatedHistory)
 
 
-handleD : Model -> Model
-handleD model =
+deleteLines : Model -> Model
+deleteLines model =
     let
         numberModifier =
             getNumberModifier model

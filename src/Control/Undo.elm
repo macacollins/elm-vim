@@ -4,8 +4,8 @@ import Model exposing (..)
 import History exposing (..)
 
 
-handleU : Model -> Model
-handleU model =
+handleUndo : Model -> Model
+handleUndo model =
     case List.head model.pastStates of
         Just lastState ->
             { model

@@ -1,11 +1,5 @@
 Pick one!
 
-add redo / undo support for d(wbhjkl)
-add dh and dl
-fix visual mode when it's all on one line
-rename Delete/Delete.elm to Delete/DeleteLines.elm
-rename Yank/Yank.elm to Yank/YankLines.elm
-
 add y for hjklbw
 
 highlighting for search

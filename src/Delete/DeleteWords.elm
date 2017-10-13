@@ -24,7 +24,7 @@ deleteBackWords model =
             model
 
         leftUpdated =
-            handleB leftedModel
+            navigateToLastWord leftedModel
 
         modifiedModelWithVisualModeHack =
             { model

@@ -1,4 +1,4 @@
-module Yank.Yank exposing (..)
+module Yank.YankLines exposing (..)
 
 import Model exposing (Model, PasteBuffer(..))
 import List
@@ -8,11 +8,8 @@ import History exposing (getUpdatedHistory)
 import Mode exposing (Mode(..))
 
 
--- TODO handle normal words
-
-
-handleY : Model -> Model
-handleY model =
+yankLines : Model -> Model
+yankLines model =
     let
         modifierNumber =
             getNumberModifier model

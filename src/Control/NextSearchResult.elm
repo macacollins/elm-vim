@@ -1,11 +1,11 @@
-module Control.NextSearchResult exposing (handleN)
+module Control.NextSearchResult exposing (navigateToNextSearchResult)
 
 import Model exposing (Model)
 import Util.Search exposing (searchTo)
 
 
-handleN : Model -> Model
-handleN model =
+navigateToNextSearchResult : Model -> Model
+navigateToNextSearchResult model =
     case searchTo model.searchString model of
         Just updatedModel ->
             updatedModel

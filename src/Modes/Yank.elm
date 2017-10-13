@@ -4,7 +4,7 @@ import Model exposing (Model)
 import Keyboard exposing (KeyCode)
 import Mode exposing (Mode(Control))
 import Modes.Control exposing (controlModeUpdate)
-import Yank.Yank exposing (..)
+import Yank.YankLines exposing (..)
 import Char
 import Dict exposing (Dict)
 
@@ -12,7 +12,7 @@ import Dict exposing (Dict)
 dict : Dict Char (Model -> Model)
 dict =
     Dict.empty
-        |> Dict.insert 'y' handleY
+        |> Dict.insert 'y' yankLines
 
 
 yankModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )

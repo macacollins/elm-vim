@@ -1,12 +1,12 @@
-module Delete.DeleteCharacter exposing (handleX, handleBackspace)
+module Delete.DeleteCharacter exposing (deleteCharacterUnderCursor, handleBackspace)
 
 import Model exposing (Model)
 import List
 import Util.ListUtils exposing (..)
 
 
-handleX : Model -> Model
-handleX model =
+deleteCharacterUnderCursor : Model -> Model
+deleteCharacterUnderCursor model =
     let
         { lines, cursorY, cursorX } =
             model
@@ -27,11 +27,11 @@ handleBackspace model =
             handleBackspaceLine model
 
         _ ->
-            handleNormalBackspace model
+            navigateToNextSearchResultormalBackspace model
 
 
-handleNormalBackspace : Model -> Model
-handleNormalBackspace model =
+navigateToNextSearchResultormalBackspace : Model -> Model
+navigateToNextSearchResultormalBackspace model =
     let
         { lines, cursorY, cursorX } =
             model
