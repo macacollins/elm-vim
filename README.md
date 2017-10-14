@@ -1,3 +1,4 @@
+![build status](https://travis-ci.org/macacollins/elm-vim.svg?branch=master)
 # Statistics
 ## Line count statistics
 ### src folder
@@ -7,7 +8,7 @@ $ cloc src
 classified 50 files      50 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.13 s (378.5 files/s, 20214.1 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.13 s (370.7 files/s, 19795.1 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -23,7 +24,7 @@ $ cloc --exclude-dir elm-stuff .
 classified 21 files      21 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.07 s (315.8 files/s, 41386.6 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.07 s (318.6 files/s, 41750.1 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
