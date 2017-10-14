@@ -52,20 +52,19 @@ deleteToNextWord model =
             getLine leftedModel.cursorY model.lines
 
         ( deleteLine, cursorX, cursorY ) =
-            Debug.log "delete, x, y" <|
-                if leftedModel.cursorX == 0 && String.trim endLine /= "" then
-                    -- we need to leave the line as is
-                    if leftedModel.cursorY == 0 then
-                        -- this is confusing; is it possible to get here? Empty file would do it
-                        ( False, leftedModel.cursorX, leftedModel.cursorY )
-                    else
-                        let
-                            line =
-                                getLine (leftedModel.cursorY - 1) model.lines
-                        in
-                            ( True, String.length line - 1, leftedModel.cursorY - 1 )
-                else
+            if leftedModel.cursorX == 0 && String.trim endLine /= "" then
+                -- we need to leave the line as is
+                if leftedModel.cursorY == 0 then
+                    -- this is confusing; is it possible to get here? Empty file would do it
                     ( False, leftedModel.cursorX, leftedModel.cursorY )
+                else
+                    let
+                        line =
+                            getLine (leftedModel.cursorY - 1) model.lines
+                    in
+                        ( True, String.length line - 1, leftedModel.cursorY - 1 )
+            else
+                ( False, leftedModel.cursorX, leftedModel.cursorY )
 
         modifiedModelWithVisualModeHack =
             { model

@@ -42,6 +42,8 @@ dict =
         |> Dict.insert 'L' moveToBottomOfScreen
         |> Dict.insert 'M' moveToMiddleOfScreen
         |> Dict.insert '0' navigateToStartOfLine
+        |> Dict.insert '$' navigateToEndOfLine
+        |> Dict.insert 'G' handleG
         -- text manipulation
         |> Dict.insert 'J' joinLines
         |> Dict.insert 'D' deleteToEndOfLine
@@ -52,9 +54,6 @@ dict =
         -- insert new line
         |> Dict.insert 'O' handleO
         |> Dict.insert 'o' handleo
-        |> Dict.insert 'G' handleG
-        |> Dict.insert 'g' handleLittleG
-        |> Dict.insert '$' navigateToEndOfLine
         -- undo, redo
         |> Dict.insert 'u' handleUndo
         |> Dict.insert 'R' handleRedo
@@ -69,12 +68,13 @@ dict =
 modeDict : Dict Char Mode
 modeDict =
     Dict.empty
-        |> Dict.insert 'y' Yank
-        |> Dict.insert 'd' Delete
+        |> Dict.insert 'y' (Yank Control)
+        |> Dict.insert 'd' (Delete Control)
         |> Dict.insert '/' Search
         |> Dict.insert '@' MacroExecute
         |> Dict.insert 'q' (Macro Control)
         |> Dict.insert 'i' Insert
+        |> Dict.insert 'g' GoToLine
 
 
 controlModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )

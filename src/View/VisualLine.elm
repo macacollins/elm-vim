@@ -99,11 +99,10 @@ renderLineWithVisualStart model index line =
                 String.slice (startX + 1) (String.length line + 1) line
 
             middle =
-                Debug.log "Cursor Text" <|
-                    if String.length maybeMiddle == 0 then
-                        "_"
-                    else
-                        maybeMiddle
+                if String.length maybeMiddle == 0 then
+                    "_"
+                else
+                    maybeMiddle
         in
             span []
                 [ replaceSpaceWithNbsp before
@@ -130,11 +129,10 @@ renderLineWithVisualEnd model index line =
                 String.slice (endX + 1) (String.length line + 1) line
 
             middle =
-                Debug.log "Cursor Text" <|
-                    if String.length maybeMiddle == 0 then
-                        "_"
-                    else
-                        maybeMiddle
+                if String.length maybeMiddle == 0 then
+                    "_"
+                else
+                    maybeMiddle
         in
             span []
                 [ replaceSpaceWithNbspAndClass before "visual"

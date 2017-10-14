@@ -11,6 +11,7 @@ import Modes.Yank exposing (yankModeUpdate)
 import Modes.Delete exposing (deleteModeUpdate)
 import Modes.Search exposing (searchModeUpdate)
 import Modes.MacroRecord exposing (macroRecordModeUpdate)
+import Control.NavigateFile exposing (goToLineModeUpdate)
 import Keyboard exposing (KeyCode)
 
 
@@ -44,10 +45,13 @@ updateKeyInput keyPress mode model =
         Control ->
             controlModeUpdate model keyPress
 
-        Yank ->
+        GoToLine ->
+            goToLineModeUpdate model
+
+        Yank _ ->
             yankModeUpdate model keyPress
 
-        Delete ->
+        Delete _ ->
             deleteModeUpdate model keyPress
 
         Search ->

@@ -23,11 +23,10 @@ renderLineWithCursor model index line =
                 String.slice (model.cursorX + 1) (String.length line + 1) line
 
             middle =
-                Debug.log "Cursor Text" <|
-                    if String.length maybeMiddle == 0 then
-                        "_"
-                    else
-                        maybeMiddle
+                if String.length maybeMiddle == 0 then
+                    "_"
+                else
+                    maybeMiddle
         in
             span []
                 [ replaceSpaceWithNbsp before

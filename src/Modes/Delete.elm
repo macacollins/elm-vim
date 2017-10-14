@@ -13,6 +13,7 @@ import History exposing (addHistory)
 import Modes.Control exposing (controlModeUpdate)
 import Char
 import Dict exposing (Dict)
+import Mode exposing (Mode(..))
 
 
 dict : Dict Char (Model -> Model)
@@ -31,9 +32,23 @@ dict =
 
 deleteModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
 deleteModeUpdate model keyCode =
+    case model.mode of
+        Delete GoToLine ->
+            deleteModeUpdateInner model keyCode
+
+        _ ->
+            deleteModeUpdateInner model keyCode
+
+
+deleteModeUpdateInner : Model -> KeyCode -> ( Model, Cmd msg )
+deleteModeUpdateInner model keyCode =
     case Dict.get (Char.fromCode keyCode) dict of
         Just handler ->
-            (handler model |> addHistory model) ! []
+            let
+                updatedModel =
+                    (handler model |> addHistory model)
+            in
+                { updatedModel | mode = Control } ! []
 
         Nothing ->
             if Char.isDigit (Char.fromCode keyCode) then

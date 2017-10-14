@@ -6,6 +6,7 @@ import Test exposing (..)
 import Macro.Actions exposing (newStateAfterActions)
 import Macro.ActionEntry exposing (ActionEntry(..))
 import List
+import Mode exposing (Mode(..))
 
 
 testCursorMovesBackAfterExitingInsert =
@@ -122,22 +123,23 @@ testLittleG =
 
         modelWith100LinesOneG =
             newStateAfterActions actionsWith100LinesOneG
+
+        { inProgress, cursorX, cursorY, firstLine, mode } =
+            modelWith100LinesOneG
     in
         describe "The little g key."
-            [ test "One g goes to in progress." <|
+            [ test "One g doesn't goes to in progress." <|
                 \_ ->
-                    let
-                        { inProgress } =
-                            modelWith100LinesOneG
-                    in
-                        Expect.equal inProgress [ 'g' ]
+                    Expect.equal inProgress []
+            , test "One g moves to GoToLine mode" <|
+                \_ ->
+                    Expect.equal mode GoToLine
             , test "One g doesn't move anything." <|
                 \_ ->
-                    let
-                        { firstLine } =
-                            modelWith100LinesOneG
-                    in
-                        Expect.equal firstLine 70
+                    Expect.equal firstLine 70
+            , test "One g doesn't move the cursorY ." <|
+                \_ ->
+                    Expect.equal cursorY 100
             , test "move cursorX back to 0!" <|
                 \_ ->
                     let
@@ -145,13 +147,6 @@ testLittleG =
                             newStateAfterActions [ Keys "iaaaaaa", Enter, Enter, Enter, Keys "aaaaa", Escape, Keys "gg" ]
                     in
                         Expect.equal cursorX 0
-            , test "One g doesn't move the cursorY ." <|
-                \_ ->
-                    let
-                        { cursorY } =
-                            modelWith100LinesOneG
-                    in
-                        Expect.equal cursorY 100
             , test "2 gs does move anything." <|
                 \_ ->
                     let

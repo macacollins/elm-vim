@@ -3,6 +3,7 @@ module Control.NavigateFile exposing (..)
 import Model exposing (Model)
 import Util.ListUtils exposing (getLine)
 import Util.ModifierUtils exposing (..)
+import Mode exposing (Mode(Control))
 
 
 handleG : Model -> Model
@@ -43,18 +44,17 @@ handleG model =
         }
 
 
-handleLittleG : Model -> Model
-handleLittleG model =
+goToLineModeUpdate : Model -> ( Model, Cmd msg )
+goToLineModeUpdate model =
     let
         ( newCursorX, newCursorY, newFirstLine, newInProgress ) =
-            if List.member 'g' model.inProgress then
-                ( 0, 0, 0, [] )
-            else
-                ( model.cursorX, model.cursorY, model.firstLine, 'g' :: model.inProgress )
+            ( 0, 0, 0, [] )
     in
         { model
             | cursorY = newCursorY
             , cursorX = newCursorX
             , firstLine = newFirstLine
             , inProgress = newInProgress
+            , mode = Control
         }
+            ! []
