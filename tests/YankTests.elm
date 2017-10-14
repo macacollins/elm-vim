@@ -62,7 +62,7 @@ yankUpTests =
                     \_ ->
                         Expect.equal cursorY 1
                 ]
-        , describe "single dj" <|
+        , describe "single yk" <|
             let
                 { lines, cursorX, buffer, cursorY } =
                     newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3", Escape, Keys "yk" ]
@@ -125,7 +125,7 @@ yankDownTests =
         [ describe "5yj" <|
             let
                 { lines, cursorX, buffer, cursorY, inProgress } =
-                    newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3", Enter, Keys "45", Enter, Keys "6", Enter, Keys "7", Enter, Keys "8", Escape, Keys "gg5yk" ]
+                    newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3", Enter, Keys "45", Enter, Keys "6", Enter, Keys "7", Enter, Keys "8", Escape, Keys "gg5yj" ]
             in
                 [ test "moves those lines into buffer" <|
                     \_ ->
@@ -143,10 +143,10 @@ yankDownTests =
                     \_ ->
                         Expect.equal cursorY 0
                 ]
-        , describe "single dj" <|
+        , describe "single yj" <|
             let
                 { lines, cursorX, buffer, cursorY } =
-                    newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3", Escape, Keys "ggyk" ]
+                    newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3", Escape, Keys "ggyj" ]
             in
                 [ test "leaves the normal text contents" <|
                     \_ ->
@@ -196,5 +196,125 @@ yankDownTests =
                 , test "moves cursorY" <|
                     \_ ->
                         Expect.equal cursorY 0
+                ]
+        ]
+
+
+yankWordsTest : Test
+yankWordsTest =
+    describe "yankin' words"
+        [ describe "yank 3 words" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1 2 3 4 5 6 7", Escape, Keys "0y3w" ]
+            in
+                [ test "y3w leaves lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1 2 3 4 5 6 7" ]
+                , test "y3w yanks three words " <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "1 2 3 " ]
+                , test "y3w leaves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "y3w leaves cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        , describe "single yw" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1 2 3 4 5 6 7", Escape, Keys "0yw" ]
+            in
+                [ test "yw leaves lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1 2 3 4 5 6 7" ]
+                , test "yw yanks one word" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "1 " ]
+                , test "yw leaves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "yw leaves cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        , describe "test over multiple lines" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1 2 3", Enter, Keys "4 5 6", Enter, Keys "7", Enter, Keys "8", Enter, Keys "9", Escape, Keys "ggy8w" ]
+            in
+                [ test "doesn't change lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1 2 3", "4 5 6", "7", "8", "9" ]
+                , test "copies into buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "1 2 3", "4 5 6", "7", "8" ]
+                , test "moves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "moves cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        ]
+
+
+yankWordsBackTests : Test
+yankWordsBackTests =
+    describe "yanking words backwards"
+        [ describe "single yb" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1 23", Backspace, Keys " 3 4 5 6 7 8 9", Escape, Keys "yb" ]
+            in
+                [ test "yb leaves lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1 2 3 4 5 6 7 8 9" ]
+                , test "yb copies the word" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "8 " ]
+                , test "yb moves cursorX back " <|
+                    \_ ->
+                        Expect.equal cursorX 14
+                , test "yb leaves cursorY " <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        , describe "triple yb" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1 23", Backspace, Keys " 3 4 5 6 7 8 9", Escape, Keys "3yb" ]
+            in
+                [ test "3yb leaves lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1 2 3 4 5 6 7 8 9" ]
+                , test "3yb copies the word" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "6 7 8 " ]
+                , test "3yb moves cursorX back " <|
+                    \_ ->
+                        Expect.equal cursorX 10
+                , test "3yb leaves cursorY " <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        , describe "yb over multiple lines" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3 4 5", Escape, Keys "y3b" ]
+            in
+                [ test "3yb leaves lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1", "2", "3 4 5" ]
+                , test "3yb copies the word" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "2", "3 4 " ]
+                , test "3yb moves cursorX back " <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "3yb moves cursorY " <|
+                    \_ ->
+                        Expect.equal cursorY 1
                 ]
         ]

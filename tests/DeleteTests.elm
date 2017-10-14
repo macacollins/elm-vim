@@ -339,6 +339,24 @@ deleteWordsTests =
                     \_ ->
                         Expect.equal cursorX 0
                 ]
+        , describe "test over multiple lines" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1 2 3", Enter, Keys "4 5 6", Enter, Keys "7", Enter, Keys "8", Enter, Keys "9", Escape, Keys "ggd8w" ]
+            in
+                [ test "does change lines" <|
+                    \_ ->
+                        Expect.equal lines [ "9" ]
+                , test "copies into buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "1 2 3", "4 5 6", "7", "8" ]
+                , test "moves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "moves cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
         , describe "5dw over multiple lines" <|
             let
                 { buffer, lines, cursorX } =
