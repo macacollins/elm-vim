@@ -1,7 +1,6 @@
 Pick one!
 
-add y for hjklbw
-
+add d and y support for G and gg
 highlighting for search
 add numbers to Macros
 relative line numbers

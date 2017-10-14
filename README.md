@@ -8,13 +8,13 @@ $ cloc src
 classified 51 files      51 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.14 s (357.9 files/s, 18970.6 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.15 s (341.1 files/s, 18221.1 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             51            547             40           2116
+Elm                             51            553             48           2123
 -------------------------------------------------------------------------------
-SUM:                            51            547             40           2116
+SUM:                            51            553             48           2123
 -------------------------------------------------------------------------------
 ```
 ### tests folder
@@ -24,7 +24,7 @@ $ cloc --exclude-dir elm-stuff .
 classified 21 files      21 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.07 s (302.3 files/s, 41693.5 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.07 s (297.4 files/s, 41008.7 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -40,7 +40,12 @@ $ grep -r TODO src
 src/Control/NavigateFile.elm:            -- TODO update when we page in a more mature fashion
 src/Delete/DeleteNavigationKeys.elm:-- TODO handle firstLine adjustments
 src/Model.elm:-- TODO move this to the other syntax with named params
+Binary file src/Modes/.Control.elm.swp matches
 src/Modes/Control.elm:-- TODO need to make this configurable
+src/Modes/Control.elm:        -- TODO standardize on handle, navigate, or move
+src/Modes/Control.elm:        -- TODO move the addHistory into the functions themselves
+src/Modes/Control.elm:                        -- TODO more thoroughly test the history here
+src/Modes/Control.elm:-- TODO move the rest of these to their own files
 src/Modes/MacroRecord.elm:-- TODO probably refactor
 src/Modes/MacroRecord.elm:            -- TODO flush buffer to dict
 src/Modes/Search.elm:                        -- TODO probably restructure

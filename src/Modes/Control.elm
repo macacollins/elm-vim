@@ -31,6 +31,7 @@ dict : Dict Char (Model -> Model)
 dict =
     Dict.empty
         -- moveCursor
+        -- TODO standardize on handle, navigate, or move
         |> Dict.insert 'l' handleRight
         |> Dict.insert 'h' handleLeft
         |> Dict.insert 'j' handleDown
@@ -40,30 +41,40 @@ dict =
         |> Dict.insert 'H' moveToTopOfScreen
         |> Dict.insert 'L' moveToBottomOfScreen
         |> Dict.insert 'M' moveToMiddleOfScreen
+        |> Dict.insert '0' navigateToStartOfLine
         -- text manipulation
         |> Dict.insert 'J' joinLines
         |> Dict.insert 'D' deleteToEndOfLine
-        |> Dict.insert 'i' (\model -> addHistory model { model | mode = Insert })
-        |> Dict.insert 'q' (\model -> { model | mode = Macro Control })
-        |> Dict.insert '@' (\model -> { model | mode = MacroExecute })
-        |> Dict.insert 'x' (\model -> addHistory model <| deleteCharacterUnderCursor model)
+        |> Dict.insert 'X' handleBackspace
+        -- search
         |> Dict.insert 'n' navigateToNextSearchResult
         |> Dict.insert 'N' navigateToLastSearchResult
+        -- insert new line
         |> Dict.insert 'O' handleO
         |> Dict.insert 'o' handleo
-        |> Dict.insert 'p' (\model -> addHistory model <| handlePaste model)
-        |> Dict.insert 'P' (\model -> addHistory model <| handlePasteBefore model)
-        |> Dict.insert '0' navigateToStartOfLine
         |> Dict.insert 'G' handleG
         |> Dict.insert 'g' handleLittleG
         |> Dict.insert '$' navigateToEndOfLine
+        -- undo, redo
         |> Dict.insert 'u' handleUndo
         |> Dict.insert 'R' handleRedo
-        |> Dict.insert 'X' handleBackspace
-        |> Dict.insert 'y' (\model -> { model | mode = Yank })
-        |> Dict.insert 'd' (\model -> { model | mode = Delete })
+        -- switch modes
         |> Dict.insert 'v' (\model -> { model | mode = Visual model.cursorX model.cursorY })
-        |> Dict.insert '/' (\model -> { model | mode = Search })
+        -- TODO move the addHistory into the functions themselves
+        |> Dict.insert 'p' (\model -> addHistory model <| handlePaste model)
+        |> Dict.insert 'P' (\model -> addHistory model <| handlePasteBefore model)
+        |> Dict.insert 'x' (\model -> addHistory model <| deleteCharacterUnderCursor model)
+
+
+modeDict : Dict Char Mode
+modeDict =
+    Dict.empty
+        |> Dict.insert 'y' Yank
+        |> Dict.insert 'd' Delete
+        |> Dict.insert '/' Search
+        |> Dict.insert '@' MacroExecute
+        |> Dict.insert 'q' (Macro Control)
+        |> Dict.insert 'i' Insert
 
 
 controlModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
@@ -73,7 +84,13 @@ controlModeUpdate model keyCode =
             if 48 <= keyCode && keyCode <= 57 then
                 { model | inProgress = (Char.fromCode keyCode) :: model.inProgress }
             else
-                model
+                case Dict.get (Char.fromCode keyCode) modeDict of
+                    Just newMode ->
+                        -- TODO more thoroughly test the history here
+                        addHistory model { model | mode = newMode }
+
+                    Nothing ->
+                        model
 
         newModel =
             case Dict.get (Char.fromCode keyCode) dict of
@@ -84,6 +101,10 @@ controlModeUpdate model keyCode =
                     default
     in
         ( newModel, Cmd.none )
+
+
+
+-- TODO move the rest of these to their own files
 
 
 addHistory : Model -> Model -> Model
