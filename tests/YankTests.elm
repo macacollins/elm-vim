@@ -38,6 +38,30 @@ yankTests =
         ]
 
 
+yankToEndOfLineTests : Test
+yankToEndOfLineTests =
+    describe "yanking to end of line"
+        [ describe "y$ from middle of line" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1234567", Escape, Keys "hhhy$" ]
+            in
+                [ test "y$ deletes two lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1234567" ]
+                , test "y$ copies the rest of the line" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "4567" ]
+                , test "y$ leaves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 3
+                , test "y$ leaves cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        ]
+
+
 yankLeftTests : Test
 yankLeftTests =
     describe "yanking left"

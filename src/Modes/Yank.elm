@@ -25,7 +25,7 @@ yankModeUpdate model keyCode =
         Nothing ->
             if Char.isDigit (Char.fromCode keyCode) then
                 controlModeUpdate model keyCode
-            else if List.member (Char.fromCode keyCode) [ 'j', 'k', 'h', 'l', 'w', 'b' ] then
+            else if List.member (Char.fromCode keyCode) [ 'j', 'k', 'h', 'l', 'w', 'b', '$' ] then
                 wrapDelete model keyCode
             else
                 { model | mode = Control } ! []
