@@ -30,6 +30,30 @@ deleteToEndOfLineWithDollarTests =
         ]
 
 
+deleteToStartOfLine : Test
+deleteToStartOfLine =
+    describe "d0"
+        [ describe "d0 from end of line" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1234567", Escape, Keys "d0" ]
+            in
+                [ test "d0 deletes to start of line" <|
+                    \_ ->
+                        Expect.equal lines [ "7" ]
+                , test "d0 copies the deleted text" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "123456" ]
+                , test "d0 moves cursorX back when deleting " <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "d0 moves cursorY back when deleting " <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        ]
+
+
 deleteUpTests : Test
 deleteUpTests =
     describe "deleting up"

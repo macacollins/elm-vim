@@ -5,6 +5,7 @@ import Keyboard exposing (KeyCode)
 import Mode exposing (Mode(Control))
 import Delete.DeleteLines exposing (..)
 import Delete.DeleteToEndOfLine exposing (..)
+import Delete.DeleteToStartOfLine exposing (..)
 import Delete.DeleteCharacter exposing (..)
 import Delete.DeleteNavigationKeys exposing (..)
 import Delete.DeleteWords exposing (..)
@@ -25,6 +26,7 @@ dict =
         |> Dict.insert 'h' deleteLeft
         |> Dict.insert 'l' deleteRight
         |> Dict.insert '$' deleteToEndOfLine
+        |> Dict.insert '0' deleteToStartOfLine
 
 
 deleteModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )

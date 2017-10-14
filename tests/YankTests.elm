@@ -62,6 +62,54 @@ yankToEndOfLineTests =
         ]
 
 
+yankToStartOfLineTests : Test
+yankToStartOfLineTests =
+    describe "y0"
+        [ describe "y0 from end of line" <|
+            let
+                { lines, cursorX, buffer, inProgress, cursorY } =
+                    newStateAfterActions [ Keys "i1234567", Escape, Keys "y0" ]
+            in
+                [ test "y0 leaves the line" <|
+                    \_ ->
+                        Expect.equal lines [ "1234567" ]
+                , test "y0 has an empty inProgress" <|
+                    \_ ->
+                        Expect.equal inProgress []
+                , test "y0 copies text" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "123456" ]
+                , test "y0 moves cursorX back " <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "y0 moves cursorY back " <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        , describe "y20 doesn't copy text" <|
+            let
+                { lines, cursorX, buffer, inProgress, cursorY } =
+                    newStateAfterActions [ Keys "i1234567", Escape, Keys "y20" ]
+            in
+                [ test "y20 leaves the line" <|
+                    \_ ->
+                        Expect.equal lines [ "1234567" ]
+                , test "y20 copies text" <|
+                    \_ ->
+                        Expect.equal buffer <| LinesBuffer []
+                , test "y20 has 2 and 0 inProgress" <|
+                    \_ ->
+                        Expect.equal (List.member '2' inProgress && List.member '0' inProgress) True
+                , test "y20 moves cursorX back " <|
+                    \_ ->
+                        Expect.equal cursorX 6
+                , test "y20 doesn't move cursor" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        ]
+
+
 yankLeftTests : Test
 yankLeftTests =
     describe "yanking left"

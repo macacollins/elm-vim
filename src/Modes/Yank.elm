@@ -23,10 +23,12 @@ yankModeUpdate model keyCode =
             handler model ! []
 
         Nothing ->
-            if Char.isDigit (Char.fromCode keyCode) then
-                controlModeUpdate model keyCode
-            else if List.member (Char.fromCode keyCode) [ 'j', 'k', 'h', 'l', 'w', 'b', '$' ] then
+            if List.member (Char.fromCode keyCode) [ 'j', 'k', 'h', 'l', 'w', 'b', '$' ] then
                 wrapDelete model keyCode
+            else if List.isEmpty model.inProgress && Char.fromCode keyCode == '0' then
+                wrapDelete model keyCode
+            else if Char.isDigit (Char.fromCode keyCode) then
+                controlModeUpdate model keyCode
             else
                 { model | mode = Control } ! []
 
@@ -40,7 +42,7 @@ wrapDelete model keyCode =
 
         -- messy
         ( moveModel, _ ) =
-            if List.member (Char.fromCode keyCode) [ 'k', 'b', 'h' ] then
+            if List.member (Char.fromCode keyCode) [ 'k', 'b', 'h', '0' ] then
                 controlModeUpdate model keyCode
             else
                 model ! []
@@ -53,6 +55,5 @@ wrapDelete model keyCode =
                 , inProgress = []
                 , mode = Control
             }
-                |> Debug.log "Updated model"
     in
         updatedModel ! []
