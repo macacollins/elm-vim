@@ -38,6 +38,54 @@ yankTests =
         ]
 
 
+yankLeftTests : Test
+yankLeftTests =
+    describe "yanking left"
+        [ describe "3yh" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1234567", Escape, Keys "3yh" ]
+            in
+                [ test "3yh leaves the line" <|
+                    \_ ->
+                        Expect.equal lines [ "1234567" ]
+                , test "3yh copies characters into the buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "456" ]
+                , test "3yh moves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 3
+                , test "3yh leaves cursorY when on one line" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        ]
+
+
+yankRightTests : Test
+yankRightTests =
+    describe "y3l"
+        [ describe "single y3l" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1234567", Escape, Keys "0y3l" ]
+            in
+                [ test "y3l leaves lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1234567" ]
+                , test "y3l copies the characters" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "123" ]
+                , test "y3l leaves cursorX  " <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "y3l leaves cursorY " <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        ]
+
+
 yankUpTests : Test
 yankUpTests =
     describe "yanking up"
