@@ -8,13 +8,13 @@ $ cloc src
 classified 52 files      52 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.15 s (354.5 files/s, 19245.2 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.15 s (350.6 files/s, 19274.7 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             52            574             51           2198
+Elm                             52            589             51           2219
 -------------------------------------------------------------------------------
-SUM:                            52            574             51           2198
+SUM:                            52            589             51           2219
 -------------------------------------------------------------------------------
 ```
 ### tests folder
@@ -24,24 +24,24 @@ $ cloc --exclude-dir elm-stuff .
 classified 21 files      21 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.07 s (311.4 files/s, 44471.2 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.07 s (302.0 files/s, 43730.8 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             20            191              5           2784
+Elm                             20            193              5           2824
 JSON                             1              0              0             19
 -------------------------------------------------------------------------------
-SUM:                            21            191              5           2803
+SUM:                            21            193              5           2843
 -------------------------------------------------------------------------------
 ```
 ## TODOs
 ```bash
 $ grep -r TODO src
-Binary file src/Control/.NavigateFile.elm.swp matches
 src/Control/NavigateFile.elm:            -- TODO update when we page in a more mature fashion
 src/Delete/DeleteNavigationKeys.elm:-- TODO handle firstLine adjustments
 src/Model.elm:-- TODO move this to the other syntax with named params
 Binary file src/Modes/.Delete.elm.swp matches
+Binary file src/Modes/.MacroRecord.elm.swp matches
 Binary file src/Modes/.Yank.elm.swp matches
 src/Modes/Control.elm:-- TODO need to make this configurable
 src/Modes/Control.elm:        -- TODO standardize on handle, navigate, or move

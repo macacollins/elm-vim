@@ -78,6 +78,48 @@ deleteToLineTests =
         ]
 
 
+testdG : Test
+testdG =
+    describe "dG" <|
+        [ let
+            { lines, cursorX, buffer, cursorY } =
+                newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3", Enter, Keys "4", Enter, Keys "5", Enter, Keys "6", Enter, Keys "7", Enter, Keys "8", Escape, Keys "kkkkkkkdG" ]
+          in
+            describe "ggdG"
+                [ test "deletes lines" <|
+                    \_ ->
+                        Expect.equal lines [ "" ]
+                , test "copies into buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| LinesBuffer [ "1", "2", "3", "4", "5", "6", "7", "8" ]
+                , test "leaves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "leavescursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        , let
+            { lines, cursorX, buffer, cursorY } =
+                newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3", Enter, Keys "4", Enter, Keys "5", Enter, Keys "6", Enter, Keys "7", Escape, Keys "kkkdG" ]
+          in
+            describe "kkkdG"
+                [ test "from middle, changes lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1", "2", "3" ]
+                , test "from middle, copies into buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| LinesBuffer [ "4", "5", "6", "7" ]
+                , test "from middle, leaves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "from middle, moves cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 2
+                ]
+        ]
+
+
 deleteUpTests : Test
 deleteUpTests =
     describe "deleting up"

@@ -4,7 +4,7 @@ import Model exposing (..)
 import Keyboard exposing (KeyCode)
 import Char
 import Mode exposing (Mode(..))
-import Dict
+import Dict exposing (Dict)
 import History exposing (addHistory)
 import Util.Search exposing (searchTo)
 import Macro.Model exposing (MacroModel)
@@ -77,6 +77,62 @@ addToBuffer keyCode macroModel =
         { macroModel | buffer = newBuffer, rawBuffer = newRawBuffer }
 
 
+getSuite : Model -> String
+getSuite model =
+    let
+        { macroMap } =
+            model.macroModel
+
+        allMacros =
+            Dict.values macroMap
+
+        testStrings =
+            allMacros
+                |> List.map getTest
+                |> String.join "\n    , "
+    in
+        start ++ testStrings ++ end
+
+
+start : String
+start =
+    """
+zTests : Test
+zTests =
+  describe "z" <|
+    [ """
+
+
+end : String
+end =
+    "    ]"
+
+
+getTest : List ActionEntry -> String
+getTest macro =
+    """
+      let
+          { lines, cursorX, buffer, cursorY } =
+            newStateAfterActions """
+        ++ (toString macro)
+        ++ """
+        in
+          describe "z"
+            [ test "changes lines" <|
+              \\_ ->
+                Expect.equal lines [ "" ]
+            , test "copies into buffer" <|
+              \\_ ->
+                Expect.equal buffer <| LinesBuffer [ "one two", "three four" ]
+            , test "moves cursorX" <|
+              \\_ ->
+                Expect.equal cursorX 0
+            , test "moves cursorY" <|
+              \\_ ->
+                Expect.equal cursorY 0
+            ]"""
+
+
 flushBuffer : Model -> Model
 flushBuffer model =
     let
@@ -85,63 +141,10 @@ flushBuffer model =
 
         trash2 =
             Debug.log
-                ("""
-        , describe "additional test" <|
-            let
-                { lines, cursorX, buffer, cursorY } =
-                    newStateAfterActions """
-                    ++ (toString macroModel.buffer)
-                    ++ """
-            in
-                [ test "changes lines" <|
-                    \\_ ->
-                        Expect.equal lines [ "" ]
-                , test "copies into buffer" <|
-                    \\_ ->
-                        Expect.equal buffer <| LinesBuffer [ "one two", "three four" ]
-                , test "moves cursorX" <|
-                    \\_ ->
-                        Expect.equal cursorX 0
-                , test "moves cursorY" <|
-                    \\_ ->
-                        Expect.equal cursorY 0
-                ]
-            """
-                )
+                (getSuite finalModel)
                 0
 
-        trash =
-            Debug.log
-                ("""
-zTests : Test
-zTests =
-    describe "deleting down"
-        [ describe "single dj" <|
-            let
-                { lines, cursorX, buffer, cursorY } =
-                    newStateAfterActions """
-                    ++ (toString macroModel.buffer)
-                    ++ """
-            in
-                [ test "dj deletes two lines" <|
-                    \\_ ->
-                        Expect.equal lines [ "" ]
-                , test "dj copies the deleted word" <|
-                    \\_ ->
-                        Expect.equal buffer <| LinesBuffer [ "one two", "three four" ]
-                , test "dj moves cursorX back when deleting 2 lines" <|
-                    \\_ ->
-                        Expect.equal cursorX 0
-                , test "dj moves cursorY back when deleting 2 lines" <|
-                    \\_ ->
-                        Expect.equal cursorY 0
-                ]
-
-          ]
-            """
-                )
-                0
-
+        updatedMacroMap : Dict Char (List ActionEntry)
         updatedMacroMap =
             case macroModel.bufferChar of
                 Just char ->
@@ -160,5 +163,8 @@ zTests =
                 , rawBuffer = []
                 , macroMap = updatedMacroMap
             }
+
+        finalModel =
+            { model | mode = Control, macroModel = updatedMacroModel }
     in
-        { model | mode = Control, macroModel = updatedMacroModel }
+        finalModel

@@ -58,13 +58,12 @@ wrapDelete : Model -> KeyCode -> ( Model, Cmd msg )
 wrapDelete model keyCode =
     let
         newInnerMode =
-            Debug.log "newMode" <|
-                case model.mode of
-                    Yank (_ as innerMode) ->
-                        innerMode
+            case model.mode of
+                Yank (_ as innerMode) ->
+                    innerMode
 
-                    _ ->
-                        Control
+                _ ->
+                    Control
 
         modelWithMode =
             { model | mode = Delete newInnerMode }

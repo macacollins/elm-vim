@@ -4,12 +4,12 @@ import Model exposing (Model)
 import Keyboard exposing (KeyCode)
 import Mode exposing (Mode(Control))
 import Delete.DeleteLines exposing (..)
-import Delete.DeleteToLine exposing (..)
 import Delete.DeleteToEndOfLine exposing (..)
 import Delete.DeleteToStartOfLine exposing (..)
 import Delete.DeleteCharacter exposing (..)
 import Delete.DeleteNavigationKeys exposing (..)
 import Delete.DeleteWords exposing (..)
+import Delete.DeleteToLine exposing (deleteToLineDefaultStart, deleteToLineDefaultEnd)
 import History exposing (addHistory)
 import Modes.Control exposing (controlModeUpdate)
 import Char
@@ -32,6 +32,7 @@ dict =
         |> Dict.insert 'l' deleteRight
         |> Dict.insert '$' deleteToEndOfLine
         |> Dict.insert '0' deleteToStartOfLine
+        |> Dict.insert 'G' deleteToLineDefaultEnd
         |> Dict.insert 'g' (\model -> { model | mode = Delete GoToLine })
 
 
@@ -43,7 +44,7 @@ deleteModeUpdate model keyCode =
 
         Delete GoToLine ->
             if Char.fromCode keyCode == 'g' then
-                deleteToLine model ! []
+                deleteToLineDefaultStart model ! []
             else
                 handleDefaultInput model keyCode
 
