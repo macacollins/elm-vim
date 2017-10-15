@@ -4,6 +4,7 @@ import Model exposing (Model)
 import Keyboard exposing (KeyCode)
 import Mode exposing (Mode(Control))
 import Delete.DeleteLines exposing (..)
+import Delete.DeleteToLine exposing (..)
 import Delete.DeleteToEndOfLine exposing (..)
 import Delete.DeleteToStartOfLine exposing (..)
 import Delete.DeleteCharacter exposing (..)
@@ -14,6 +15,9 @@ import Modes.Control exposing (controlModeUpdate)
 import Char
 import Dict exposing (Dict)
 import Mode exposing (Mode(..))
+
+
+{- TODO consider refactoring; Delete Mode and Yank Mode are not fantastic abstractions. They should probably be toplevel rather than nested. -}
 
 
 dict : Dict Char (Model -> Model)
@@ -28,16 +32,31 @@ dict =
         |> Dict.insert 'l' deleteRight
         |> Dict.insert '$' deleteToEndOfLine
         |> Dict.insert '0' deleteToStartOfLine
+        |> Dict.insert 'g' (\model -> { model | mode = Delete GoToLine })
 
 
 deleteModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
 deleteModeUpdate model keyCode =
     case model.mode of
-        Delete GoToLine ->
+        Delete Control ->
             deleteModeUpdateInner model keyCode
 
+        Delete GoToLine ->
+            if Char.fromCode keyCode == 'g' then
+                deleteToLine model ! []
+            else
+                handleDefaultInput model keyCode
+
         _ ->
-            deleteModeUpdateInner model keyCode
+            handleDefaultInput model keyCode
+
+
+handleDefaultInput : Model -> KeyCode -> ( Model, Cmd msg )
+handleDefaultInput model keyCode =
+    if Char.isDigit (Char.fromCode keyCode) then
+        controlModeUpdate model keyCode
+    else
+        { model | mode = Control } ! []
 
 
 deleteModeUpdateInner : Model -> KeyCode -> ( Model, Cmd msg )
@@ -48,10 +67,7 @@ deleteModeUpdateInner model keyCode =
                 updatedModel =
                     (handler model |> addHistory model)
             in
-                { updatedModel | mode = Control } ! []
+                updatedModel ! []
 
         Nothing ->
-            if Char.isDigit (Char.fromCode keyCode) then
-                controlModeUpdate model keyCode
-            else
-                { model | mode = Control } ! []
+            handleDefaultInput model keyCode

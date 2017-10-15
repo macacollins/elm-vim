@@ -69,7 +69,7 @@ deleteDown model =
 cutLines : Int -> Int -> Model -> Model
 cutLines start finish model =
     let
-        ( newLines, maybeRemoved ) =
+        ( newLines, newBuffer ) =
             removeSlice start (finish + 1) model.lines
 
         actualNewLines =
@@ -92,16 +92,11 @@ cutLines start finish model =
             else
                 List.length newLines - 1
     in
-        case maybeRemoved of
-            Just removed ->
-                { model
-                    | lines = actualNewLines
-                    , buffer = LinesBuffer removed
-                    , cursorX = 0
-                    , cursorY = actualNewCursorY
-                    , inProgress = []
-                    , firstLine = newFirstLine
-                }
-
-            _ ->
-                model
+        { model
+            | lines = actualNewLines
+            , buffer = newBuffer
+            , cursorX = 0
+            , cursorY = actualNewCursorY
+            , inProgress = []
+            , firstLine = newFirstLine
+        }

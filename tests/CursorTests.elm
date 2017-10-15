@@ -7,6 +7,7 @@ import Macro.Actions exposing (newStateAfterActions)
 import Macro.ActionEntry exposing (ActionEntry(..))
 import List
 import Mode exposing (Mode(..))
+import Model exposing (PasteBuffer(..))
 
 
 testCursorMovesBackAfterExitingInsert =
@@ -105,6 +106,30 @@ testG =
                     in
                         Expect.equal firstLine 0
             ]
+
+
+navigateToLineTests : Test
+navigateToLineTests =
+    describe "navigation"
+        [ describe "navigate to line 5" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3", Enter, Keys "4", Enter, Keys "5", Enter, Keys "6", Enter, Keys "7", Enter, Keys "8", Enter, Keys "9", Escape, Keys "5gg" ]
+            in
+                [ test "5gg leaves lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
+                , test "5gg copies the deleted word" <|
+                    \_ ->
+                        Expect.equal buffer <| LinesBuffer []
+                , test "5gg moves cursorX back when deleting 2 lines" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "5gg moves cursorY back when deleting 2 lines" <|
+                    \_ ->
+                        Expect.equal cursorY 4
+                ]
+        ]
 
 
 testLittleG : Test

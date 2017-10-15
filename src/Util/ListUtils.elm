@@ -1,6 +1,7 @@
 module Util.ListUtils exposing (..)
 
 import List exposing (..)
+import Model exposing (PasteBuffer(..))
 
 
 getOrDefault : Int -> List a -> a -> a
@@ -40,10 +41,10 @@ splitLine string index =
 
 
 
--- TODO change this API; we always remove stuff
+-- Return value is (updatedLines, bufferLines
 
 
-removeSlice : Int -> Int -> List String -> ( List String, Maybe (List String) )
+removeSlice : Int -> Int -> List String -> ( List String, PasteBuffer )
 removeSlice start end list =
     let
         actualEnd =
@@ -65,7 +66,7 @@ removeSlice start end list =
             List.drop start list
                 |> List.take (actualEnd - start)
     in
-        ( startPart ++ endPart, Just removed )
+        ( startPart ++ endPart, LinesBuffer removed )
 
 
 insertAtIndex : Int -> List a -> a -> List a

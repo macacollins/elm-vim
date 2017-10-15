@@ -5,6 +5,7 @@ import Fuzz exposing (Fuzzer, int, list, string)
 import Test exposing (..)
 import Macro.Actions exposing (newStateAfterActions)
 import Macro.ActionEntry exposing (ActionEntry(..))
+import Model exposing (PasteBuffer(..))
 import List
 import Util.ListUtils exposing (..)
 import Mode exposing (Mode(..))
@@ -27,35 +28,35 @@ removeSliceTests =
         , test "Will populate the removed value with the single removed line." <|
             \_ ->
                 let
-                    ( result, removed ) =
+                    ( _, buffer ) =
                         removeSlice 2 3 testLines
                 in
-                    Expect.equal removed (Just [ "3" ])
+                    Expect.equal buffer (LinesBuffer [ "3" ])
         , test "Removes 3 lines" <|
             \_ ->
                 let
-                    ( result, removed ) =
+                    ( result, _ ) =
                         removeSlice 2 5 testLines
                 in
                     Expect.equal (List.length result) 7
         , test "Puts the 3 lines in the returned removed buffer" <|
             \_ ->
                 let
-                    ( result, removed ) =
+                    ( _, buffer ) =
                         removeSlice 2 5 testLines
                 in
-                    Expect.equal removed (Just [ "3", "4", "5" ])
+                    Expect.equal buffer (LinesBuffer [ "3", "4", "5" ])
         , test "if the last index is too high, it copies to the end of the array" <|
             \_ ->
                 let
-                    ( result, removed ) =
+                    ( _, buffer ) =
                         removeSlice 2 500 testLines
                 in
-                    Expect.equal removed (Just [ "3", "4", "5", "6", "7", "8", "9", "10" ])
+                    Expect.equal buffer (LinesBuffer [ "3", "4", "5", "6", "7", "8", "9", "10" ])
         , test "if the last index is too high, it removes to the end of the array" <|
             \_ ->
                 let
-                    ( result, removed ) =
+                    ( result, _ ) =
                         removeSlice 2 500 testLines
                 in
                     Expect.equal result ([ "1", "2" ])

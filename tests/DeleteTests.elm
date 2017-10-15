@@ -54,6 +54,30 @@ deleteToStartOfLine =
         ]
 
 
+deleteToLineTests : Test
+deleteToLineTests =
+    describe "dgg"
+        [ describe "navigate to line 5" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3", Enter, Keys "4", Enter, Keys "5", Enter, Keys "6", Enter, Keys "7", Enter, Keys "8", Enter, Keys "9", Escape, Keys "5dgg" ]
+            in
+                [ test "5dgg leaves lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1", "2", "3", "4" ]
+                , test "5dgg copies the lines" <|
+                    \_ ->
+                        Expect.equal buffer <| LinesBuffer [ "5", "6", "7", "8", "9" ]
+                , test "5dgg leaves cursorX " <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "5dgg moves cursorY back " <|
+                    \_ ->
+                        Expect.equal cursorY 3
+                ]
+        ]
+
+
 deleteUpTests : Test
 deleteUpTests =
     describe "deleting up"

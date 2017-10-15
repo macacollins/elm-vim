@@ -14,7 +14,7 @@ deleteLines model =
         numberModifier =
             getNumberModifier model
 
-        ( lines, removed ) =
+        ( lines, newBuffer ) =
             removeSlice model.cursorY (model.cursorY + numberModifier) model.lines
 
         actualLines =
@@ -23,13 +23,8 @@ deleteLines model =
             else
                 lines
 
-        ( newBuffer, newPastStates ) =
-            case removed of
-                Just thing ->
-                    ( LinesBuffer thing, getUpdatedHistory model )
-
-                Nothing ->
-                    ( LinesBuffer [ "" ], model.pastStates )
+        newPastStates =
+            getUpdatedHistory model
 
         updatedCursorY =
             if model.cursorY > List.length actualLines - 1 then
