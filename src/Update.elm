@@ -6,6 +6,7 @@ import Model exposing (Model)
 import Mode exposing (Mode(..))
 import Modes.Control exposing (controlModeUpdate)
 import Modes.Visual exposing (visualModeUpdate)
+import Modes.NavigateToCharacter exposing (navigateToCharacterModeUpdate)
 import Modes.Insert exposing (insertModeUpdate)
 import Modes.Yank exposing (yankModeUpdate)
 import Modes.Delete exposing (deleteModeUpdate)
@@ -51,6 +52,9 @@ updateKeyInput keyPress mode model =
         Yank _ ->
             yankModeUpdate model keyPress
 
+        NavigateToCharacter _ ->
+            navigateToCharacterModeUpdate model keyPress
+
         Delete _ ->
             deleteModeUpdate model keyPress
 
@@ -69,7 +73,7 @@ updateKeyInput keyPress mode model =
                 -- future bug if we start returning cmds
                 -- this could impact performance if we are calculating a model we won't use
                 ( newModel, _ ) =
-                    updateKeyInput keyPress inner model
+                    updateKeyInput keyPress inner { model | mode = inner }
 
                 initialModel =
                     model

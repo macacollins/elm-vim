@@ -5,7 +5,7 @@ import Keyboard exposing (KeyCode)
 import List exposing (..)
 import Dict exposing (Dict)
 import Char
-import Mode exposing (Mode(..))
+import Mode exposing (Mode(..), NavigationType(..))
 import Delete.DeleteCharacter exposing (..)
 import Control.ScreenMovement exposing (..)
 import Control.Undo exposing (..)
@@ -75,6 +75,10 @@ modeDict =
         |> Dict.insert 'q' (Macro Control)
         |> Dict.insert 'i' Insert
         |> Dict.insert 'g' GoToLine
+        |> Dict.insert 't' (NavigateToCharacter Til)
+        |> Dict.insert 'T' (NavigateToCharacter TilBack)
+        |> Dict.insert 'f' (NavigateToCharacter To)
+        |> Dict.insert 'F' (NavigateToCharacter ToBack)
 
 
 controlModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )

@@ -1,4 +1,4 @@
-module Mode exposing (Mode(..))
+module Mode exposing (Mode(..), NavigationType(..))
 
 
 type Mode
@@ -15,3 +15,15 @@ type Mode
     | MacroExecute
       -- Original X, original Y
     | Visual Int Int
+    | NavigateToCharacter NavigationType
+
+
+
+-- These are for t and f navigation
+
+
+type NavigationType
+    = Til
+    | TilBack
+    | To
+    | ToBack
