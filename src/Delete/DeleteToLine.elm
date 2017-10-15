@@ -40,8 +40,14 @@ deleteToLine model defaultY =
             else
                 ( numberModifier, model.cursorY )
 
+        finalLow =
+            if lowNumber == highNumber then
+                lowNumber
+            else
+                lowNumber - 1
+
         ( updatedLines, newBuffer ) =
-            removeSlice (lowNumber - 1) (highNumber + 1) model.lines
+            removeSlice finalLow (highNumber + 1) model.lines
 
         numLines =
             List.length updatedLines

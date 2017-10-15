@@ -86,6 +86,84 @@ yankToLineTests =
         ]
 
 
+yankToEndOfFileTests : Test
+yankToEndOfFileTests =
+    describe "yG" <|
+        [ let
+            { lines, cursorX, buffer, cursorY } =
+                newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3", Enter, Keys "4", Enter, Keys "5", Enter, Keys "6", Enter, Keys "7", Enter, Keys "8", Enter, Keys "9", Escape, Keys "ggyG" ]
+          in
+            describe "ggyG"
+                [ test "doesn't change lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
+                , test "copies into buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| LinesBuffer [ "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
+                , test "moves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "moves cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        , let
+            { lines, cursorX, buffer, cursorY } =
+                newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3", Enter, Keys "4", Enter, Keys "5", Escape, Keys "d", Escape, Keys "yG" ]
+          in
+            describe "yG from last line"
+                [ test "doesn't change lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1", "2", "3", "4", "5" ]
+                , test "copies into buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| LinesBuffer [ "5" ]
+                , test "moves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "moves cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 4
+                ]
+        , let
+            { lines, cursorX, buffer, cursorY } =
+                newStateAfterActions [ Keys "yG" ]
+          in
+            describe "yG in empty buffer"
+                [ test "changes lines" <|
+                    \_ ->
+                        Expect.equal lines [ "" ]
+                , test "copies into buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| LinesBuffer [ "" ]
+                , test "moves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "moves cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        , let
+            { lines, cursorX, buffer, cursorY } =
+                newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3", Enter, Keys "4", Enter, Keys "5", Enter, Keys "6", Escape, Keys "kkkyG" ]
+          in
+            describe "copy from midway through the file"
+                [ test "changes lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1", "2", "3", "4", "5", "6" ]
+                , test "copies into buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| LinesBuffer [ "3", "4", "5", "6" ]
+                , test "moves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "moves cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 2
+                ]
+        ]
+
+
 yankToStartOfLineTests : Test
 yankToStartOfLineTests =
     describe "y0"

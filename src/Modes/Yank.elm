@@ -44,7 +44,7 @@ yankModeNormalUpdate model keyCode =
             handler model ! []
 
         Nothing ->
-            if List.member (Char.fromCode keyCode) [ 'j', 'k', 'h', 'l', 'w', 'b', '$' ] then
+            if List.member (Char.fromCode keyCode) [ 'j', 'k', 'h', 'l', 'w', 'b', '$', 'G' ] then
                 wrapDelete model keyCode
             else if List.isEmpty model.inProgress && Char.fromCode keyCode == '0' then
                 wrapDelete model keyCode
