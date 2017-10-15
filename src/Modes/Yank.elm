@@ -2,7 +2,7 @@ module Modes.Yank exposing (yankModeUpdate)
 
 import Model exposing (Model)
 import Keyboard exposing (KeyCode)
-import Mode exposing (Mode(..))
+import Mode exposing (Mode(..), NavigationType(..))
 import Modes.Control exposing (controlModeUpdate)
 import Yank.YankLines exposing (..)
 import Control.NavigateFile exposing (goToLineModeUpdate)
@@ -24,6 +24,8 @@ yankModeUpdate model keyCode =
         Yank Control ->
             if Char.fromCode keyCode == 'g' then
                 { model | mode = Yank GoToLine } ! []
+            else if Char.fromCode keyCode == 't' then
+                { model | mode = Yank (NavigateToCharacter Til) } ! []
             else
                 yankModeNormalUpdate model keyCode
 
@@ -32,6 +34,9 @@ yankModeUpdate model keyCode =
                 wrapDelete model keyCode
             else
                 yankModeNormalUpdate model keyCode
+
+        Yank (NavigateToCharacter Til) ->
+            wrapDelete model keyCode
 
         _ ->
             yankModeNormalUpdate model keyCode

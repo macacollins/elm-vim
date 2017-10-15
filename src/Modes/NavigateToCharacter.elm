@@ -51,7 +51,7 @@ navigateTilCharacter model keyCode =
                 cursorX - 1
 
         remainingLineSegment =
-            String.dropLeft indexToCut line
+            String.dropLeft (indexToCut + 1) line
 
         singleCharString =
             String.cons (Char.fromCode keyCode) ""
@@ -62,7 +62,7 @@ navigateTilCharacter model keyCode =
         newCursorX =
             case indices of
                 first :: _ ->
-                    cursorX + first - 1
+                    cursorX + first
 
                 _ ->
                     cursorX

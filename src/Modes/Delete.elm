@@ -2,8 +2,9 @@ module Modes.Delete exposing (deleteModeUpdate)
 
 import Model exposing (Model)
 import Keyboard exposing (KeyCode)
-import Mode exposing (Mode(Control))
+import Mode exposing (Mode(Control, NavigateToCharacter), NavigationType(..))
 import Delete.DeleteLines exposing (..)
+import Delete.DeleteToCharacter exposing (deleteToCharacter)
 import Delete.DeleteToEndOfLine exposing (..)
 import Delete.DeleteToStartOfLine exposing (..)
 import Delete.DeleteCharacter exposing (..)
@@ -34,6 +35,7 @@ dict =
         |> Dict.insert '0' deleteToStartOfLine
         |> Dict.insert 'G' deleteToLineDefaultEnd
         |> Dict.insert 'g' (\model -> { model | mode = Delete GoToLine })
+        |> Dict.insert 't' (\model -> { model | mode = Delete (NavigateToCharacter Til) })
 
 
 deleteModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
@@ -47,6 +49,9 @@ deleteModeUpdate model keyCode =
                 deleteToLineDefaultStart model ! []
             else
                 handleDefaultInput model keyCode
+
+        Delete (NavigateToCharacter Til) ->
+            deleteToCharacter model keyCode
 
         _ ->
             handleDefaultInput model keyCode
