@@ -36,6 +36,7 @@ dict =
         |> Dict.insert 'G' deleteToLineDefaultEnd
         |> Dict.insert 'g' (\model -> { model | mode = Delete GoToLine })
         |> Dict.insert 't' (\model -> { model | mode = Delete (NavigateToCharacter Til) })
+        |> Dict.insert 'f' (\model -> { model | mode = Delete (NavigateToCharacter To) })
 
 
 deleteModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
@@ -51,6 +52,9 @@ deleteModeUpdate model keyCode =
                 handleDefaultInput model keyCode
 
         Delete (NavigateToCharacter Til) ->
+            deleteToCharacter model keyCode
+
+        Delete (NavigateToCharacter To) ->
             deleteToCharacter model keyCode
 
         _ ->

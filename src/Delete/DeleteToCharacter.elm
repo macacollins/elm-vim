@@ -42,6 +42,14 @@ deleteToCharacter model keyCode =
                 |> String.left (newCursorX - cursorX + 1)
                 |> List.singleton
                 |> InlineBuffer
+
+        finalBuffer =
+            if updatedBuffer == InlineBuffer [ "" ] then
+                -- default empty buffer
+                -- we should prolly express this at a type level instead of as a convention
+                LinesBuffer []
+            else
+                updatedBuffer
     in
         if cursorX == newCursorX then
             { model | mode = Control }
@@ -49,8 +57,7 @@ deleteToCharacter model keyCode =
         else
             { model
                 | lines = updatedLines
-                , buffer = updatedBuffer
-                , cursorX = 0
+                , buffer = finalBuffer
                 , inProgress = []
                 , mode = Control
             }

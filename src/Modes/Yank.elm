@@ -26,6 +26,8 @@ yankModeUpdate model keyCode =
                 { model | mode = Yank GoToLine } ! []
             else if Char.fromCode keyCode == 't' then
                 { model | mode = Yank (NavigateToCharacter Til) } ! []
+            else if Char.fromCode keyCode == 'f' then
+                { model | mode = Yank (NavigateToCharacter To) } ! []
             else
                 yankModeNormalUpdate model keyCode
 
@@ -34,6 +36,9 @@ yankModeUpdate model keyCode =
                 wrapDelete model keyCode
             else
                 yankModeNormalUpdate model keyCode
+
+        Yank (NavigateToCharacter To) ->
+            wrapDelete model keyCode
 
         Yank (NavigateToCharacter Til) ->
             wrapDelete model keyCode

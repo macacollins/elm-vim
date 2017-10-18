@@ -5,6 +5,7 @@ import Test exposing (..)
 import Macro.Actions exposing (newStateAfterActions)
 import Macro.ActionEntry exposing (ActionEntry(..))
 import List
+import Mode exposing (Mode(..))
 
 
 testCanary : Test
