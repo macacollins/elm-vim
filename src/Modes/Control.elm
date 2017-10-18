@@ -13,7 +13,11 @@ import Control.Redo exposing (..)
 import Control.Paste exposing (..)
 import Yank.YankLines exposing (..)
 import Control.Navigation exposing (..)
+import Control.AppendAtEnd exposing (..)
+import Control.AppendAtStart exposing (..)
+import Control.SubstituteLine exposing (..)
 import Control.PreviousWord exposing (..)
+import Control.EnterAppendMode exposing (..)
 import Control.NextWord exposing (..)
 import Control.JoinLines exposing (joinLines)
 import Control.NavigateFile exposing (..)
@@ -44,10 +48,13 @@ dict =
         |> Dict.insert '0' navigateToStartOfLine
         |> Dict.insert '$' navigateToEndOfLine
         |> Dict.insert 'G' handleG
+        |> Dict.insert 'A' appendAtEnd
+        |> Dict.insert 'I' appendAtStart
         -- text manipulation
         |> Dict.insert 'J' joinLines
         |> Dict.insert 'D' deleteToEndOfLine
         |> Dict.insert 'X' handleBackspace
+        |> Dict.insert 'S' substituteLine
         -- search
         |> Dict.insert 'n' navigateToNextSearchResult
         |> Dict.insert 'N' navigateToLastSearchResult
@@ -63,6 +70,7 @@ dict =
         |> Dict.insert 'p' (\model -> addHistory model <| handlePaste model)
         |> Dict.insert 'P' (\model -> addHistory model <| handlePasteBefore model)
         |> Dict.insert 'x' (\model -> addHistory model <| deleteCharacterUnderCursor model)
+        |> Dict.insert 'a' enterAppendMode
 
 
 modeDict : Dict Char Mode
