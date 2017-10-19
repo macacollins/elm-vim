@@ -28,6 +28,8 @@ yankModeUpdate model keyCode =
                 { model | mode = Yank (NavigateToCharacter Til) } ! []
             else if Char.fromCode keyCode == 'f' then
                 { model | mode = Yank (NavigateToCharacter To) } ! []
+            else if Char.fromCode keyCode == 'F' then
+                { model | mode = Yank (NavigateToCharacter ToBack) } ! []
             else
                 yankModeNormalUpdate model keyCode
 
@@ -37,10 +39,7 @@ yankModeUpdate model keyCode =
             else
                 yankModeNormalUpdate model keyCode
 
-        Yank (NavigateToCharacter To) ->
-            wrapDelete model keyCode
-
-        Yank (NavigateToCharacter Til) ->
+        Yank (NavigateToCharacter _) ->
             wrapDelete model keyCode
 
         _ ->
@@ -75,6 +74,14 @@ wrapDelete model keyCode =
                 _ ->
                     Control
 
+        wrapsNavigateTo =
+            case newInnerMode of
+                NavigateToCharacter _ ->
+                    True
+
+                _ ->
+                    False
+
         modelWithMode =
             { model | mode = Delete newInnerMode }
 
@@ -91,6 +98,8 @@ wrapDelete model keyCode =
                 controlModeUpdate model keyCode
             else if code == 'g' then
                 goToLineModeUpdate model
+            else if wrapsNavigateTo then
+                deletedModel ! []
             else
                 model ! []
     in

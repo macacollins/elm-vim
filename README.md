@@ -8,30 +8,30 @@ $ cloc src
 classified 59 files      59 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.74  T=0.08 s (702.7 files/s, 38198.6 lines/s)
+github.com/AlDanial/cloc v 1.74  T=0.08 s (698.8 files/s, 38550.4 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             59            666             58           2483
+Elm                             59            676             58           2521
 -------------------------------------------------------------------------------
-SUM:                            59            666             58           2483
+SUM:                            59            676             58           2521
 -------------------------------------------------------------------------------
 ```
 ### tests folder
 ```bash
 $ cloc --exclude-dir elm-stuff .
-      28 text files.
-classified 28 files      28 unique files.                              
+      29 text files.
+classified 29 files      29 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.74  T=0.05 s (585.6 files/s, 81600.8 lines/s)
+github.com/AlDanial/cloc v 1.74  T=0.05 s (593.8 files/s, 85247.8 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             27            234             25           3624
+Elm                             28            249             41           3854
 JSON                             1              0              0             19
 -------------------------------------------------------------------------------
-SUM:                            28            234             25           3643
+SUM:                            29            249             41           3873
 -------------------------------------------------------------------------------
 ```
 ## TODOs
@@ -45,9 +45,10 @@ src/Modes/Control.elm:        -- TODO standardize on handle, navigate, or move
 src/Modes/Control.elm:        -- TODO move the addHistory into the functions themselves
 src/Modes/Control.elm:                        -- TODO more thoroughly test the history here
 src/Modes/Control.elm:-- TODO move the rest of these to their own files
-Binary file src/Modes/.Control.elm.swp matches
+Binary file src/Modes/.Yank.elm.swp matches
 src/Modes/MacroRecord.elm:-- TODO probably refactor
 src/Modes/MacroRecord.elm:            -- TODO flush buffer to dict
+Binary file src/Modes/.Delete.elm.swp matches
 src/Modes/Delete.elm:{- TODO consider refactoring; Delete Mode and Yank Mode are not fantastic abstractions. They should probably be toplevel rather than nested. -}
 src/Model.elm:-- TODO move this to the other syntax with named params
 ```

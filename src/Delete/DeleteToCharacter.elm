@@ -33,13 +33,19 @@ deleteToCharacter model keyCode =
         newCursorX =
             navigateModeUpdatedModel.cursorX
 
+        ( low, high ) =
+            if cursorX < newCursorX then
+                ( cursorX, newCursorX + 1 )
+            else
+                ( newCursorX, cursorX )
+
         updatedLines =
-            mutateAtIndex cursorY lines (\line -> String.left (cursorX) line ++ String.dropLeft (newCursorX + 1) line)
+            mutateAtIndex cursorY lines (\line -> String.left low line ++ String.dropLeft high line)
 
         updatedBuffer =
             getLine cursorY lines
-                |> String.dropLeft cursorX
-                |> String.left (newCursorX - cursorX + 1)
+                |> String.dropLeft low
+                |> String.left (high - low)
                 |> List.singleton
                 |> InlineBuffer
 
@@ -60,5 +66,6 @@ deleteToCharacter model keyCode =
                 , buffer = finalBuffer
                 , inProgress = []
                 , mode = Control
+                , cursorX = low
             }
                 ! []
