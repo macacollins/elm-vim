@@ -21,7 +21,7 @@ navigateToCharacterModeUpdate model keyCode =
             navigateTilCharacter model keyCode
 
         NavigateToCharacter ToBack ->
-            backToControlMode model
+            navigateBackwardToCharacter model keyCode
 
         NavigateToCharacter TilBack ->
             backToControlMode model
@@ -35,6 +35,10 @@ backToControlMode model =
     { model | mode = Control } ! []
 
 
+getStringFromKeycode =
+    Char.fromCode >> String.fromChar
+
+
 navigateForwardToCharacter : Model -> KeyCode -> ( Model, Cmd msg )
 navigateForwardToCharacter model keyCode =
     let
@@ -43,8 +47,31 @@ navigateForwardToCharacter model keyCode =
 
         indices =
             getLine cursorY lines
-                |> String.indices (keyCode |> Char.fromCode |> String.fromChar)
+                |> String.indices (getStringFromKeycode keyCode)
                 |> List.filter (\n -> n > cursorX + 1)
+
+        newCursorX =
+            case indices of
+                first :: _ ->
+                    first
+
+                _ ->
+                    cursorX
+    in
+        { model | cursorX = newCursorX, mode = Control } ! []
+
+
+navigateBackwardToCharacter : Model -> KeyCode -> ( Model, Cmd msg )
+navigateBackwardToCharacter model keyCode =
+    let
+        { lines, cursorX, cursorY } =
+            model
+
+        indices =
+            getLine cursorY lines
+                |> String.indices (getStringFromKeycode keyCode)
+                |> List.filter (\n -> n < cursorX)
+                |> List.reverse
 
         newCursorX =
             case indices of
@@ -65,7 +92,7 @@ navigateTilCharacter model keyCode =
 
         indices =
             getLine cursorY lines
-                |> String.indices (keyCode |> Char.fromCode |> String.fromChar)
+                |> String.indices (getStringFromKeycode keyCode)
                 |> List.filter (\n -> n > cursorX)
 
         newCursorX =
