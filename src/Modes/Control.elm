@@ -10,8 +10,8 @@ import Delete.DeleteCharacter exposing (..)
 import Control.ScreenMovement exposing (..)
 import Control.Undo exposing (..)
 import Control.Redo exposing (..)
+import Control.Substitute exposing (substitute)
 import Control.Paste exposing (..)
-import Yank.YankLines exposing (..)
 import Control.Navigation exposing (..)
 import Control.AppendAtEnd exposing (..)
 import Control.AppendAtStart exposing (..)
@@ -23,12 +23,10 @@ import Control.JoinLines exposing (joinLines)
 import Control.NavigateFile exposing (..)
 import Control.NextSearchResult exposing (..)
 import Control.LastSearchResults exposing (..)
+import Yank.YankLines exposing (..)
 import Delete.DeleteToEndOfLine exposing (..)
 import Util.ListUtils exposing (..)
 import History exposing (addHistory)
-
-
--- TODO need to make this configurable
 
 
 dict : Dict Char (Model -> Model)
@@ -54,6 +52,7 @@ dict =
         |> Dict.insert 'J' joinLines
         |> Dict.insert 'D' deleteToEndOfLine
         |> Dict.insert 'X' handleBackspace
+        |> Dict.insert 's' substitute
         |> Dict.insert 'S' substituteLine
         -- search
         |> Dict.insert 'n' navigateToNextSearchResult
