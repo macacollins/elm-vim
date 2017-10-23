@@ -6,6 +6,7 @@ import Styles exposing (styleString)
 import List exposing (..)
 import Json.Encode exposing (string)
 import View.Util exposing (..)
+import View.PortsScript exposing (..)
 import View.NormalLine exposing (..)
 import Html.Attributes exposing (id)
 
@@ -27,6 +28,6 @@ topView model =
                 [ text <| (toString model.mode ++ " " ++ model.searchStringBuffer) ]
 
         children =
-            styles :: mode :: lines
+            styles :: mode :: portsScript :: lines
     in
         main_ [] children

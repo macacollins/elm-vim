@@ -1,5 +1,7 @@
 module Mode exposing (Mode(..), NavigationType(..))
 
+import Json.Decode exposing (Value)
+
 
 type Mode
     = Control
@@ -16,6 +18,7 @@ type Mode
       -- Original X, original Y
     | Visual Int Int
     | NavigateToCharacter NavigationType
+    | Command String
 
 
 

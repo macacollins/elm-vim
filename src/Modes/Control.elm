@@ -78,6 +78,7 @@ modeDict =
         |> Dict.insert 'y' (Yank Control)
         |> Dict.insert 'd' (Delete Control)
         |> Dict.insert '/' Search
+        |> Dict.insert ':' (Command ":")
         |> Dict.insert '@' MacroExecute
         |> Dict.insert 'q' (Macro Control)
         |> Dict.insert 'i' Insert

@@ -5,6 +5,7 @@ import Msg exposing (Msg(..))
 import Model exposing (Model)
 import Mode exposing (Mode(..))
 import Modes.Control exposing (controlModeUpdate)
+import Modes.Command exposing (commandModeUpdate)
 import Modes.Visual exposing (visualModeUpdate)
 import Modes.NavigateToCharacter exposing (navigateToCharacterModeUpdate)
 import Modes.Insert exposing (insertModeUpdate)
@@ -14,6 +15,7 @@ import Modes.Search exposing (searchModeUpdate)
 import Modes.MacroRecord exposing (macroRecordModeUpdate)
 import Control.NavigateFile exposing (goToLineModeUpdate)
 import Keyboard exposing (KeyCode)
+import Import.AcceptBuffer exposing (acceptBuffer)
 
 
 -- the below should get refactored
@@ -27,6 +29,9 @@ update msg model =
     case msg of
         KeyInput keyPress ->
             updateKeyInput keyPress model.mode model
+
+        AcceptBuffer buffer ->
+            acceptBuffer model buffer
 
         KeyUp keyPress ->
             if List.member keyPress [ 27, 8 ] then
@@ -67,6 +72,9 @@ updateKeyInput keyPress mode model =
 
         Visual _ _ ->
             visualModeUpdate model keyPress
+
+        Command _ ->
+            commandModeUpdate model keyPress
 
         Macro inner ->
             let
