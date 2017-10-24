@@ -1,7 +1,7 @@
 module Delete.DeleteWords exposing (..)
 
 import Control.PreviousWord exposing (..)
-import Control.NextWord exposing (navigateToNextWord)
+import Control.NextWord exposing (moveToNextWord)
 import Control.Move exposing (moveLeft)
 import Control.CutSegment exposing (cutSegment)
 import Util.ListUtils exposing (getLine, removeAtIndex)
@@ -24,7 +24,7 @@ deleteBackWords model =
             model
 
         leftUpdated =
-            navigateToLastWord leftedModel
+            moveToLastWord leftedModel
 
         modifiedModelWithVisualModeHack =
             { model
@@ -45,7 +45,7 @@ deleteToNextWord model =
     let
         leftedModel =
             model
-                |> navigateToNextWord
+                |> moveToNextWord
                 |> moveLeft
 
         endLine =

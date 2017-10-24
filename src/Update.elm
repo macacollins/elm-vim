@@ -16,10 +16,7 @@ import Modes.MacroRecord exposing (macroRecordModeUpdate)
 import Control.NavigateFile exposing (goToLineModeUpdate)
 import Keyboard exposing (KeyCode)
 import Import.AcceptBuffer exposing (acceptBuffer)
-
-
--- the below should get refactored
-
+import Window
 import Macro.ActionEntry exposing (ActionEntry(..))
 import Macro.Model exposing (getMacro)
 
@@ -34,12 +31,19 @@ update msg model =
             acceptBuffer model buffer
 
         KeyUp keyPress ->
-            if List.member keyPress [ 27, 8 ] then
+            if List.member keyPress [ 27, 8, 9 ] then
                 update (KeyInput keyPress) model
             else if List.member keyPress [ 37, 38, 39, 40 ] then
                 controlModeUpdate model <| translateArrowKeys keyPress
             else
                 ( model, Cmd.none )
+
+        WindowResized size ->
+            let
+                newHeight =
+                    Debug.log "newHeight" (size.height // 19) - 1
+            in
+                { model | screenHeight = newHeight } ! []
 
 
 updateKeyInput : KeyCode -> Mode -> Model -> ( Model, Cmd msg )

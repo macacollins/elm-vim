@@ -2,7 +2,6 @@ module Modes.Control exposing (controlModeUpdate)
 
 import Model exposing (..)
 import Keyboard exposing (KeyCode)
-import List exposing (..)
 import Dict exposing (Dict)
 import Char
 import Mode exposing (Mode(..), NavigationType(..))
@@ -23,29 +22,61 @@ import Control.JoinLines exposing (joinLines)
 import Control.NavigateFile exposing (..)
 import Control.NextSearchResult exposing (..)
 import Control.LastSearchResults exposing (..)
+import Control.MoveToStartOfLine exposing (..)
+import Control.MoveToEndOfLine exposing (..)
+import Control.InsertLineAboveCursor exposing (..)
+import Control.InsertLineBelowCursor exposing (..)
 import Yank.YankLines exposing (..)
 import Delete.DeleteToEndOfLine exposing (..)
 import Util.ListUtils exposing (..)
 import History exposing (addHistory)
 
 
+controlModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
+controlModeUpdate model keyCode =
+    let
+        keyChar =
+            Char.fromCode keyCode
+
+        default =
+            if 48 <= keyCode && keyCode <= 57 then
+                { model | numberBuffer = keyChar :: model.numberBuffer }
+            else
+                case Dict.get keyChar modeDict of
+                    Just newMode ->
+                        -- TODO more thoroughly test the history here
+                        addHistory model { model | mode = newMode }
+
+                    Nothing ->
+                        model
+
+        newModel =
+            case Dict.get keyChar dict of
+                Just theFunction ->
+                    theFunction model
+
+                Nothing ->
+                    default
+    in
+        ( newModel, Cmd.none )
+
+
 dict : Dict Char (Model -> Model)
 dict =
     Dict.empty
         -- moveCursor
-        -- TODO standardize on handle, navigate, or move
         |> Dict.insert 'l' moveRight
         |> Dict.insert 'h' moveLeft
         |> Dict.insert 'j' moveDown
         |> Dict.insert 'k' moveUp
-        |> Dict.insert 'b' navigateToLastWord
-        |> Dict.insert 'w' navigateToNextWord
+        |> Dict.insert 'b' moveToLastWord
+        |> Dict.insert 'w' moveToNextWord
         |> Dict.insert 'H' moveToTopOfScreen
         |> Dict.insert 'L' moveToBottomOfScreen
         |> Dict.insert 'M' moveToMiddleOfScreen
-        |> Dict.insert '0' navigateToStartOfLine
-        |> Dict.insert '$' navigateToEndOfLine
-        |> Dict.insert 'G' handleG
+        |> Dict.insert '0' moveToStartOfLine
+        |> Dict.insert '$' moveToEndOfLine
+        |> Dict.insert 'G' goToLine
         |> Dict.insert 'A' appendAtEnd
         |> Dict.insert 'I' appendAtStart
         -- text manipulation
@@ -55,11 +86,11 @@ dict =
         |> Dict.insert 's' substitute
         |> Dict.insert 'S' substituteLine
         -- search
-        |> Dict.insert 'n' navigateToNextSearchResult
-        |> Dict.insert 'N' navigateToLastSearchResult
+        |> Dict.insert 'n' moveToNextSearchResult
+        |> Dict.insert 'N' moveToLastSearchResult
         -- insert new line
-        |> Dict.insert 'O' handleO
-        |> Dict.insert 'o' handleo
+        |> Dict.insert 'O' insertLineAboveCursor
+        |> Dict.insert 'o' insertLineBelowCursor
         -- undo, redo
         |> Dict.insert 'u' handleUndo
         |> Dict.insert 'R' handleRedo
@@ -87,91 +118,3 @@ modeDict =
         |> Dict.insert 'T' (NavigateToCharacter TilBack)
         |> Dict.insert 'f' (NavigateToCharacter To)
         |> Dict.insert 'F' (NavigateToCharacter ToBack)
-
-
-controlModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
-controlModeUpdate model keyCode =
-    let
-        default =
-            if 48 <= keyCode && keyCode <= 57 then
-                { model | numberBuffer = (Char.fromCode keyCode) :: model.numberBuffer }
-            else
-                case Dict.get (Char.fromCode keyCode) modeDict of
-                    Just newMode ->
-                        -- TODO more thoroughly test the history here
-                        addHistory model { model | mode = newMode }
-
-                    Nothing ->
-                        model
-
-        newModel =
-            case Dict.get (Char.fromCode keyCode) dict of
-                Just theFunction ->
-                    theFunction model
-
-                Nothing ->
-                    default
-    in
-        ( newModel, Cmd.none )
-
-
-
--- TODO move the rest of these to their own files
-
-
-addHistory : Model -> Model -> Model
-addHistory lastModel newModel =
-    { newModel | pastStates = getState lastModel :: lastModel.pastStates }
-
-
-handleO model =
-    let
-        updatedLines =
-            insertAtIndex (model.cursorY) model.lines ""
-    in
-        addHistory model
-            { model
-                | mode = Insert
-                , lines = updatedLines
-                , cursorX = 0
-            }
-
-
-handleo model =
-    let
-        newCursorY =
-            model.cursorY + 1
-
-        updatedLines =
-            insertAtIndex (model.cursorY + 1) model.lines ""
-    in
-        addHistory model
-            { model
-                | mode = Insert
-                , cursorY = newCursorY
-                , cursorX = 0
-                , lines = updatedLines
-            }
-
-
-navigateToStartOfLine : Model -> Model
-navigateToStartOfLine model =
-    if List.length (List.filter Char.isDigit model.numberBuffer) > 0 then
-        { model | numberBuffer = '0' :: model.numberBuffer }
-    else
-        { model | cursorX = 0 }
-
-
-navigateToEndOfLine : Model -> Model
-navigateToEndOfLine model =
-    let
-        length =
-            String.length <| getLine model.cursorY model.lines
-
-        zeroSafeLength =
-            if length == 0 then
-                0
-            else
-                length - 1
-    in
-        { model | cursorX = zeroSafeLength }

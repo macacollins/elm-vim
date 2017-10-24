@@ -8,13 +8,13 @@ import Mode exposing (Mode(Visual))
 import Control.Move exposing (moveLeft)
 
 
-navigateToLastWord : Model -> Model
-navigateToLastWord model =
-    navigateToLastWordInner model (getNumberModifier model)
+moveToLastWord : Model -> Model
+moveToLastWord model =
+    moveToLastWordInner model (getNumberModifier model)
 
 
-navigateToLastWordInner : Model -> Int -> Model
-navigateToLastWordInner model countDown =
+moveToLastWordInner : Model -> Int -> Model
+moveToLastWordInner model countDown =
     let
         { cursorY, cursorX, lines } =
             model
@@ -52,7 +52,7 @@ navigateToLastWordInner model countDown =
             { model | cursorX = newCursorX, cursorY = newCursorY }
     in
         if countDown > 1 then
-            navigateToLastWordInner updatedModel (countDown - 1)
+            moveToLastWordInner updatedModel (countDown - 1)
         else
             { updatedModel | numberBuffer = [] }
 

@@ -3,6 +3,7 @@ port module Subscriptions exposing (subscriptions)
 import Msg exposing (Msg(..))
 import Keyboard
 import Json.Decode exposing (Value)
+import Window
 
 
 subscriptions _ =
@@ -10,11 +11,12 @@ subscriptions _ =
         [ Keyboard.presses KeyInput
         , Keyboard.ups KeyUp
         , updateCurrentBuffer AcceptBuffer
+        , Window.resizes WindowResized
         ]
 
 
 
--- port for listening for suggestions from JavaScript
+-- port for getting buffers from localStorage in JavaScript
 
 
 port updateCurrentBuffer : (Value -> msg) -> Sub msg

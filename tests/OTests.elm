@@ -51,6 +51,21 @@ oTests =
         ]
 
 
+cursorYTests : Test
+cursorYTests =
+    describe "Increments firstLine if at the end of the buffer" <|
+        [ let
+            { firstLine } =
+                newStateAfterActions [ Keys "i", Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Enter, Escape, Keys "o", Escape ]
+          in
+            describe "firstLine moves"
+                [ test "moves firstLine" <|
+                    \_ ->
+                        Expect.equal firstLine 29
+                ]
+        ]
+
+
 capitalOTests : Test
 capitalOTests =
     describe "Hitting the O key."

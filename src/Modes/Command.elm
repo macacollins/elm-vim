@@ -5,6 +5,7 @@ import Char exposing (KeyCode)
 import Mode exposing (Mode(..))
 import Command.ExecuteCommand exposing (executeCommand)
 import Command.Autocomplete exposing (autocompleteCommand)
+import Command.Backspace exposing (backspace)
 import Command.Util exposing (getCommandModeText)
 
 
@@ -19,27 +20,14 @@ commandModeUpdate model keyCode =
                 Debug.log "Somehow we weren't in command mode in commandModeUpdate" <|
                     model
                         ! []
-    else if keyCode == 92 then
+    else if keyCode == 9 then
         autocompleteCommand model
+    else if keyCode == 27 then
+        { model | mode = Control } ! []
     else if keyCode == 8 then
         backspace model
     else
         addInput model (Char.fromCode keyCode)
-
-
-backspace : Model -> ( Model, Cmd msg )
-backspace model =
-    let
-        text =
-            getCommandModeText model
-
-        newText =
-            if String.length text > 1 then
-                String.dropRight 1 text
-            else
-                text
-    in
-        { model | mode = Command newText } ! []
 
 
 addInput : Model -> Char -> ( Model, Cmd msg )

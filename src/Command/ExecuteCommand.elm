@@ -23,11 +23,29 @@ commandDict =
         |> Dict.insert ":w" writeToLocalStorage
         |> Dict.insert ":set testsFromMacros" (setTestsFromMacros True)
         |> Dict.insert ":set !testsFromMacros" (setTestsFromMacros False)
+        |> Dict.insert ":set number" (setLineNumber True)
+        |> Dict.insert ":set !number" (setLineNumber False)
+        |> Dict.insert ":set relativenumber" (setRelativeLineNumber True)
+        |> Dict.insert ":set !relativenumber" (setRelativeLineNumber False)
+
+
+
+{- TODO see if there's a more dynamic way to do this -}
 
 
 setTestsFromMacros : Bool -> Model -> ( Model, Cmd msg )
 setTestsFromMacros newState model =
     propertiesUpdate (\properties -> { properties | testsFromMacros = newState }) model
+
+
+setLineNumber : Bool -> Model -> ( Model, Cmd msg )
+setLineNumber newState model =
+    propertiesUpdate (\properties -> { properties | lineNumbers = newState }) model
+
+
+setRelativeLineNumber : Bool -> Model -> ( Model, Cmd msg )
+setRelativeLineNumber newState model =
+    propertiesUpdate (\properties -> { properties | relativeLineNumbers = newState }) model
 
 
 propertiesUpdate : (Properties -> Properties) -> Model -> ( Model, Cmd msg )

@@ -6,8 +6,8 @@ import Util.ModifierUtils exposing (..)
 import Mode exposing (Mode(Control))
 
 
-handleG : Model -> Model
-handleG model =
+goToLine : Model -> Model
+goToLine model =
     let
         cursorY =
             List.length model.lines - 1
@@ -37,8 +37,8 @@ goToLineInner model defaultCursorX defaultCursorY =
 
         newFirstLine =
             -- TODO update when we page in a more mature fashion
-            if newCursorY > model.screenHeight then
-                newCursorY - model.screenHeight
+            if newCursorY >= model.screenHeight then
+                newCursorY - model.screenHeight + 1
             else
                 0
 

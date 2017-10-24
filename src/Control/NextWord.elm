@@ -1,4 +1,4 @@
-module Control.NextWord exposing (navigateToNextWord)
+module Control.NextWord exposing (moveToNextWord)
 
 import Model exposing (Model)
 import Util.ListUtils exposing (getLine)
@@ -8,13 +8,13 @@ import Control.Move exposing (moveLeft)
 import Mode exposing (Mode(Visual))
 
 
-navigateToNextWord : Model -> Model
-navigateToNextWord model =
-    navigateToNextWordInner model (getNumberModifier model)
+moveToNextWord : Model -> Model
+moveToNextWord model =
+    moveToNextWordInner model (getNumberModifier model)
 
 
-navigateToNextWordInner : Model -> Int -> Model
-navigateToNextWordInner model numberLeft =
+moveToNextWordInner : Model -> Int -> Model
+moveToNextWordInner model numberLeft =
     let
         { cursorY, cursorX, lines } =
             model
@@ -47,7 +47,7 @@ navigateToNextWordInner model numberLeft =
             { model | cursorX = newCursorX, cursorY = newCursorY }
     in
         if numberLeft > 1 then
-            navigateToNextWordInner
+            moveToNextWordInner
                 updatedModel
                 (numberLeft - 1)
         else

@@ -33,7 +33,12 @@ getNormalLineHTML model index line =
         paddedIndex =
             String.padLeft padding '0' <| toString actualIndex
     in
-        div [ class "normalLine" ]
-            [ span [ class "lineNumber" ] [ text paddedIndex ]
-            , textContents
-            ]
+        if model.properties.lineNumbers then
+            div [ class "normalLine" ]
+                [ span [ class "lineNumber" ] [ text paddedIndex ]
+                , textContents
+                ]
+        else
+            div [ class "normalLine" ]
+                [ textContents
+                ]

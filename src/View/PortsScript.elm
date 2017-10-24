@@ -17,6 +17,12 @@ scriptItself =
     """
     if (typeof started === "undefined") {
 
+        document.addEventListener('keydown', function(event) {
+            if (event.keyCode === 9) {
+                event.preventDefault();
+            }
+        });
+
         var app = Elm.Main.fullscreen()
 
         app.ports.writeBufferPort.subscribe(function(buffer) {

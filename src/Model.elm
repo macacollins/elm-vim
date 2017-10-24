@@ -58,6 +58,6 @@ initialModel =
     , searchString = ""
     , searchStringBuffer = ""
     , macroModel = initialMacroModel
-    , screenHeight = 30
+    , screenHeight = 31
     , properties = defaultProperties
     }

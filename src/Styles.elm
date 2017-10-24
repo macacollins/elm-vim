@@ -31,6 +31,10 @@ main {
   bottom: 0;
 }
 
+.normalLine {
+  height: 19px;
+}
+
 .lineNumber {
   padding-right: 15px;
   color: #800;

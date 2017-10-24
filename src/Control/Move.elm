@@ -43,8 +43,8 @@ moveDown model =
                 model.cursorY + numberModifier
 
         newFirstLine =
-            if newCursorY > model.firstLine + 30 then
-                newCursorY - 30
+            if newCursorY >= model.firstLine + model.screenHeight then
+                newCursorY - model.screenHeight + 1
             else
                 model.firstLine
     in

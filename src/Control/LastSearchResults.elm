@@ -1,11 +1,11 @@
-module Control.LastSearchResults exposing (navigateToLastSearchResult)
+module Control.LastSearchResults exposing (moveToLastSearchResult)
 
 import Model exposing (Model)
 import Util.Search exposing (searchBackwards)
 
 
-navigateToLastSearchResult : Model -> Model
-navigateToLastSearchResult model =
+moveToLastSearchResult : Model -> Model
+moveToLastSearchResult model =
     case searchBackwards model.searchString model of
         Just updatedModel ->
             updatedModel

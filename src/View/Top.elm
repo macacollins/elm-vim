@@ -15,7 +15,7 @@ topView : Model -> Html msg
 topView model =
     let
         lineRange =
-            take 31 <| drop model.firstLine model.lines
+            take model.screenHeight <| drop model.firstLine model.lines
 
         lines =
             List.indexedMap (getNormalLineHTML model) lineRange

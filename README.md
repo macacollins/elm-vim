@@ -4,17 +4,17 @@
 ### src folder
 ```bash
 $ cloc src
-      68 text files.
-classified 68 files      68 unique files.                              
+      73 text files.
+classified 73 files      73 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.17 s (400.8 files/s, 21394.3 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.18 s (399.6 files/s, 20417.9 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             68            763             67           2800
+Elm                             73            776             65           2889
 -------------------------------------------------------------------------------
-SUM:                            68            763             67           2800
+SUM:                            73            776             65           2889
 -------------------------------------------------------------------------------
 ```
 ### tests folder
@@ -24,25 +24,25 @@ $ cloc --exclude-dir elm-stuff .
 classified 29 files      29 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.08 s (346.4 files/s, 50296.2 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.09 s (341.1 files/s, 49720.0 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             28            249             41           3902
-JSON                             1              0              0             19
+Elm                             28            251             41           3915
+JSON                             1              0              0             20
 -------------------------------------------------------------------------------
-SUM:                            29            249             41           3921
+SUM:                            29            251             41           3935
 -------------------------------------------------------------------------------
 ```
 ## TODOs
 ```bash
 $ grep -r TODO src
+src/Command/ExecuteCommand.elm:{- TODO see if there's a more dynamic way to do this -}
+Binary file src/Control/.NavigateFile.elm.swp matches
 src/Control/NavigateFile.elm:            -- TODO update when we page in a more mature fashion
 src/Delete/DeleteNavigationKeys.elm:-- TODO handle firstLine adjustments
-src/Modes/Control.elm:        -- TODO standardize on handle, navigate, or move
-src/Modes/Control.elm:        -- TODO move the addHistory into the functions themselves
 src/Modes/Control.elm:                        -- TODO more thoroughly test the history here
-src/Modes/Control.elm:-- TODO move the rest of these to their own files
+src/Modes/Control.elm:        -- TODO move the addHistory into the functions themselves
 src/Modes/Delete.elm:{- TODO consider refactoring; Delete Mode and Yank Mode are not fantastic abstractions. They should probably be toplevel rather than nested. -}
 src/Modes/MacroRecord.elm:-- TODO probably refactor
 src/Modes/Yank.elm:        -- TODO This is nasty. Move to Yank and YankToLine

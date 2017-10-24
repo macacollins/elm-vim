@@ -16,7 +16,7 @@ moveToBottomOfScreen model =
         }
     else
         { model
-            | cursorY = model.firstLine + model.screenHeight
+            | cursorY = model.firstLine + model.screenHeight - 1
         }
 
 
