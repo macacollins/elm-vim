@@ -9,7 +9,7 @@ type alias Model =
     , cursorX : Int
     , cursorY : Int
     , mode : Mode
-    , inProgress : List Char
+    , numberBuffer : List Char
     , buffer : PasteBuffer
     , firstLine : Int
     , pastStates : List State

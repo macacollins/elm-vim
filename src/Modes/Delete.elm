@@ -59,8 +59,7 @@ deleteModeUpdate model keyCode =
             deleteToCharacter model keyCode
 
         Delete (NavigateToCharacter ToBack) ->
-            Debug.log "ToBack" <|
-                deleteToCharacter model keyCode
+            deleteToCharacter model keyCode
 
         _ ->
             handleDefaultInput model keyCode

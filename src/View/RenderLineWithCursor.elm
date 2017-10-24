@@ -25,6 +25,8 @@ renderLineWithCursor model index line =
             middle =
                 if String.length maybeMiddle == 0 then
                     "_"
+                else if maybeMiddle == " " then
+                    "_"
                 else
                     maybeMiddle
         in

@@ -4,7 +4,7 @@ import Model exposing (Model)
 import Util.ListUtils exposing (getLine)
 import Util.ModifierUtils exposing (..)
 import Control.CutSegment exposing (cutSegment)
-import Control.Navigation exposing (handleLeft)
+import Control.Move exposing (moveLeft)
 import Mode exposing (Mode(Visual))
 
 
@@ -51,7 +51,7 @@ navigateToNextWordInner model numberLeft =
                 updatedModel
                 (numberLeft - 1)
         else
-            { updatedModel | inProgress = [] }
+            { updatedModel | numberBuffer = [] }
 
 
 nextSpaceIndex : String -> Int

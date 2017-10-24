@@ -1,11 +1,10 @@
 module Control.Substitute exposing (substitute)
 
-import Model exposing (Model)
-import Util.ListUtils exposing (getLine, mutateAtIndex, insertAtIndex, removeSlice)
 import Mode exposing (Mode(..))
-import Util.ModifierUtils exposing (getNumberModifier)
-import Control.Navigation exposing (handleRight)
+import Model exposing (Model)
 import Model exposing (PasteBuffer(..))
+import Util.ListUtils exposing (getLine, mutateAtIndex, insertAtIndex, removeSlice)
+import Util.ModifierUtils exposing (getNumberModifier)
 
 
 -- removeSlice : Int -> Int -> List String -> ( List String, PasteBuffer )
@@ -21,7 +20,7 @@ substitute model =
             getLine cursorY lines
 
         righted =
-            handleRight model
+            moveRight model
 
         endX =
             righted.cursorX
@@ -44,5 +43,23 @@ substitute model =
             | mode = Insert
             , lines = updatedLines
             , buffer = newBuffer
-            , inProgress = []
+            , numberBuffer = []
         }
+
+
+moveRight : Model -> Model
+moveRight model =
+    let
+        numberModifier =
+            getNumberModifier model
+
+        currentLine =
+            getLine model.cursorY model.lines
+
+        newCursorX =
+            if model.cursorX + numberModifier < String.length currentLine then
+                model.cursorX + numberModifier
+            else
+                String.length currentLine
+    in
+        { model | cursorX = newCursorX, numberBuffer = [] }

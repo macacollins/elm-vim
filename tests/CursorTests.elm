@@ -149,13 +149,13 @@ testLittleG =
         modelWith100LinesOneG =
             newStateAfterActions actionsWith100LinesOneG
 
-        { inProgress, cursorX, cursorY, firstLine, mode } =
+        { numberBuffer, cursorX, cursorY, firstLine, mode } =
             modelWith100LinesOneG
     in
         describe "The little g key."
             [ test "One g doesn't goes to in progress." <|
                 \_ ->
-                    Expect.equal inProgress []
+                    Expect.equal numberBuffer []
             , test "One g moves to GoToLine mode" <|
                 \_ ->
                     Expect.equal mode GoToLine
@@ -244,14 +244,14 @@ testCursor =
                             [ Keys "iaaaaa", Escape, Keys "2h" ]
                 in
                     Expect.equal cursorX 2
-        , test "h resets the inProgress buffer." <|
+        , test "h resets the numberBuffer buffer." <|
             \_ ->
                 let
-                    { inProgress } =
+                    { numberBuffer } =
                         newStateAfterActions
                             [ Keys "iaaaaa", Escape, Keys "2h" ]
                 in
-                    Expect.equal inProgress []
+                    Expect.equal numberBuffer []
         , test "Too many h leaves the cursor at 0" <|
             \_ ->
                 let
@@ -273,7 +273,7 @@ lTests =
                         newStateAfterActions
                             [ Keys "iaaa", Escape, Keys "hhhllllllllllllllllllllllllll" ]
                 in
-                    Expect.equal cursorX 3
+                    Expect.equal cursorX 2
         , test "Cursor on 0 length line doesn't go to -1 on l." <|
             \_ ->
                 let
@@ -309,7 +309,7 @@ lTests =
                         newStateAfterActions
                             [ Keys "iaa", Enter, Keys "aaaa", Escape, Keys "kl" ]
                 in
-                    Expect.equal cursorX 2
+                    Expect.equal cursorX 1
         , test "L key takes modifiers" <|
             \_ ->
                 let
@@ -318,14 +318,14 @@ lTests =
                             [ Keys "iaaaaa", Escape, Keys "gg3l" ]
                 in
                     Expect.equal cursorX 3
-        , test "L key clears inProgress buffer" <|
+        , test "L key clears numberBuffer buffer" <|
             \_ ->
                 let
-                    { inProgress } =
+                    { numberBuffer } =
                         newStateAfterActions
                             [ Keys "iaaaaa", Escape, Keys "gg3l" ]
                 in
-                    Expect.equal inProgress []
+                    Expect.equal numberBuffer []
         , test "Too many ls doesn't go past the end of the line" <|
             \_ ->
                 let
@@ -333,7 +333,7 @@ lTests =
                         newStateAfterActions
                             [ Keys "iaaaaa", Escape, Keys "gg3000l" ]
                 in
-                    Expect.equal cursorX 5
+                    Expect.equal cursorX 4
         , test "Cursor resets on h key." <|
             \_ ->
                 let
@@ -342,6 +342,15 @@ lTests =
                             [ Keys "ia", Enter, Keys "aaa", Escape, Keys "kh" ]
                 in
                     Expect.equal cursorX 0
+        , let
+            { lines, cursorX, buffer, cursorY } =
+                newStateAfterActions [ Keys "ithis is a string", Escape, Keys "l" ]
+          in
+            describe "z"
+                [ test "moves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 15
+                ]
         , test "Cursor sticks around for k key." <|
             \_ ->
                 let
@@ -364,14 +373,14 @@ jTests =
                             [ Keys "i", Enter, Enter, Enter, Escape, Keys "gg2j" ]
                 in
                     Expect.equal cursorY 2
-        , test "j clears out inProgress" <|
+        , test "j clears out numberBuffer" <|
             \_ ->
                 let
-                    { inProgress } =
+                    { numberBuffer } =
                         newStateAfterActions
                             [ Keys "i", Enter, Enter, Enter, Escape, Keys "gg2j" ]
                 in
-                    Expect.equal inProgress []
+                    Expect.equal numberBuffer []
         , test "too many j's doesn't go below the bottom of the screen" <|
             \_ ->
                 let
@@ -394,14 +403,14 @@ kTests =
                             [ Keys "i", Enter, Enter, Enter, Enter, Escape, Keys "2k" ]
                 in
                     Expect.equal cursorY 2
-        , test "k clears out inProgress" <|
+        , test "k clears out numberBuffer" <|
             \_ ->
                 let
-                    { inProgress } =
+                    { numberBuffer } =
                         newStateAfterActions
                             [ Keys "i", Enter, Enter, Enter, Escape, Keys "2k" ]
                 in
-                    Expect.equal inProgress []
+                    Expect.equal numberBuffer []
         , test "too many ks doesn't go above the top of the screen" <|
             \_ ->
                 let
@@ -499,14 +508,14 @@ wTests =
                             [ Keys "iaaa aaa aaa", Escape, Keys "gg2w" ]
                 in
                     Expect.equal cursorX 8
-        , test "w resets the inProgress buffer properly." <|
+        , test "w resets the numberBuffer buffer properly." <|
             \_ ->
                 let
-                    { inProgress } =
+                    { numberBuffer } =
                         newStateAfterActions
                             [ Keys "iaaa aaa aaa", Escape, Keys "gg2w" ]
                 in
-                    Expect.equal inProgress []
+                    Expect.equal numberBuffer []
         , test "w takes you to the next line if there are more lines." <|
             \_ ->
                 let
@@ -593,14 +602,14 @@ bTests =
                             [ Keys "iaaa aaa aaa", Escape, Keys "3b" ]
                 in
                     Expect.equal cursorX 0
-        , test "b clears out inProgress" <|
+        , test "b clears out numberBuffer" <|
             \_ ->
                 let
-                    { inProgress } =
+                    { numberBuffer } =
                         newStateAfterActions
                             [ Keys "iaaa aaa aaa", Escape, Keys "3b" ]
                 in
-                    Expect.equal inProgress []
+                    Expect.equal numberBuffer []
         , test "b takes you to the start of the line if it's all one word." <|
             \_ ->
                 let

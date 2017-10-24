@@ -1,12 +1,12 @@
-module Control.Navigation exposing (handleUp, handleDown, handleLeft, handleRight)
+module Control.Move exposing (moveUp, moveDown, moveLeft, moveRight)
 
 import Model exposing (Model, PasteBuffer(..))
 import Util.ListUtils exposing (getLine, removeSlice)
 import Util.ModifierUtils exposing (..)
 
 
-handleUp : Model -> Model
-handleUp model =
+moveUp : Model -> Model
+moveUp model =
     let
         numberModifier =
             getNumberModifier model
@@ -24,14 +24,14 @@ handleUp model =
                 model.firstLine
     in
         { model
-            | inProgress = []
+            | numberBuffer = []
             , cursorY = newCursorY
             , firstLine = newFirstLine
         }
 
 
-handleDown : Model -> Model
-handleDown model =
+moveDown : Model -> Model
+moveDown model =
     let
         numberModifier =
             getNumberModifier model
@@ -49,14 +49,14 @@ handleDown model =
                 model.firstLine
     in
         { model
-            | inProgress = []
+            | numberBuffer = []
             , cursorY = newCursorY
             , firstLine = newFirstLine
         }
 
 
-handleLeft : Model -> Model
-handleLeft model =
+moveLeft : Model -> Model
+moveLeft model =
     let
         numberModifier =
             getNumberModifier model
@@ -74,11 +74,11 @@ handleLeft model =
             else
                 model.cursorX - numberModifier
     in
-        { model | cursorX = newCursorX, inProgress = [] }
+        { model | cursorX = newCursorX, numberBuffer = [] }
 
 
-handleRight : Model -> Model
-handleRight model =
+moveRight : Model -> Model
+moveRight model =
     let
         numberModifier =
             getNumberModifier model
@@ -87,9 +87,11 @@ handleRight model =
             getLine model.cursorY model.lines
 
         newCursorX =
-            if model.cursorX + numberModifier < String.length currentLine then
+            if model.cursorX + numberModifier < String.length currentLine - 1 then
                 model.cursorX + numberModifier
+            else if String.length currentLine == 0 then
+                0
             else
-                String.length currentLine
+                String.length currentLine - 1
     in
-        { model | cursorX = newCursorX, inProgress = [] }
+        { model | cursorX = newCursorX, numberBuffer = [] }

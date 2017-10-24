@@ -3,7 +3,7 @@ module Delete.DeleteNavigationKeys exposing (deleteUp, deleteDown, deleteLeft, d
 import Model exposing (Model, PasteBuffer(..))
 import Util.ListUtils exposing (getLine, removeSlice)
 import Util.ModifierUtils exposing (..)
-import Control.Navigation exposing (..)
+import Control.Move exposing (..)
 import Control.CutSegment exposing (cutSegment)
 import Mode exposing (Mode(..))
 
@@ -12,7 +12,7 @@ deleteRight : Model -> Model
 deleteRight model =
     let
         { cursorX } =
-            handleRight model
+            moveRight model
 
         updatedModel =
             { model
@@ -30,7 +30,7 @@ deleteLeft : Model -> Model
 deleteLeft model =
     let
         { cursorX } =
-            handleLeft model
+            moveLeft model
 
         updatedModel =
             { model
@@ -48,7 +48,7 @@ deleteUp : Model -> Model
 deleteUp model =
     let
         { cursorY } =
-            handleUp model
+            moveUp model
     in
         cutLines cursorY model.cursorY model
 
@@ -57,7 +57,7 @@ deleteDown : Model -> Model
 deleteDown model =
     let
         { cursorY } =
-            handleDown model
+            moveDown model
     in
         cutLines model.cursorY cursorY model
 
@@ -97,6 +97,7 @@ cutLines start finish model =
             , buffer = newBuffer
             , cursorX = 0
             , cursorY = actualNewCursorY
-            , inProgress = []
+            , numberBuffer = []
             , firstLine = newFirstLine
+            , mode = Control
         }

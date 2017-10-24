@@ -64,7 +64,7 @@ deleteToCharacter model keyCode =
             { model
                 | lines = updatedLines
                 , buffer = finalBuffer
-                , inProgress = []
+                , numberBuffer = []
                 , mode = Control
                 , cursorX = low
             }

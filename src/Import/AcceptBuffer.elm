@@ -2,6 +2,7 @@ module Import.AcceptBuffer exposing (acceptBuffer)
 
 import Model exposing (Model, initialModel)
 import Json.Decode exposing (..)
+import Char
 
 
 {-
@@ -42,11 +43,23 @@ acceptBuffer model value =
             value
                 |> decodeValue decoder
                 |> Result.withDefault defaultBuffer
+
+        removeRs string =
+            string
+                |> String.split (String.cons (Char.fromCode 13) "")
+                |> String.join ""
+                |> String.split (String.cons (Char.fromCode 10) "")
+                |> String.join ""
+
+        updatedLines =
+            buffer.contents
+                |> String.split "\n"
+                |> List.map removeRs
     in
         { model
             | cursorX = buffer.cursorX
             , cursorY = buffer.cursorY
-            , lines = String.split "\n" buffer.contents
+            , lines = updatedLines
             , firstLine = buffer.firstLine
         }
             ! []

@@ -5,7 +5,7 @@ import Util.ListUtils exposing (getLine)
 import Util.ModifierUtils exposing (..)
 import Control.CutSegment exposing (cutSegment)
 import Mode exposing (Mode(Visual))
-import Control.Navigation exposing (handleLeft)
+import Control.Move exposing (moveLeft)
 
 
 navigateToLastWord : Model -> Model
@@ -54,7 +54,7 @@ navigateToLastWordInner model countDown =
         if countDown > 1 then
             navigateToLastWordInner updatedModel (countDown - 1)
         else
-            { updatedModel | inProgress = [] }
+            { updatedModel | numberBuffer = [] }
 
 
 lastSpaceIndex : String -> Bool -> Int

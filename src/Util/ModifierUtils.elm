@@ -12,7 +12,7 @@ getNumberModifier model =
 
 getNumericCharactersFromInProgress : Model -> List Char
 getNumericCharactersFromInProgress model =
-    model.inProgress
+    model.numberBuffer
         |> List.filter
             (\c -> List.member c [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ])
         |> List.reverse

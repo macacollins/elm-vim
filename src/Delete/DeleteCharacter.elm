@@ -12,12 +12,28 @@ deleteCharacterUnderCursor model =
             model
 
         updateLine currentLine =
-            (String.slice 0 cursorX currentLine) ++ (String.slice (cursorX + 1) (String.length currentLine) currentLine)
+            (String.slice 0 cursorX currentLine)
+                ++ (String.slice
+                        (cursorX + 1)
+                        (String.length currentLine)
+                        currentLine
+                   )
 
         finalLines =
             mutateAtIndex cursorY lines updateLine
+
+        mutatedLine =
+            getLine cursorY finalLines
+
+        finalCursorX =
+            if cursorX < String.length mutatedLine then
+                cursorX
+            else if String.length mutatedLine == 0 then
+                0
+            else
+                String.length mutatedLine - 1
     in
-        { model | lines = finalLines }
+        { model | lines = finalLines, cursorX = finalCursorX }
 
 
 handleBackspace : Model -> Model

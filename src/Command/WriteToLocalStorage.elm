@@ -18,10 +18,9 @@ writeToLocalStorage model =
 
 getValue : Model -> Value
 getValue model =
-    Debug.log "object" <|
-        object
-            [ ( "contents", string <| String.join "\x0D\n" model.lines )
-            , ( "cursorX", int <| model.cursorX )
-            , ( "cursorY", int <| model.cursorY )
-            , ( "firstLine", int <| model.firstLine )
-            ]
+    object
+        [ ( "contents", string <| String.join "\x0D\n" model.lines )
+        , ( "cursorX", int <| model.cursorX )
+        , ( "cursorY", int <| model.cursorY )
+        , ( "firstLine", int <| model.firstLine )
+        ]

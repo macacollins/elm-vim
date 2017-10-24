@@ -26,5 +26,5 @@ deleteToStartOfLine model =
             | lines = updatedLines
             , buffer = updatedBuffer
             , cursorX = 0
-            , inProgress = []
+            , numberBuffer = []
         }

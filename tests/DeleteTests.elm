@@ -173,6 +173,38 @@ deleteUpTests =
                     \_ ->
                         Expect.equal cursorY 1
                 ]
+        , describe "3dkk" <|
+            let
+                { lines, cursorX, buffer, cursorY } =
+                    newStateAfterActions
+                        [ Keys "ione"
+                        , Enter
+                        , Keys "two"
+                        , Enter
+                        , Keys "three"
+                        , Enter
+                        , Keys "four"
+                        , Enter
+                        , Keys "five"
+                        , Enter
+                        , Keys "six"
+                        , Escape
+                        , Keys "b3dkk"
+                        ]
+            in
+                [ test "3dk deletes 4 lines" <|
+                    \_ ->
+                        Expect.equal lines [ "one", "two" ]
+                , test "3dk copies the deleted word" <|
+                    \_ ->
+                        Expect.equal buffer <| LinesBuffer [ "three", "four", "five", "six" ]
+                , test "3dk moves cursorX back when deleting 4 lines" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "3dk moves cursorY back when deleting 4 lines at the end" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
         , describe "3dk in middle" <|
             let
                 { lines, cursorX, buffer, cursorY } =
@@ -365,9 +397,9 @@ deleteWordsBackwardsTests =
                 , test "3db copies the deleted words" <|
                     \_ ->
                         Expect.equal testModel.buffer <| InlineBuffer [ "two three fou" ]
-                , test "3db clears inProgress" <|
+                , test "3db clears numberBuffer" <|
                     \_ ->
-                        Expect.equal testModel.inProgress []
+                        Expect.equal testModel.numberBuffer []
                 , test "3db moves the cursor back too" <|
                     \_ ->
                         Expect.equal testModel.cursorX 4
@@ -576,10 +608,10 @@ dKeyWithModifiersTests =
         , test "Modifiers go in properly" <|
             \_ ->
                 let
-                    { inProgress } =
+                    { numberBuffer } =
                         newStateAfterActions [ Keys "1234567890" ]
                 in
-                    Expect.equal (List.length inProgress) 10
+                    Expect.equal (List.length numberBuffer) 10
         ]
 
 
@@ -685,4 +717,11 @@ xTests =
                         getLine 0 lines
                 in
                     Expect.equal finalLine "a"
+        , test "moves cursorX back when at end of line" <|
+            \_ ->
+                let
+                    { cursorX } =
+                        newStateAfterActions [ Keys "iaa", Escape, Keys "x" ]
+                in
+                    Expect.equal cursorX 0
         ]

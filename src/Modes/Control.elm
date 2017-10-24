@@ -12,7 +12,7 @@ import Control.Undo exposing (..)
 import Control.Redo exposing (..)
 import Control.Substitute exposing (substitute)
 import Control.Paste exposing (..)
-import Control.Navigation exposing (..)
+import Control.Move exposing (..)
 import Control.AppendAtEnd exposing (..)
 import Control.AppendAtStart exposing (..)
 import Control.SubstituteLine exposing (..)
@@ -34,10 +34,10 @@ dict =
     Dict.empty
         -- moveCursor
         -- TODO standardize on handle, navigate, or move
-        |> Dict.insert 'l' handleRight
-        |> Dict.insert 'h' handleLeft
-        |> Dict.insert 'j' handleDown
-        |> Dict.insert 'k' handleUp
+        |> Dict.insert 'l' moveRight
+        |> Dict.insert 'h' moveLeft
+        |> Dict.insert 'j' moveDown
+        |> Dict.insert 'k' moveUp
         |> Dict.insert 'b' navigateToLastWord
         |> Dict.insert 'w' navigateToNextWord
         |> Dict.insert 'H' moveToTopOfScreen
@@ -94,7 +94,7 @@ controlModeUpdate model keyCode =
     let
         default =
             if 48 <= keyCode && keyCode <= 57 then
-                { model | inProgress = (Char.fromCode keyCode) :: model.inProgress }
+                { model | numberBuffer = (Char.fromCode keyCode) :: model.numberBuffer }
             else
                 case Dict.get (Char.fromCode keyCode) modeDict of
                     Just newMode ->
@@ -156,8 +156,8 @@ handleo model =
 
 navigateToStartOfLine : Model -> Model
 navigateToStartOfLine model =
-    if List.length (List.filter Char.isDigit model.inProgress) > 0 then
-        { model | inProgress = '0' :: model.inProgress }
+    if List.length (List.filter Char.isDigit model.numberBuffer) > 0 then
+        { model | numberBuffer = '0' :: model.numberBuffer }
     else
         { model | cursorX = 0 }
 

@@ -2,7 +2,7 @@ module Delete.DeleteWords exposing (..)
 
 import Control.PreviousWord exposing (..)
 import Control.NextWord exposing (navigateToNextWord)
-import Control.Navigation exposing (handleLeft)
+import Control.Move exposing (moveLeft)
 import Control.CutSegment exposing (cutSegment)
 import Util.ListUtils exposing (getLine, removeAtIndex)
 import Util.ModifierUtils exposing (..)
@@ -37,7 +37,7 @@ deleteBackWords model =
             cutSegmentModel =
                 cutSegment modifiedModelWithVisualModeHack
         in
-            { cutSegmentModel | inProgress = [] }
+            { cutSegmentModel | numberBuffer = [] }
 
 
 deleteToNextWord : Model -> Model
@@ -46,7 +46,7 @@ deleteToNextWord model =
         leftedModel =
             model
                 |> navigateToNextWord
-                |> handleLeft
+                |> moveLeft
 
         endLine =
             getLine leftedModel.cursorY model.lines
@@ -80,4 +80,4 @@ deleteToNextWord model =
             else
                 ( cutSegmentModel.lines, Nothing )
     in
-        { cutSegmentModel | inProgress = [], lines = withExtraDeletedLine }
+        { cutSegmentModel | numberBuffer = [], lines = withExtraDeletedLine }

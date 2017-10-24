@@ -169,15 +169,15 @@ yankToStartOfLineTests =
     describe "y0"
         [ describe "y0 from end of line" <|
             let
-                { lines, cursorX, buffer, inProgress, cursorY } =
+                { lines, cursorX, buffer, numberBuffer, cursorY } =
                     newStateAfterActions [ Keys "i1234567", Escape, Keys "y0" ]
             in
                 [ test "y0 leaves the line" <|
                     \_ ->
                         Expect.equal lines [ "1234567" ]
-                , test "y0 has an empty inProgress" <|
+                , test "y0 has an empty numberBuffer" <|
                     \_ ->
-                        Expect.equal inProgress []
+                        Expect.equal numberBuffer []
                 , test "y0 copies text" <|
                     \_ ->
                         Expect.equal buffer <| InlineBuffer [ "123456" ]
@@ -190,7 +190,7 @@ yankToStartOfLineTests =
                 ]
         , describe "y20 doesn't copy text" <|
             let
-                { lines, cursorX, buffer, inProgress, cursorY } =
+                { lines, cursorX, buffer, numberBuffer, cursorY } =
                     newStateAfterActions [ Keys "i1234567", Escape, Keys "y20" ]
             in
                 [ test "y20 leaves the line" <|
@@ -199,9 +199,9 @@ yankToStartOfLineTests =
                 , test "y20 copies text" <|
                     \_ ->
                         Expect.equal buffer <| LinesBuffer []
-                , test "y20 has 2 and 0 inProgress" <|
+                , test "y20 has 2 and 0 numberBuffer" <|
                     \_ ->
-                        Expect.equal (List.member '2' inProgress && List.member '0' inProgress) True
+                        Expect.equal (List.member '2' numberBuffer && List.member '0' numberBuffer) True
                 , test "y20 moves cursorX back " <|
                     \_ ->
                         Expect.equal cursorX 6
@@ -265,7 +265,7 @@ yankUpTests =
     describe "yanking up"
         [ describe "5yk" <|
             let
-                { lines, cursorX, buffer, cursorY, inProgress } =
+                { lines, cursorX, buffer, cursorY, numberBuffer } =
                     newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3", Enter, Keys "45", Enter, Keys "6", Enter, Keys "7", Enter, Keys "8", Escape, Keys "5yk" ]
             in
                 [ test "moves those lines into buffer" <|
@@ -274,9 +274,9 @@ yankUpTests =
                 , test "copies 6 lines" <|
                     \_ ->
                         Expect.equal buffer <| LinesBuffer [ "2", "3", "45", "6", "7", "8" ]
-                , test "clears inProgress" <|
+                , test "clears numberBuffer" <|
                     \_ ->
-                        Expect.equal inProgress []
+                        Expect.equal numberBuffer []
                 , test "leaves cursorX at 0" <|
                     \_ ->
                         Expect.equal cursorX 0
@@ -346,7 +346,7 @@ yankDownTests =
     describe "yanking down"
         [ describe "5yj" <|
             let
-                { lines, cursorX, buffer, cursorY, inProgress } =
+                { lines, cursorX, buffer, cursorY, numberBuffer } =
                     newStateAfterActions [ Keys "i1", Enter, Keys "2", Enter, Keys "3", Enter, Keys "45", Enter, Keys "6", Enter, Keys "7", Enter, Keys "8", Escape, Keys "gg5yj" ]
             in
                 [ test "moves those lines into buffer" <|
@@ -355,9 +355,9 @@ yankDownTests =
                 , test "copies 6 lines" <|
                     \_ ->
                         Expect.equal buffer <| LinesBuffer [ "1", "2", "3", "45", "6", "7" ]
-                , test "clears inProgress" <|
+                , test "clears numberBuffer" <|
                     \_ ->
-                        Expect.equal inProgress []
+                        Expect.equal numberBuffer []
                 , test "leaves cursorX at 0" <|
                     \_ ->
                         Expect.equal cursorX 0

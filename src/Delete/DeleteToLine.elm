@@ -72,5 +72,5 @@ deleteToLine model defaultY =
             , cursorY = newCursorY
             , buffer = newBuffer
             , mode = Control
-            , inProgress = []
+            , numberBuffer = []
         }

@@ -8,7 +8,7 @@ type Mode
     | Insert
       -- This is for when the user presses g
     | GoToLine
-      -- This is cleaner than checking for (List.member 'd' inProgress)
+      -- This is cleaner than checking for (List.member 'd' numberBuffer)
     | Delete Mode
     | Yank Mode
     | Search

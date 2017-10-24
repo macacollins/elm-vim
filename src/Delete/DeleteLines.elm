@@ -33,7 +33,7 @@ deleteLines model =
                 model.cursorY
     in
         { model
-            | inProgress = []
+            | numberBuffer = []
             , lines = actualLines
             , buffer = newBuffer
             , pastStates = newPastStates
