@@ -140,9 +140,12 @@ flushBuffer model =
             model
 
         trash2 =
-            Debug.log
-                (getSuite finalModel)
-                0
+            if model.testsFromMacros then
+                Debug.log
+                    (getSuite finalModel)
+                    0
+            else
+                1
 
         updatedMacroMap : Dict Char (List ActionEntry)
         updatedMacroMap =

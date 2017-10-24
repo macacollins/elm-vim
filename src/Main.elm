@@ -7,6 +7,7 @@ import Init exposing (init)
 import Subscriptions exposing (subscriptions)
 import Model exposing (Model)
 import Msg exposing (Msg)
+import Flags exposing (Flags)
 
 
 main : Program Never Model Msg
@@ -15,5 +16,5 @@ main =
         { subscriptions = subscriptions
         , view = topView
         , update = update
-        , init = init
+        , init = init { testsFromMacros = True }
         }

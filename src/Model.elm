@@ -18,6 +18,9 @@ type alias Model =
     , searchStringBuffer : String
     , macroModel : MacroModel
     , screenHeight : Int
+
+    -- TODO should be a Properties
+    , testsFromMacros : Bool
     }
 
 
@@ -62,3 +65,4 @@ initialModel =
         ""
         initialMacroModel
         30
+        False
