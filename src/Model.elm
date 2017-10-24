@@ -2,6 +2,7 @@ module Model exposing (PasteBuffer(..), Model, State, getState, initialModel)
 
 import Mode exposing (Mode(..))
 import Macro.Model exposing (MacroModel, initialMacroModel)
+import Properties exposing (Properties, defaultProperties)
 
 
 type alias Model =
@@ -18,9 +19,7 @@ type alias Model =
     , searchStringBuffer : String
     , macroModel : MacroModel
     , screenHeight : Int
-
-    -- TODO should be a Properties
-    , testsFromMacros : Bool
+    , properties : Properties
     }
 
 
@@ -46,23 +45,19 @@ getState model =
         model.firstLine
 
 
-
--- TODO move this to the other syntax with named params
-
-
 initialModel =
-    Model
-        (List.repeat 1 "")
-        0
-        0
-        Control
-        []
-        (LinesBuffer [])
-        0
-        []
-        []
-        ""
-        ""
-        initialMacroModel
-        30
-        False
+    { lines = (List.repeat 1 "")
+    , cursorX = 0
+    , cursorY = 0
+    , mode = Control
+    , numberBuffer = []
+    , buffer = (LinesBuffer [])
+    , firstLine = 0
+    , pastStates = []
+    , futureStates = []
+    , searchString = ""
+    , searchStringBuffer = ""
+    , macroModel = initialMacroModel
+    , screenHeight = 30
+    , properties = defaultProperties
+    }

@@ -52,7 +52,6 @@ macroRecordModeUpdate model initialModel keyCode =
                     Macro other
     in
         if shouldExit then
-            -- TODO flush buffer to dict
             flushBuffer model ! []
         else if macroModel.bufferChar == Nothing then
             { initialModel | macroModel = updatedMacroModel } ! []
@@ -136,11 +135,11 @@ getTest macro =
 flushBuffer : Model -> Model
 flushBuffer model =
     let
-        { macroModel } =
+        { macroModel, properties } =
             model
 
         trash2 =
-            if model.testsFromMacros then
+            if properties.testsFromMacros then
                 Debug.log
                     (getSuite finalModel)
                     0

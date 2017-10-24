@@ -7,4 +7,13 @@ import Flags exposing (Flags)
 
 init : Flags -> ( Model, Cmd msg )
 init flags =
-    ( { initialModel | testsFromMacros = flags.testsFromMacros }, Cmd.none )
+    let
+        properties =
+            initialModel.properties
+
+        updatedProperties =
+            { properties
+                | testsFromMacros = flags.testsFromMacros
+            }
+    in
+        ( { initialModel | properties = updatedProperties }, Cmd.none )

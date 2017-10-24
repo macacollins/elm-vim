@@ -22,7 +22,6 @@ searchModeUpdate model keyCode =
             if keyCode == 13 then
                 case searchTo model.searchStringBuffer model of
                     Just updatedModel ->
-                        -- TODO probably restructure
                         { updatedModel
                             | mode = Control
                             , searchString = model.searchStringBuffer
