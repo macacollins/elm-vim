@@ -4,7 +4,7 @@ module Properties exposing (Properties, defaultProperties)
 defaultProperties : Properties
 defaultProperties =
     { testsFromMacros = False
-    , lineNumbers = False
+    , lineNumbers = True
     , relativeLineNumbers = False
     }
 

@@ -1,5 +1,6 @@
 module View.RenderLineWithCursor exposing (renderLineWithCursor)
 
+import Mode exposing (Mode(..))
 import Model exposing (Model)
 import Html exposing (..)
 import Html.Attributes exposing (class, id)
@@ -13,14 +14,23 @@ renderLineWithCursor model index line =
         span [ id "cursor" ] [ text "_" ]
     else
         let
+            adjustedCursorX =
+                if String.length line <= model.cursorX then
+                    if model.mode == Insert then
+                        String.length line
+                    else
+                        String.length line - 1
+                else
+                    model.cursorX
+
             before =
-                String.slice 0 model.cursorX line
+                String.slice 0 adjustedCursorX line
 
             maybeMiddle =
-                String.slice model.cursorX (model.cursorX + 1) line
+                String.slice adjustedCursorX (adjustedCursorX + 1) line
 
             after =
-                String.slice (model.cursorX + 1) (String.length line + 1) line
+                String.slice (adjustedCursorX + 1) (String.length line + 1) line
 
             middle =
                 if String.length maybeMiddle == 0 then
