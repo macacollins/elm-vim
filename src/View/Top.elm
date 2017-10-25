@@ -17,8 +17,14 @@ topView model =
         lineRange =
             take model.screenHeight <| drop model.firstLine model.lines
 
+        tildeLines =
+            if List.length lineRange == model.screenHeight then
+                []
+            else
+                List.repeat (model.screenHeight - List.length lineRange) "~"
+
         lines =
-            List.indexedMap (getNormalLineHTML model) lineRange
+            List.indexedMap (getNormalLineHTML model) (lineRange ++ tildeLines)
 
         styles =
             node "style" [] [ text styleString ]

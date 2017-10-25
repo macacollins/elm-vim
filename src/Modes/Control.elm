@@ -83,6 +83,7 @@ dict =
         |> Dict.insert 'J' joinLines
         |> Dict.insert 'D' deleteToEndOfLine
         |> Dict.insert 'X' handleBackspace
+        |> Dict.insert (Char.fromCode 8) handleBackspace
         |> Dict.insert 's' substitute
         |> Dict.insert 'S' substituteLine
         -- search

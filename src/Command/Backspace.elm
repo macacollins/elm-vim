@@ -11,10 +11,10 @@ backspace model =
         text =
             getCommandModeText model
 
-        newText =
+        newMode =
             if String.length text > 1 then
-                String.dropRight 1 text
+                Command <| String.dropRight 1 text
             else
-                text
+                Control
     in
-        { model | mode = Command newText } ! []
+        { model | mode = newMode } ! []

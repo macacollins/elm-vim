@@ -34,3 +34,47 @@ testCommandToProps ( command, propertyGetter, expectedValue ) =
         test (command ++ " " ++ (toString propertyGetter) ++ " leads to " ++ toString expectedValue) <|
             \_ ->
                 Expect.equal (propertyGetter properties) expectedValue
+
+
+testEscapeGetsToCommandMode : Test
+testEscapeGetsToCommandMode =
+    let
+        { mode } =
+            newStateAfterActions [ Keys ":set sxzxaszxs\t", Escape ]
+    in
+        test "Escape returns to Control mode" <|
+            \_ ->
+                Expect.equal mode Control
+
+
+testInvalidSequence : Test
+testInvalidSequence =
+    let
+        { mode } =
+            newStateAfterActions [ Keys ":set sxzxaszxs\t", Enter ]
+    in
+        test "Goes back to control mode with an invalid sequence" <|
+            \_ ->
+                Expect.equal mode Control
+
+
+testBackspaceALotOfTimes : Test
+testBackspaceALotOfTimes =
+    let
+        { mode } =
+            newStateAfterActions [ Keys ":s", Backspace, Backspace ]
+    in
+        test "goes back to control mode" <|
+            \_ ->
+                Expect.equal mode Control
+
+
+testBackspace : Test
+testBackspace =
+    let
+        { mode } =
+            newStateAfterActions [ Keys ":set s", Backspace ]
+    in
+        test "removes character from mode" <|
+            \_ ->
+                Expect.equal mode <| Command ":set "
