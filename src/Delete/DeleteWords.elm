@@ -51,20 +51,23 @@ deleteToNextWord model =
         endLine =
             getLine leftedModel.cursorY model.lines
 
-        ( deleteLine, cursorX, cursorY ) =
-            if leftedModel.cursorX == 0 && String.trim endLine /= "" then
+        ( deleteLine, moveCursorXBack, cursorX, cursorY ) =
+            if leftedModel.cursorX == 0 then
                 -- we need to leave the line as is
                 if leftedModel.cursorY == 0 then
                     -- this is confusing; is it possible to get here? Empty file would do it
-                    ( False, leftedModel.cursorX, leftedModel.cursorY )
+                    ( False, False, leftedModel.cursorX, leftedModel.cursorY )
                 else
                     let
                         line =
                             getLine (leftedModel.cursorY - 1) model.lines
                     in
-                        ( True, String.length line - 1, leftedModel.cursorY - 1 )
+                        if model.cursorX == 0 then
+                            ( True, False, String.length line - 1, leftedModel.cursorY - 1 )
+                        else
+                            ( False, True, String.length line - 1, leftedModel.cursorY - 1 )
             else
-                ( False, leftedModel.cursorX, leftedModel.cursorY )
+                ( False, False, leftedModel.cursorX, leftedModel.cursorY )
 
         modifiedModelWithVisualModeHack =
             { model
@@ -79,5 +82,15 @@ deleteToNextWord model =
                 removeAtIndex model.cursorY cutSegmentModel.lines
             else
                 ( cutSegmentModel.lines, Nothing )
+
+        newCursorX =
+            if moveCursorXBack then
+                model.cursorX - 1
+            else
+                model.cursorX
     in
-        { cutSegmentModel | numberBuffer = [], lines = withExtraDeletedLine }
+        { cutSegmentModel
+            | numberBuffer = []
+            , lines = withExtraDeletedLine
+            , cursorX = newCursorX
+        }

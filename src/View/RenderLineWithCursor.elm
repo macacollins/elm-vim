@@ -17,7 +17,7 @@ renderLineWithCursor model index line =
             adjustedCursorX =
                 if String.length line <= model.cursorX then
                     if model.mode == Insert then
-                        String.length line
+                        String.length line + 1
                     else
                         String.length line - 1
                 else

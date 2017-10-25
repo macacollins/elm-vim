@@ -539,7 +539,7 @@ wTests =
                         newStateAfterActions
                             [ Keys "iaaaaa", Enter, Enter, Keys "aaaaaa", Escape, Keys "kkhhhhhhhhhhhhhhhhhw" ]
                 in
-                    Expect.equal cursorY 2
+                    Expect.equal cursorY 1
         ]
 
 

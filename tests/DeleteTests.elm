@@ -461,6 +461,24 @@ deleteWordsTests =
                     \_ ->
                         Expect.equal cursorX 0
                 ]
+        , let
+            { lines, cursorX, buffer, cursorY } =
+                newStateAfterActions [ Keys "ithis is a test", Escape, Keys "o", Enter, Enter, Keys "and another", Escape, Keys "kkkdw" ]
+          in
+            describe "deleting the last word in a line"
+                [ test "changes lines" <|
+                    \_ ->
+                        Expect.equal lines [ "this is a ", "", "", "and another" ]
+                , test "copies into buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "test" ]
+                , test "moves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 9
+                , test "moves cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
         , describe "test over multiple lines" <|
             let
                 { lines, cursorX, buffer, cursorY } =

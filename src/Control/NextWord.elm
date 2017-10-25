@@ -39,7 +39,7 @@ moveToNextWordInner model numberLeft =
 
         ( newCursorX, newCursorY ) =
             if goToNextLine then
-                goToNextNonEmptyLine lines (cursorY + 1)
+                ( 0, (cursorY + 1) )
             else
                 ( newOneLineIndex, cursorY )
 
