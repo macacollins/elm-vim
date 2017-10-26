@@ -2,16 +2,27 @@ module View.NormalLine exposing (getNormalLineHTML)
 
 import Model exposing (Model)
 import Html exposing (..)
-import Html.Attributes exposing (class, id)
+import Html.Attributes exposing (class)
 import Html.Attributes exposing (property, attribute)
 import View.Util exposing (..)
 import View.RenderLineWithCursor exposing (renderLineWithCursor)
 import Mode exposing (Mode(..))
 import View.VisualLine exposing (getVisualTextContents)
+import View.Line exposing (Line(..), tildeLine)
 
 
-getNormalLineHTML : Model -> Int -> String -> Html msg
+getNormalLineHTML : Model -> Int -> Line -> Html msg
 getNormalLineHTML model index line =
+    case line of
+        TextLine text ->
+            getNormalLineInner model index text
+
+        TildeLine ->
+            tildeLine
+
+
+getNormalLineInner : Model -> Int -> String -> Html msg
+getNormalLineInner model index line =
     let
         textContents =
             case model.mode of
