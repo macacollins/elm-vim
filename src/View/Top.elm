@@ -2,6 +2,7 @@ module View.Top exposing (topView)
 
 import Html exposing (..)
 import Model exposing (Model)
+import Mode exposing (Mode(..))
 import Styles exposing (styleString)
 import List exposing (..)
 import Json.Encode exposing (string)
@@ -34,10 +35,21 @@ topView model =
             node "style" [] [ text styleString ]
 
         mode =
-            footer [ id "modeDisplay" ]
-                [ text <| (toString model.mode ++ " " ++ model.searchStringBuffer) ]
+            footer [ id "modeDisplay" ] <| modeFooter model
 
         children =
             styles :: mode :: portsScript :: lines
     in
         main_ [] children
+
+
+modeFooter : Model -> List (Html msg)
+modeFooter model =
+    case model.mode of
+        Command command ->
+            [ text command
+            , span [ id "cursor" ] [ text "_" ]
+            ]
+
+        _ ->
+            [ text <| (toString model.mode ++ " " ++ model.searchStringBuffer) ]

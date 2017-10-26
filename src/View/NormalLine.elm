@@ -26,6 +26,10 @@ getNormalLineInner model index line =
     let
         textContents =
             case model.mode of
+                Command _ ->
+                    -- In command mode, the cursor shows on the bottom line
+                    replaceSpaceWithNbsp line
+
                 Visual _ _ ->
                     getVisualTextContents model index line
 
@@ -38,15 +42,27 @@ getNormalLineInner model index line =
         actualIndex =
             index + model.firstLine
 
-        padding =
+        relativeNumberModePaddedIndex =
+            model.cursorY
+                - actualIndex
+                |> abs
+                |> toString
+                |> String.padLeft 2 '0'
+
+        numberModePadding =
             String.length <| toString <| List.length model.lines
 
-        paddedIndex =
-            String.padLeft padding '0' <| toString actualIndex
+        numberModePaddedIndex =
+            String.padLeft numberModePadding '0' <| toString actualIndex
     in
-        if model.properties.lineNumbers then
+        if model.properties.relativeLineNumbers then
             div [ class "normalLine" ]
-                [ span [ class "lineNumber" ] [ text paddedIndex ]
+                [ span [ class "lineNumber" ] [ text relativeNumberModePaddedIndex ]
+                , textContents
+                ]
+        else if model.properties.lineNumbers then
+            div [ class "normalLine" ]
+                [ span [ class "lineNumber" ] [ text numberModePaddedIndex ]
                 , textContents
                 ]
         else
