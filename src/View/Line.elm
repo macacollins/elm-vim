@@ -5,7 +5,9 @@ import Html.Attributes exposing (class)
 
 
 type Line
-    = TextLine String
+    = TextLine Int String
+      -- fields are lineIndex, numberWrapped, contents
+    | WrappedLine Int Int String
     | TildeLine
 
 

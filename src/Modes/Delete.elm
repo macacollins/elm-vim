@@ -80,8 +80,16 @@ deleteModeUpdateInner model keyCode =
             let
                 updatedModel =
                     (handler model |> addHistory model)
+
+                newMode =
+                    case updatedModel.mode of
+                        Delete Control ->
+                            Control
+
+                        _ as other ->
+                            other
             in
-                updatedModel ! []
+                { updatedModel | mode = newMode } ! []
 
         Nothing ->
             handleDefaultInput model keyCode

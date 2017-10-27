@@ -5,13 +5,12 @@ import Model exposing (Model)
 import Html exposing (..)
 import Html.Attributes exposing (class, id)
 import Html.Attributes exposing (property, attribute)
-import View.Util exposing (..)
 
 
 renderLineWithCursor : Model -> Int -> String -> Html msg
 renderLineWithCursor model index line =
     if String.length line == 0 then
-        span [ id "cursor" ] [ text "_" ]
+        span [ id "cursor" ] [ text " " ]
     else
         let
             adjustedCursorX =
@@ -34,14 +33,14 @@ renderLineWithCursor model index line =
 
             middle =
                 if String.length maybeMiddle == 0 then
-                    "_"
+                    " "
                 else if maybeMiddle == " " then
-                    "_"
+                    " "
                 else
                     maybeMiddle
         in
             span []
-                [ replaceSpaceWithNbsp before
+                [ text before
                 , span [ id "cursor" ] [ text <| middle ]
-                , replaceSpaceWithNbsp after
+                , text after
                 ]

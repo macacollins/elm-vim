@@ -5,7 +5,6 @@ import Mode exposing (Mode(..))
 import Html exposing (..)
 import Html.Attributes exposing (class, id)
 import Html.Attributes exposing (property, attribute)
-import View.Util exposing (..)
 import View.RenderLineWithCursor exposing (renderLineWithCursor)
 import Util.VisualUtils exposing (getStartAndEnd)
 
@@ -30,11 +29,11 @@ getVisualTextContents model index line =
         else if startY == actualIndex then
             renderLineWithVisualStart model index line
         else if startY < actualIndex && actualIndex < endY then
-            replaceSpaceWithNbspAndClass line "visual"
+            pre [ class "visual" ] [ text line ]
         else if endY == actualIndex then
             renderLineWithVisualEnd model index line
         else
-            replaceSpaceWithNbsp line
+            pre [] [ text line ]
 
 
 renderLineWithVisualStartAndEnd model line =
@@ -73,11 +72,11 @@ renderLineWithVisualStartAndEnd model line =
                     maybeMiddleEnd
         in
             span []
-                [ replaceSpaceWithNbsp before
-                , span [ id "cursor" ] [ text <| selectedIndexStart ]
-                , replaceSpaceWithNbspAndClass maybeMiddleInner "visual"
-                , span [ id "cursor" ] [ text <| selectedIndexEnd ]
-                , replaceSpaceWithNbsp after
+                [ text before
+                , span [ id "cursor" ] [ text selectedIndexStart ]
+                , span [ class "visual" ] [ text maybeMiddleInner ]
+                , span [ id "cursor" ] [ text selectedIndexEnd ]
+                , text after
                 ]
 
 
@@ -105,9 +104,9 @@ renderLineWithVisualStart model index line =
                     maybeMiddle
         in
             span []
-                [ replaceSpaceWithNbsp before
-                , span [ id "cursor" ] [ text <| middle ]
-                , replaceSpaceWithNbspAndClass after "visual"
+                [ text before
+                , span [ id "cursor" ] [ text middle ]
+                , span [ class "visual" ] [ text after ]
                 ]
 
 
@@ -135,7 +134,7 @@ renderLineWithVisualEnd model index line =
                     maybeMiddle
         in
             span []
-                [ replaceSpaceWithNbspAndClass before "visual"
-                , span [ id "cursor" ] [ text <| middle ]
-                , replaceSpaceWithNbsp after
+                [ span [ class "visual" ] [ text before ]
+                , span [ id "cursor" ] [ text middle ]
+                , text after
                 ]

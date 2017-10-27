@@ -18,7 +18,8 @@ type alias Model =
     , searchString : String
     , searchStringBuffer : String
     , macroModel : MacroModel
-    , screenHeight : Int
+    , windowHeight : Int
+    , windowWidth : Int
     , properties : Properties
     }
 
@@ -58,6 +59,7 @@ initialModel =
     , searchString = ""
     , searchStringBuffer = ""
     , macroModel = initialMacroModel
-    , screenHeight = 31
+    , windowHeight = 31
+    , windowWidth = 80
     , properties = defaultProperties
     }

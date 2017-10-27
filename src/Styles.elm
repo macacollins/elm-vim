@@ -12,6 +12,10 @@ main {
   background-color: aqua;
 }
 
+.wrappedLine {
+  margin-left: 28.8px;
+}
+
 .selectedLine {
   background-color: #ADADAD;
 }
@@ -35,8 +39,11 @@ main {
   height: 19px;
 }
 
+pre {
+  margin: 0;
+}
+
 .lineNumber {
-  padding-right: 15px;
   color: #800;
 }
 

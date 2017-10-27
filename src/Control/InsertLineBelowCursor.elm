@@ -16,8 +16,8 @@ insertLineBelowCursor model =
             insertAtIndex (model.cursorY + 1) model.lines ""
 
         updatedFirstLine =
-            if newCursorY >= model.firstLine + model.screenHeight then
-                newCursorY - model.screenHeight + 1
+            if newCursorY >= model.firstLine + model.windowHeight then
+                newCursorY - model.windowHeight + 1
             else
                 model.firstLine
     in
@@ -37,5 +37,5 @@ cursorOnLastLine model =
         (model.cursorY
             == model.firstLine
             + 1
-            + model.screenHeight
+            + model.windowHeight
         )

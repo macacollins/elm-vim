@@ -40,10 +40,13 @@ update msg model =
 
         WindowResized size ->
             let
+                newWidth =
+                    Debug.log "newHeight" ((toFloat size.width) / 9.5 |> floor)
+
                 newHeight =
                     Debug.log "newHeight" (size.height // 19) - 1
             in
-                { model | screenHeight = newHeight } ! []
+                { model | windowHeight = newHeight, windowWidth = newWidth } ! []
 
 
 updateKeyInput : KeyCode -> Mode -> Model -> ( Model, Cmd msg )

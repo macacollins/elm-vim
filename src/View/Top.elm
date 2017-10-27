@@ -6,11 +6,11 @@ import Mode exposing (Mode(..))
 import Styles exposing (styleString)
 import List exposing (..)
 import Json.Encode exposing (string)
-import View.Util exposing (..)
 import View.PortsScript exposing (..)
 import View.NormalLine exposing (..)
 import Html.Attributes exposing (id)
 import View.Line exposing (Line(..), tildeLine)
+import View.Util exposing (getActualScreenWidth)
 
 
 topView : Model -> Html msg
@@ -18,18 +18,22 @@ topView model =
     let
         lineRange =
             model.lines
+                |> List.map (\line -> String.padLeft 1 ' ' line)
+                |> List.indexedMap TextLine
                 |> drop model.firstLine
-                |> take model.screenHeight
-                |> List.map TextLine
+                |> take model.windowHeight
+                |> List.foldl (foldLines model) []
+                |> take model.windowHeight
+                |> Debug.log "lines"
 
         tildeLines =
-            if List.length lineRange == model.screenHeight then
+            if List.length lineRange == model.windowHeight then
                 []
             else
-                List.repeat (model.screenHeight - List.length lineRange) TildeLine
+                List.repeat (model.windowHeight - List.length lineRange) TildeLine
 
         lines =
-            List.indexedMap (getNormalLineHTML model) (lineRange ++ tildeLines)
+            List.map (getNormalLineHTML model) (lineRange ++ tildeLines)
 
         styles =
             node "style" [] [ text styleString ]
@@ -41,6 +45,40 @@ topView model =
             styles :: mode :: portsScript :: lines
     in
         main_ [] children
+
+
+foldLines : Model -> (Line -> List Line -> List Line)
+foldLines model =
+    let
+        actualLineWidth =
+            getActualScreenWidth model
+
+        innerFold item list =
+            case item of
+                TextLine index text ->
+                    if String.length text > actualLineWidth then
+                        list ++ (split actualLineWidth index text)
+                    else
+                        list ++ [ item ]
+
+                _ ->
+                    list ++ [ item ]
+    in
+        innerFold
+
+
+split : Int -> Int -> String -> List Line
+split actualWidth lineNumber text =
+    TextLine lineNumber (String.left actualWidth text) :: (splitInner actualWidth lineNumber 1 (String.dropLeft actualWidth text))
+
+
+splitInner : Int -> Int -> Int -> String -> List Line
+splitInner actualWidth lineNumber numberSoFar remainingText =
+    if String.length remainingText > actualWidth then
+        WrappedLine lineNumber numberSoFar (String.left actualWidth remainingText)
+            :: splitInner actualWidth lineNumber (numberSoFar + 1) (String.dropLeft actualWidth remainingText)
+    else
+        [ WrappedLine lineNumber numberSoFar remainingText ]
 
 
 modeFooter : Model -> List (Html msg)

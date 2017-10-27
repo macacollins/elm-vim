@@ -37,8 +37,8 @@ goToLineInner model defaultCursorX defaultCursorY =
 
         newFirstLine =
             -- TODO update when we page in a more mature fashion
-            if newCursorY >= model.screenHeight then
-                newCursorY - model.screenHeight + 1
+            if newCursorY >= model.windowHeight then
+                newCursorY - model.windowHeight + 1
             else
                 0
 
