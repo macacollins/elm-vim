@@ -95,6 +95,8 @@ dict =
         -- undo, redo
         |> Dict.insert 'u' handleUndo
         |> Dict.insert 'R' handleRedo
+        -- Yank shortcut
+        |> Dict.insert 'Y' yankLines
         -- switch modes
         |> Dict.insert 'v' (\model -> { model | mode = Visual model.cursorX model.cursorY })
         -- TODO move the addHistory into the functions themselves

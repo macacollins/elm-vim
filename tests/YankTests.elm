@@ -62,6 +62,30 @@ yankToEndOfLineTests =
         ]
 
 
+yankLines : Test
+yankLines =
+    describe "Yank using Y" <|
+        [ let
+            { lines, cursorX, buffer, cursorY } =
+                newStateAfterActions [ Keys "i1234", Escape, Keys "Y" ]
+          in
+            describe "Y"
+                [ test "leaves line" <|
+                    \_ ->
+                        Expect.equal lines [ "1234" ]
+                , test "copies into buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| LinesBuffer [ "1234" ]
+                , test "moves cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 3
+                , test "moves cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
+        ]
+
+
 yankToLineTests : Test
 yankToLineTests =
     describe "ygg"
