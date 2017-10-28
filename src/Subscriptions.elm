@@ -11,6 +11,7 @@ subscriptions _ =
         [ Keyboard.presses KeyInput
         , Keyboard.ups KeyUp
         , updateCurrentBuffer AcceptBuffer
+        , paste Paste
         , Window.resizes WindowResized
         ]
 
@@ -20,3 +21,6 @@ subscriptions _ =
 
 
 port updateCurrentBuffer : (Value -> msg) -> Sub msg
+
+
+port paste : (String -> msg) -> Sub msg

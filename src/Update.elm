@@ -33,6 +33,9 @@ update msg model =
             acceptBuffer model buffer
                 |> updateLinesShown
 
+        Paste pasteString ->
+            paste model pasteString |> updateLinesShown
+
         KeyUp keyPress ->
             if List.member keyPress [ 27, 8, 9 ] then
                 update (KeyInput keyPress) model
@@ -191,3 +194,34 @@ getCodeList actionEntry =
                     Char.toCode character :: resultList
             in
                 String.foldl addCodeAndRecur [] keys
+
+
+paste : Model -> String -> ( Model, Cmd msg )
+paste model string =
+    let
+        withOptionalI : String
+        withOptionalI =
+            case model.mode of
+                Control ->
+                    String.cons 'i' string
+
+                Macro Control ->
+                    String.cons 'i' string
+
+                _ ->
+                    string
+
+        updatedModel =
+            getActionsFromString withOptionalI
+                |> applyActions model
+    in
+        updatedModel ! []
+
+
+getActionsFromString : String -> List ActionEntry
+getActionsFromString string =
+    string
+        |> String.split (String.cons (Char.fromCode 10) "")
+        |> List.concatMap (String.split (String.cons (Char.fromCode 13) ""))
+        |> List.map Keys
+        |> List.intersperse Enter

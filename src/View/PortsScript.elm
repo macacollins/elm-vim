@@ -7,12 +7,6 @@ portsScript =
     node "script" [] [ Html.text scriptItself ]
 
 
-
-{-
-
--}
-
-
 scriptItself =
     """
     if (typeof started === "undefined") {
@@ -22,6 +16,7 @@ scriptItself =
                 event.preventDefault();
             }
         });
+
 
         var app = Elm.Main.fullscreen()
 
@@ -53,5 +48,24 @@ scriptItself =
                 app.ports.updateCurrentBuffer.send(value);
             }, 0);
         }
+
+        // this is getting ridiculous
+        // let's maybe move this to a separate file
+        setTimeout( () => {
+            var body = document.querySelector('body');
+            body.onpaste = function(e) {
+              var pastedText = undefined;
+              if (window.clipboardData && window.clipboardData.getData) { // IE
+                pastedText = window.clipboardData.getData('Text');
+              } else if (e.clipboardData && e.clipboardData.getData) {
+                pastedText = e.clipboardData.getData('text/plain');
+              }
+              console.log("pasted", pastedText);
+              if (typeof pastedText === 'string') {
+                  app.ports.paste.send(pastedText);
+              }
+              return false; // Prevent the default handler from running.
+            };
+        }, 0);
     }
 """

@@ -104,31 +104,34 @@ zTests =
 
 end : String
 end =
-    "    ]"
+    "\n    ]"
 
 
 getTest : List ActionEntry -> String
 getTest macro =
     """
       let
-          { lines, cursorX, buffer, cursorY } =
+          { mode, lines, cursorX, buffer, cursorY } =
             newStateAfterActions """
         ++ (toString macro)
         ++ """
         in
           describe "z"
-            [ test "changes lines" <|
+            [ test "lines" <|
               \\_ ->
                 Expect.equal lines [ "" ]
-            , test "copies into buffer" <|
+            , test "buffer" <|
               \\_ ->
-                Expect.equal buffer <| LinesBuffer [ "one two", "three four" ]
-            , test "moves cursorX" <|
+                Expect.equal buffer <| LinesBuffer []
+            , test "cursorX" <|
               \\_ ->
                 Expect.equal cursorX 0
-            , test "moves cursorY" <|
+            , test "cursorY" <|
               \\_ ->
                 Expect.equal cursorY 0
+            , test "mode" <|
+              \\_ ->
+                Expect.equal mode Control
             ]"""
 
 

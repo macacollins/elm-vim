@@ -10,3 +10,4 @@ type Msg
     | KeyUp KeyCode
     | AcceptBuffer Value
     | WindowResized Window.Size
+    | Paste String
