@@ -78,8 +78,10 @@ modeFooter : Model -> List (Html msg)
 modeFooter model =
     case model.mode of
         Command command ->
-            [ text command
-            , span [ id "cursor" ] [ text "_" ]
+            [ pre []
+                [ text command
+                , span [ id "cursor" ] [ text " " ]
+                ]
             ]
 
         _ ->

@@ -29,16 +29,16 @@ getVisualTextContents model index line =
         else if startY == actualIndex then
             renderLineWithVisualStart model index line
         else if startY < actualIndex && actualIndex < endY then
-            pre [ class "visual" ] [ text line ]
+            span [ class "visual" ] [ text line ]
         else if endY == actualIndex then
             renderLineWithVisualEnd model index line
         else
-            pre [] [ text line ]
+            span [] [ text line ]
 
 
 renderLineWithVisualStartAndEnd model line =
     if String.length line == 0 then
-        span [ id "cursor" ] [ text "_" ]
+        pre [ id "cursor" ] [ text " " ]
     else
         let
             ( startX, startY, endX, endY ) =
@@ -61,28 +61,28 @@ renderLineWithVisualStartAndEnd model line =
 
             selectedIndexStart =
                 if String.length maybeMiddleStart == 0 then
-                    "_"
+                    " "
                 else
                     maybeMiddleStart
 
             selectedIndexEnd =
                 if String.length maybeMiddleEnd == 0 then
-                    "_"
+                    " "
                 else
                     maybeMiddleEnd
         in
             span []
-                [ text before
+                [ span [] [ text before ]
                 , span [ id "cursor" ] [ text selectedIndexStart ]
                 , span [ class "visual" ] [ text maybeMiddleInner ]
                 , span [ id "cursor" ] [ text selectedIndexEnd ]
-                , text after
+                , span [] [ text after ]
                 ]
 
 
 renderLineWithVisualStart model index line =
     if String.length line == 0 then
-        span [ id "cursor" ] [ text "_" ]
+        span [ id "cursor" ] [ text " " ]
     else
         let
             ( startX, startY, endX, endY ) =
@@ -112,7 +112,7 @@ renderLineWithVisualStart model index line =
 
 renderLineWithVisualEnd model index line =
     if String.length line == 0 then
-        span [ id "cursor" ] [ text "_" ]
+        span [ id "cursor" ] [ text " " ]
     else
         let
             ( _, _, endX, endY ) =

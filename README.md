@@ -8,13 +8,13 @@ $ cloc src
 classified 75 files      75 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.22 s (346.3 files/s, 19005.6 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.19 s (396.1 files/s, 21746.5 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             75            851             73           3192
+Elm                             75            851             73           3194
 -------------------------------------------------------------------------------
-SUM:                            75            851             73           3192
+SUM:                            75            851             73           3194
 -------------------------------------------------------------------------------
 ```
 ### tests folder
@@ -24,7 +24,7 @@ $ cloc --exclude-dir elm-stuff .
 classified 30 files      30 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.09 s (320.9 files/s, 46519.8 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.09 s (333.7 files/s, 48370.1 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -37,8 +37,6 @@ SUM:                            30            266             41           4042
 ## TODOs
 ```bash
 $ grep -r TODO src
-Binary file src/.Properties.elm.swp matches
-Binary file src/Command/.ExecuteCommand.elm.swp matches
 src/Command/ExecuteCommand.elm:        -- TODO figure out if I want to do it this way
 src/Command/ExecuteCommand.elm:{- TODO see if there's a more dynamic way to do this -}
 src/Delete/DeleteNavigationKeys.elm:-- TODO handle firstLine adjustments
