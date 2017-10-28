@@ -21,27 +21,36 @@ moveToNextWordInner model numberLeft =
 
         currentLine =
             getLine cursorY lines
+                |> Debug.log "CurrentLine"
 
         actualCursorX =
-            if cursorX > String.length currentLine then
-                String.length currentLine
+            Debug.log "current cursorX" <|
+                if cursorX > String.length currentLine then
+                    String.length currentLine
+                else
+                    cursorX
+
+        trimmedLine =
+            currentLine
+                |> String.dropLeft actualCursorX
+                |> String.toList
+                |> dropWhile (\char -> char /= ' ')
+                |> List.map (\char -> String.cons char "")
+                |> String.join ""
+                |> String.trimLeft
+                |> Debug.log "TrimmedLine"
+
+        newXIfSameLine =
+            if String.length trimmedLine == 0 then
+                String.length currentLine - 1
             else
-                cursorX
-
-        xOffset =
-            nextSpaceIndex (String.dropLeft actualCursorX currentLine)
-
-        newOneLineIndex =
-            xOffset + actualCursorX
-
-        goToNextLine =
-            newOneLineIndex == (String.length currentLine) && (List.length lines > (cursorY + 1))
+                String.length currentLine - String.length trimmedLine
 
         ( newCursorX, newCursorY ) =
-            if goToNextLine then
-                ( 0, (cursorY + 1) )
+            if String.isEmpty trimmedLine && model.cursorY < List.length model.lines - 1 then
+                goToNextNonEmptyLine model.lines (cursorY + 1)
             else
-                ( newOneLineIndex, cursorY )
+                ( newXIfSameLine, cursorY )
 
         updatedModel =
             { model | cursorX = newCursorX, cursorY = newCursorY }
@@ -52,6 +61,19 @@ moveToNextWordInner model numberLeft =
                 (numberLeft - 1)
         else
             { updatedModel | numberBuffer = [] }
+
+
+dropWhile : (a -> Bool) -> List a -> List a
+dropWhile selector list =
+    case list of
+        first :: rest ->
+            if selector first then
+                dropWhile selector rest
+            else
+                rest
+
+        [] ->
+            []
 
 
 nextSpaceIndex : String -> Int
@@ -75,10 +97,13 @@ goToNextNonEmptyLine lines cursorY =
 
         restOfLinesAreEmpty =
             List.all (\line -> String.trim line == "") (List.drop cursorY lines)
+
+        newX =
+            String.length line - (String.length (String.trimLeft line))
     in
         if restOfLinesAreEmpty then
-            ( 0, cursorY )
+            ( newX, cursorY )
         else if String.trim line == "" then
-            goToNextNonEmptyLine lines (cursorY + 1)
-        else
             ( 0, cursorY )
+        else
+            ( newX, cursorY )

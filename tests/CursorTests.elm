@@ -476,6 +476,18 @@ wTests =
                             [ Keys "iaaa aaa", Escape, Keys "hhhhhhhhhhhhhhhhhw" ]
                 in
                     Expect.equal cursorX 4
+        , let
+            { mode, lines, cursorX, buffer, cursorY } =
+                newStateAfterActions [ Keys "ione      ", Enter, Keys "two", Escape, Keys "0kwwwww" ]
+          in
+            describe "w over spaces"
+                [ test "cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 2
+                , test "cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 1
+                ]
         , test "w takes you to the end of the line if it's all one word." <|
             \_ ->
                 let
@@ -483,7 +495,7 @@ wTests =
                         newStateAfterActions
                             [ Keys "iaaaaa", Escape, Keys "hhhhhhhhhhhhhhhhhw" ]
                 in
-                    Expect.equal cursorX 5
+                    Expect.equal cursorX 4
         , test "w doesn't cause an infinite loop" <|
             \_ ->
                 let
