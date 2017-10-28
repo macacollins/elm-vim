@@ -29,7 +29,7 @@ topView model =
             List.map (getNormalLineHTML model) (lineRange ++ tildeLines)
 
         styles =
-            node "style" [] [ text styleString ]
+            node "style" [] [ text <| styleString model ]
 
         mode =
             footer [ id "modeDisplay" ] <| modeFooter model

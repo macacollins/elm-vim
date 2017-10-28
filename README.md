@@ -4,17 +4,17 @@
 ### src folder
 ```bash
 $ cloc src
-      74 text files.
-classified 74 files      74 unique files.                              
+      75 text files.
+classified 75 files      75 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.30 s (242.6 files/s, 13315.6 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.22 s (346.3 files/s, 19005.6 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             74            841             71           3149
+Elm                             75            851             73           3192
 -------------------------------------------------------------------------------
-SUM:                            74            841             71           3149
+SUM:                            75            851             73           3192
 -------------------------------------------------------------------------------
 ```
 ### tests folder
@@ -24,7 +24,7 @@ $ cloc --exclude-dir elm-stuff .
 classified 30 files      30 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.35 s (86.1 files/s, 12477.7 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.09 s (320.9 files/s, 46519.8 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -37,6 +37,9 @@ SUM:                            30            266             41           4042
 ## TODOs
 ```bash
 $ grep -r TODO src
+Binary file src/.Properties.elm.swp matches
+Binary file src/Command/.ExecuteCommand.elm.swp matches
+src/Command/ExecuteCommand.elm:        -- TODO figure out if I want to do it this way
 src/Command/ExecuteCommand.elm:{- TODO see if there's a more dynamic way to do this -}
 src/Delete/DeleteNavigationKeys.elm:-- TODO handle firstLine adjustments
 src/Modes/Control.elm:                        -- TODO more thoroughly test the history here
@@ -44,4 +47,5 @@ src/Modes/Control.elm:        -- TODO move the addHistory into the functions the
 src/Modes/Delete.elm:{- TODO consider refactoring; Delete Mode and Yank Mode are not fantastic abstractions. They should probably be toplevel rather than nested. -}
 src/Modes/MacroRecord.elm:-- TODO probably refactor
 src/Modes/Yank.elm:        -- TODO This is nasty. Move to Yank and YankToLine
+src/Properties.elm:-- TODO rename to Preferences
 ```

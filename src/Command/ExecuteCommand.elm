@@ -5,6 +5,7 @@ import Dict exposing (Dict)
 import Mode exposing (Mode(..))
 import Model exposing (Model)
 import Properties exposing (Properties)
+import Theme exposing (Theme(..))
 
 
 executeCommand : Model -> String -> ( Model, Cmd msg )
@@ -27,6 +28,9 @@ commandDict =
         |> Dict.insert ":set !number" (setLineNumber False)
         |> Dict.insert ":set relativenumber" (setRelativeLineNumber True)
         |> Dict.insert ":set !relativenumber" (setRelativeLineNumber False)
+        -- TODO figure out if I want to do it this way
+        |> Dict.insert ":night" (setTheme Night)
+        |> Dict.insert ":day" (setTheme Day)
 
 
 
@@ -36,6 +40,11 @@ commandDict =
 setTestsFromMacros : Bool -> Model -> ( Model, Cmd msg )
 setTestsFromMacros newState model =
     propertiesUpdate (\properties -> { properties | testsFromMacros = newState }) model
+
+
+setTheme : Theme -> Model -> ( Model, Cmd msg )
+setTheme newTheme model =
+    propertiesUpdate (\properties -> { properties | theme = newTheme }) model
 
 
 setLineNumber : Bool -> Model -> ( Model, Cmd msg )

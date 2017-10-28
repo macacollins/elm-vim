@@ -1,11 +1,20 @@
 module Styles exposing (styleString)
 
+import Theme exposing (getThemeColors)
+import Model exposing (Model)
 
-styleString =
-    """
+
+styleString : Model -> String
+styleString model =
+    let
+        theme =
+            getThemeColors model.properties.theme
+    in
+        """
 main {
-  background-color : #EDAEAEA;
-  color : #333;
+  background-color : """ ++ theme.mainBackgroundColor ++ """;
+  color : """ ++ theme.mainColor ++ """;
+  height: 100%;
 }
 
 .visual {
@@ -16,12 +25,9 @@ main {
   margin-left: 28.8px;
 }
 
-.selectedLine {
-  background-color: #ADADAD;
-}
-
 #cursor {
-  background-color: red;
+  background-color: """ ++ theme.cursorBackgroundColor ++ """;
+  color: """ ++ theme.cursorColor ++ """;
   height: 20px;
   width: 1em;
 }
@@ -44,7 +50,6 @@ pre {
 }
 
 .lineNumber {
-  color: #800;
+  color: """ ++ theme.lineNumberColor ++ """;
 }
-
 """
