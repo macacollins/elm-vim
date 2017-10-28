@@ -8,13 +8,13 @@ $ cloc src
 classified 74 files      74 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.18 s (411.3 files/s, 21808.7 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.30 s (242.6 files/s, 13315.6 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             74            808             69           3047
+Elm                             74            841             71           3149
 -------------------------------------------------------------------------------
-SUM:                            74            808             69           3047
+SUM:                            74            841             71           3149
 -------------------------------------------------------------------------------
 ```
 ### tests folder
@@ -24,7 +24,7 @@ $ cloc --exclude-dir elm-stuff .
 classified 30 files      30 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.09 s (343.1 files/s, 49744.4 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.35 s (86.1 files/s, 12477.7 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -38,7 +38,6 @@ SUM:                            30            266             41           4042
 ```bash
 $ grep -r TODO src
 src/Command/ExecuteCommand.elm:{- TODO see if there's a more dynamic way to do this -}
-src/Control/NavigateFile.elm:            -- TODO update when we page in a more mature fashion
 src/Delete/DeleteNavigationKeys.elm:-- TODO handle firstLine adjustments
 src/Modes/Control.elm:                        -- TODO more thoroughly test the history here
 src/Modes/Control.elm:        -- TODO move the addHistory into the functions themselves

@@ -21,9 +21,9 @@ handleNewLine model =
             0
 
         newFirstLine =
-            if newCursorY > model.firstLine + model.windowHeight then
-                newCursorY - model.windowHeight
-            else if newCursorY == model.firstLine + model.windowHeight then
+            if newCursorY > model.firstLine + model.linesShown then
+                newCursorY - model.linesShown
+            else if newCursorY == model.firstLine + model.linesShown then
                 model.firstLine + 1
             else
                 model.firstLine

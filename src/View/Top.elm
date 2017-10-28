@@ -10,21 +10,14 @@ import View.PortsScript exposing (..)
 import View.NormalLine exposing (..)
 import Html.Attributes exposing (id)
 import View.Line exposing (Line(..), tildeLine)
-import View.Util exposing (getActualScreenWidth)
+import View.Util exposing (getActualScreenWidth, getLinesInView, getLinesInView)
 
 
 topView : Model -> Html msg
 topView model =
     let
         lineRange =
-            model.lines
-                |> List.map (\line -> String.padLeft 1 ' ' line)
-                |> List.indexedMap TextLine
-                |> drop model.firstLine
-                |> take model.windowHeight
-                |> List.foldl (foldLines model) []
-                |> take model.windowHeight
-                |> Debug.log "lines"
+            getLinesInView model
 
         tildeLines =
             if List.length lineRange == model.windowHeight then

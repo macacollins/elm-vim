@@ -10,13 +10,13 @@ moveToTopOfScreen model =
 
 moveToBottomOfScreen : Model -> Model
 moveToBottomOfScreen model =
-    if model.firstLine + model.windowHeight > (List.length model.lines) then
+    if model.firstLine + model.linesShown > (List.length model.lines) then
         { model
             | cursorY = (List.length model.lines) - 1
         }
     else
         { model
-            | cursorY = model.firstLine + model.windowHeight - 1
+            | cursorY = model.firstLine + model.linesShown - 1
         }
 
 
@@ -24,7 +24,7 @@ moveToMiddleOfScreen : Model -> Model
 moveToMiddleOfScreen model =
     let
         topPlusHalf =
-            model.firstLine + (model.windowHeight // 2)
+            model.firstLine + (model.linesShown // 2)
 
         newCursorY =
             if topPlusHalf >= List.length model.lines then

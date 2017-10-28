@@ -4,6 +4,8 @@ import Model exposing (Model)
 import Util.ListUtils exposing (getLine)
 import Util.ModifierUtils exposing (..)
 import Mode exposing (Mode(Control))
+import View.Util exposing (..)
+import View.Line exposing (Line(..))
 
 
 goToLine : Model -> Model
@@ -35,13 +37,6 @@ goToLineInner model defaultCursorX defaultCursorY =
             else
                 ( defaultCursorX, defaultCursorY )
 
-        newFirstLine =
-            -- TODO update when we page in a more mature fashion
-            if newCursorY >= model.windowHeight then
-                newCursorY - model.windowHeight + 1
-            else
-                0
-
         numberModifier =
             getNumberModifier model
 
@@ -50,6 +45,21 @@ goToLineInner model defaultCursorX defaultCursorY =
                 defaultCursorY
             else
                 numberModifier - 1
+
+        partiallyUpdatedModel =
+            { model
+                | cursorY = newCursorY
+                , cursorX = newCursorX
+            }
+
+        proposedFirstLine =
+            if newCursorY >= model.windowHeight then
+                newCursorY - model.windowHeight + 1
+            else
+                0
+
+        newFirstLine =
+            calculateFirstLine partiallyUpdatedModel proposedFirstLine
     in
         { model
             | cursorY = newCursorY
@@ -57,3 +67,29 @@ goToLineInner model defaultCursorX defaultCursorY =
             , firstLine = newFirstLine
             , mode = Control
         }
+
+
+calculateFirstLine : Model -> Int -> Int
+calculateFirstLine model proposedFirstLine =
+    let
+        linesInView =
+            getLinesInView { model | firstLine = proposedFirstLine }
+
+        lineVisible =
+            linesInView
+                |> List.any (matchesLine model.cursorY)
+    in
+        if lineVisible then
+            proposedFirstLine
+        else
+            calculateFirstLine model <| proposedFirstLine + 1
+
+
+matchesLine : Int -> Line -> Bool
+matchesLine cursorY line =
+    case line of
+        TextLine index _ ->
+            index == cursorY
+
+        _ ->
+            False

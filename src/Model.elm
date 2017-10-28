@@ -19,6 +19,9 @@ type alias Model =
     , searchStringBuffer : String
     , macroModel : MacroModel
     , windowHeight : Int
+
+    -- computed property with the # of logical lines displayed on the screen
+    , linesShown : Int
     , windowWidth : Int
     , properties : Properties
     }
@@ -62,4 +65,5 @@ initialModel =
     , windowHeight = 31
     , windowWidth = 80
     , properties = defaultProperties
+    , linesShown = 31
     }

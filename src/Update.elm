@@ -19,6 +19,7 @@ import Import.AcceptBuffer exposing (acceptBuffer)
 import Window
 import Macro.ActionEntry exposing (ActionEntry(..))
 import Macro.Model exposing (getMacro)
+import View.Util exposing (getActualScreenWidth, getNumberOfLinesOnScreen)
 
 
 update : Msg -> Model -> ( Model, Cmd msg )
@@ -26,15 +27,19 @@ update msg model =
     case msg of
         KeyInput keyPress ->
             updateKeyInput keyPress model.mode model
+                |> updateLinesShown
 
         AcceptBuffer buffer ->
             acceptBuffer model buffer
+                |> updateLinesShown
 
         KeyUp keyPress ->
             if List.member keyPress [ 27, 8, 9 ] then
                 update (KeyInput keyPress) model
             else if List.member keyPress [ 37, 38, 39, 40 ] then
-                controlModeUpdate model <| translateArrowKeys keyPress
+                translateArrowKeys keyPress
+                    |> controlModeUpdate model
+                    |> updateLinesShown
             else
                 ( model, Cmd.none )
 
@@ -45,8 +50,28 @@ update msg model =
 
                 newHeight =
                     Debug.log "newHeight" (size.height // 19) - 1
+
+                newLinesShown =
+                    getNumberOfLinesOnScreen partiallyUpdatedModel
+                        |> Debug.log "newLinesShown"
+
+                partiallyUpdatedModel =
+                    { model
+                        | windowHeight = newHeight
+                        , windowWidth = newWidth
+                    }
             in
-                { model | windowHeight = newHeight, windowWidth = newWidth } ! []
+                { model
+                    | windowHeight = newHeight
+                    , windowWidth = newWidth
+                    , linesShown = newLinesShown
+                }
+                    ! []
+
+
+updateLinesShown : ( Model, Cmd msg ) -> ( Model, Cmd msg )
+updateLinesShown ( model, command ) =
+    ( { model | linesShown = getNumberOfLinesOnScreen model }, command )
 
 
 updateKeyInput : KeyCode -> Mode -> Model -> ( Model, Cmd msg )
