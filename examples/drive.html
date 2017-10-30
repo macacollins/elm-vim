@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Drive API Quickstart</title>
+    <meta charset='utf-8' />
+  </head>
+  <body>
+    <p>Google Drive Demo</p>
+
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorize-button" style="display: none;">Authorize</button>
+    <button id="signout-button" style="display: none;">Sign Out</button>
+
+    <div id="content"></div>
+
+    <h2 id="filename" contenteditable="true"></h2>
+    <pre id="filecontents" contenteditable="true"></pre>
+
+    <button onclick="writeFile()">Write to cloud</button>
+
+    <script type="text/javascript" src="drive.js"></script>
+    <script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){console.log('in empty onload');};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
+  </body>
+</html>

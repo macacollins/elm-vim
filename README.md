@@ -8,7 +8,7 @@ $ cloc src
 classified 75 files      75 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.20 s (382.6 files/s, 21422.4 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.24 s (308.1 files/s, 17247.3 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ $ cloc --exclude-dir elm-stuff .
 classified 30 files      30 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.09 s (331.3 files/s, 48158.1 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.15 s (198.9 files/s, 28914.1 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -40,7 +40,6 @@ $ grep -r TODO src
 src/Command/ExecuteCommand.elm:        -- TODO figure out if I want to do it this way
 src/Command/ExecuteCommand.elm:{- TODO see if there's a more dynamic way to do this -}
 src/Delete/DeleteNavigationKeys.elm:-- TODO handle firstLine adjustments
-Binary file src/Modes/.MacroRecord.elm.swp matches
 src/Modes/Control.elm:                        -- TODO more thoroughly test the history here
 src/Modes/Control.elm:        -- TODO move the addHistory into the functions themselves
 src/Modes/Delete.elm:{- TODO consider refactoring; Delete Mode and Yank Mode are not fantastic abstractions. They should probably be toplevel rather than nested. -}
