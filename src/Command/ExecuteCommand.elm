@@ -1,5 +1,6 @@
 module Command.ExecuteCommand exposing (executeCommand, commandDict)
 
+import Drive exposing (ToDriveMessage(..), newFile, getDriveCommand, FileStatus(..))
 import Command.WriteToLocalStorage exposing (writeToLocalStorage)
 import Dict exposing (Dict)
 import Mode exposing (Mode(..))
@@ -15,7 +16,61 @@ executeCommand model commandName =
             command model
 
         Nothing ->
-            { model | mode = Control } ! []
+            if String.startsWith ":w " commandName then
+                handleWrite model (String.dropLeft 3 commandName)
+            else if String.startsWith ":e " commandName then
+                handleLoad model (String.dropLeft 3 commandName)
+            else
+                { model | mode = Control } ! []
+
+
+handleLoad : Model -> String -> ( Model, Cmd msg )
+handleLoad model name =
+    let
+        fileOrEmptyList =
+            model.driveState.files
+                |> List.filter (\file -> String.contains name file.name)
+
+        command =
+            case fileOrEmptyList of
+                head :: _ ->
+                    -- TODO make this not a maybe somehow
+                    case head.id of
+                        Just id ->
+                            [ getDriveCommand <| LoadFile id ]
+
+                        Nothing ->
+                            []
+
+                _ ->
+                    []
+    in
+        { model | mode = Control } ! command
+
+
+handleWrite : Model -> String -> ( Model, Cmd msg )
+handleWrite model name =
+    let
+        command =
+            case model.driveState.currentFileStatus of
+                New ->
+                    -- TODO rewrite prolly
+                    WriteFile (newFile name) (String.join "\x0D\n" model.lines)
+
+                NewError _ ->
+                    WriteFile (newFile name) (String.join "\x0D\n" model.lines)
+
+                -- TODO skip?
+                Saved metadata ->
+                    WriteFile { metadata | name = name } (String.join "\x0D\n" model.lines)
+
+                UnsavedChanges metadata ->
+                    WriteFile { metadata | name = name } (String.join "\x0D\n" model.lines)
+
+                SavedError metadata _ ->
+                    WriteFile { metadata | name = name } (String.join "\x0D\n" model.lines)
+    in
+        { model | mode = Control } ! [ getDriveCommand command ]
 
 
 commandDict : Dict String (Model -> ( Model, Cmd msg ))
@@ -28,9 +83,17 @@ commandDict =
         |> Dict.insert ":set !number" (setLineNumber False)
         |> Dict.insert ":set relativenumber" (setRelativeLineNumber True)
         |> Dict.insert ":set !relativenumber" (setRelativeLineNumber False)
+        |> Dict.insert ":drive signin" (runDriveCommand TriggerSignin)
+        |> Dict.insert ":drive signout" (runDriveCommand TriggerSignout)
+        |> Dict.insert ":drive files" (runDriveCommand GetFileList)
         -- TODO figure out if I want to do it this way
         |> Dict.insert ":night" (setTheme Night)
         |> Dict.insert ":day" (setTheme Day)
+
+
+runDriveCommand : ToDriveMessage -> Model -> ( Model, Cmd msg )
+runDriveCommand message model =
+    { model | mode = Control } ! [ getDriveCommand message ]
 
 
 

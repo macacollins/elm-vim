@@ -3,6 +3,7 @@ module Model exposing (PasteBuffer(..), Model, State, getState, initialModel)
 import Mode exposing (Mode(..))
 import Macro.Model exposing (MacroModel, initialMacroModel)
 import Properties exposing (Properties, defaultProperties)
+import Drive exposing (DriveState)
 
 
 type alias Model =
@@ -24,6 +25,7 @@ type alias Model =
     , linesShown : Int
     , windowWidth : Int
     , properties : Properties
+    , driveState : DriveState
     }
 
 
@@ -66,4 +68,5 @@ initialModel =
     , windowWidth = 80
     , properties = defaultProperties
     , linesShown = 31
+    , driveState = Drive.defaultDriveState
     }

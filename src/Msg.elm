@@ -11,3 +11,4 @@ type Msg
     | AcceptBuffer Value
     | WindowResized Window.Size
     | Paste String
+    | UpdateFromDrive Value

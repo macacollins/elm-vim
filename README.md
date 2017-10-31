@@ -4,17 +4,17 @@
 ### src folder
 ```bash
 $ cloc src
-      75 text files.
-classified 75 files      75 unique files.                              
+      76 text files.
+classified 76 files      76 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.24 s (308.1 files/s, 17247.3 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.20 s (373.8 files/s, 22337.2 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             75            862             71           3266
+Elm                             76            937             74           3530
 -------------------------------------------------------------------------------
-SUM:                            75            862             71           3266
+SUM:                            76            937             74           3530
 -------------------------------------------------------------------------------
 ```
 ### tests folder
@@ -24,7 +24,7 @@ $ cloc --exclude-dir elm-stuff .
 classified 30 files      30 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.15 s (198.9 files/s, 28914.1 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.09 s (351.1 files/s, 51041.1 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -37,6 +37,10 @@ SUM:                            30            266             41           4054
 ## TODOs
 ```bash
 $ grep -r TODO src
+Binary file src/Command/.ExecuteCommand.elm.swp matches
+src/Command/ExecuteCommand.elm:                    -- TODO make this not a maybe somehow
+src/Command/ExecuteCommand.elm:                    -- TODO rewrite prolly
+src/Command/ExecuteCommand.elm:                -- TODO skip?
 src/Command/ExecuteCommand.elm:        -- TODO figure out if I want to do it this way
 src/Command/ExecuteCommand.elm:{- TODO see if there's a more dynamic way to do this -}
 src/Delete/DeleteNavigationKeys.elm:-- TODO handle firstLine adjustments

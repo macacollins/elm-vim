@@ -15,11 +15,12 @@ import Modes.Search exposing (searchModeUpdate)
 import Modes.MacroRecord exposing (macroRecordModeUpdate)
 import Control.NavigateFile exposing (goToLineModeUpdate)
 import Keyboard exposing (KeyCode)
-import Import.AcceptBuffer exposing (acceptBuffer)
+import Import.AcceptBuffer exposing (acceptBuffer, stringToLines)
 import Window
 import Macro.ActionEntry exposing (ActionEntry(..))
 import Macro.Model exposing (getMacro)
 import View.Util exposing (getActualScreenWidth, getNumberOfLinesOnScreen)
+import Drive exposing (updateDriveModel)
 
 
 update : Msg -> Model -> ( Model, Cmd msg )
@@ -45,6 +46,36 @@ update msg model =
                     |> updateLinesShown
             else
                 ( model, Cmd.none )
+
+        UpdateFromDrive value ->
+            let
+                newDriveModel =
+                    updateDriveModel value model.driveState
+
+                newContents =
+                    case newDriveModel.contents of
+                        Just string ->
+                            stringToLines string
+
+                        Nothing ->
+                            model.lines
+
+                ( newX, newY ) =
+                    if model.lines == newContents then
+                        ( 0, 0 )
+                    else
+                        ( model.cursorX, model.cursorY )
+
+                modelWithoutContents =
+                    { newDriveModel | contents = Nothing }
+            in
+                { model
+                    | driveState = modelWithoutContents
+                    , lines = newContents
+                    , cursorX = newX
+                    , cursorY = newY
+                }
+                    ! []
 
         WindowResized size ->
             let

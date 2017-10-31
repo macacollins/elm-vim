@@ -4,6 +4,7 @@ import Msg exposing (Msg(..))
 import Keyboard
 import Json.Decode exposing (Value)
 import Window
+import Drive exposing (fromDriveJavaScript)
 
 
 subscriptions _ =
@@ -12,6 +13,7 @@ subscriptions _ =
         , Keyboard.ups KeyUp
         , updateCurrentBuffer AcceptBuffer
         , paste Paste
+        , fromDriveJavaScript UpdateFromDrive
         , Window.resizes WindowResized
         ]
 
