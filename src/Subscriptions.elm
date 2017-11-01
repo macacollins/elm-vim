@@ -11,7 +11,7 @@ subscriptions _ =
     Sub.batch
         [ Keyboard.presses KeyInput
         , Keyboard.ups KeyUp
-        , updateCurrentBuffer AcceptBuffer
+        , localStorageToElm LocalStorageMessageHandler
         , paste Paste
         , fromDriveJavaScript UpdateFromDrive
         , Window.resizes WindowResized
@@ -22,7 +22,7 @@ subscriptions _ =
 -- port for getting buffers from localStorage in JavaScript
 
 
-port updateCurrentBuffer : (Value -> msg) -> Sub msg
+port localStorageToElm : (Value -> msg) -> Sub msg
 
 
 port paste : (String -> msg) -> Sub msg

@@ -15,7 +15,7 @@ import Modes.Search exposing (searchModeUpdate)
 import Modes.MacroRecord exposing (macroRecordModeUpdate)
 import Control.NavigateFile exposing (goToLineModeUpdate)
 import Keyboard exposing (KeyCode)
-import Import.AcceptBuffer exposing (acceptBuffer, stringToLines)
+import Import.LocalStorageMessageHandler exposing (acceptLocalStorageMessage, stringToLines)
 import Window
 import Macro.ActionEntry exposing (ActionEntry(..))
 import Macro.Model exposing (getMacro)
@@ -30,9 +30,10 @@ update msg model =
             updateKeyInput keyPress model.mode model
                 |> updateLinesShown
 
-        AcceptBuffer buffer ->
-            acceptBuffer model buffer
+        LocalStorageMessageHandler buffer ->
+            acceptLocalStorageMessage model buffer
                 |> updateLinesShown
+                |> Debug.log ("got localStorage message." ++ (toString buffer))
 
         Paste pasteString ->
             paste model pasteString |> updateLinesShown

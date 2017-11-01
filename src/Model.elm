@@ -21,10 +21,13 @@ type alias Model =
     , macroModel : MacroModel
     , windowHeight : Int
 
-    -- computed property with the # of logical lines displayed on the screen
+    -- Computed property with the # of logical lines displayed on the screen
+    -- We need this in order to handle line wraps
     , linesShown : Int
     , windowWidth : Int
     , properties : Properties
+
+    -- TODO probably move this into the StorageMethod type
     , driveState : DriveState
     }
 

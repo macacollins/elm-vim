@@ -22,14 +22,57 @@ scriptItself =
 
         setTimeout(() => { initializeDrive(app) }, 1000);
 
-        app.ports.writeBufferPort.subscribe(function(buffer) {
-            // var suggestions = spellCheck(word);
-            // app.ports.suggestions.send(suggestions);
+        app.ports.localStorageToJavaScript.subscribe(function(message) {
             if (!window.localStorage) {
                 throw "localStorage not enabled :("
             }
+            console.log("about to crash for message ", message);
 
-            window.localStorage.setItem("saved", JSON.stringify(buffer));
+
+            switch (message.type) {
+                case "WriteFile":
+                    window.localStorage.setItem(message.name, JSON.stringify(message.payload));
+                    break;
+
+                case "WriteProperties":
+                    window.localStorage.setItem("savedProperties", JSON.stringify(message.payload));
+                    break;
+
+                case "LoadProperties":
+                    const props =
+                        window.localStorage.getItem("savedProperties");
+
+                    console.log("Got props", props);
+
+                    if (props) {
+                        const message =
+                            { type : "PropertiesLoaded"
+                            , properties : JSON.parse(props)
+                            }
+                        app.ports.localStorageToElm.send(message)
+                    }
+
+                    break;
+
+                case "LoadFile":
+                    var value = JSON.parse(window.localStorage.getItem(message.name))
+                    value.type = "FileLoaded"
+                    app.ports.localStorageToElm.send(value);
+                    break;
+
+                case "GetFileList":
+                    // Still TODO!
+                    const fileListMessage =
+                        { type : "FileList"
+                        , files :
+                            [ { name : "saved", id : "saved" }
+                            ]
+                    }
+
+                    app.ports.localStorageToElm.send(fileListMessage)
+                    break;
+            }
+
         });
 
         started = true;
@@ -46,8 +89,8 @@ scriptItself =
 
             setTimeout(() => {
                 var value = JSON.parse(window.localStorage.getItem("saved"))
-
-                app.ports.updateCurrentBuffer.send(value);
+                value.type = "FileLoaded"
+                app.ports.localStorageToElm.send(value);
             }, 0);
         }
 

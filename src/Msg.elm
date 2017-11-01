@@ -8,7 +8,7 @@ import Window
 type Msg
     = KeyInput KeyCode
     | KeyUp KeyCode
-    | AcceptBuffer Value
+    | LocalStorageMessageHandler Value
     | WindowResized Window.Size
     | Paste String
     | UpdateFromDrive Value

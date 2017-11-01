@@ -1,6 +1,7 @@
 module Init exposing (init)
 
 import Model exposing (Model, initialModel)
+import Command.WriteToLocalStorage exposing (loadPropertiesCommand)
 import Mode exposing (Mode(..))
 import Flags exposing (Flags)
 import Window
@@ -19,9 +20,12 @@ init flags =
                 | testsFromMacros = flags.testsFromMacros
             }
     in
-        ( { initialModel | properties = updatedProperties }, initialSizeCmd )
+        ( { initialModel | properties = updatedProperties }, initialCmd )
 
 
-initialSizeCmd : Cmd Msg
-initialSizeCmd =
-    Task.perform WindowResized Window.size
+initialCmd : Cmd Msg
+initialCmd =
+    Cmd.batch
+        [ Task.perform WindowResized Window.size
+        , loadPropertiesCommand
+        ]
