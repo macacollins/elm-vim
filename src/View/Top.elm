@@ -67,16 +67,33 @@ getFilesList model =
         div [ class "files" ]
             [ h2 [] [ text "File search" ]
             , input [ value searchString ] []
-            , ol [] <| List.indexedMap (getFileEntry index) files
+            , ol [] <| List.indexedMap (getFileEntry searchString index) files
             ]
 
 
-getFileEntry : Int -> Int -> File -> Html msg
-getFileEntry selectedIndex entryIndex file =
-    if selectedIndex == entryIndex then
-        li [ class "selected" ] [ text file.name ]
-    else
-        li [] [ text file.name ]
+getFileEntry : String -> Int -> Int -> File -> Html msg
+getFileEntry searchString selectedIndex entryIndex file =
+    let
+        contents =
+            recurIndices startingIndices file.name
+
+        startingIndices =
+            String.indices (String.toLower searchString) (String.toLower file.name)
+
+        recurIndices indices remainingString =
+            case indices of
+                head :: rest ->
+                    text (String.left head remainingString)
+                        :: span [ class "searchText" ] [ remainingString |> String.dropLeft head |> String.left (String.length searchString) |> text ]
+                        :: recurIndices rest (String.dropLeft head <| String.dropLeft (String.length searchString) <| remainingString)
+
+                _ ->
+                    [ text remainingString ]
+    in
+        if selectedIndex == entryIndex then
+            li [ class "selected" ] contents
+        else
+            li [] contents
 
 
 foldLines : Model -> (Line -> List Line -> List Line)

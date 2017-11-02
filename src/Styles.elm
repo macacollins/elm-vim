@@ -18,7 +18,11 @@ main {
 }
 
 .selected {
-    background-color: #aaa;
+    background-color: #eee;
+}
+
+.searchText {
+    color : darkgreen;
 }
 
 .files {
@@ -42,6 +46,7 @@ main {
 }
 
 .files ol {
+    padding-left: 0;
     margin-top: 79px;
     margin-left: 13px;
     font-size: larger;

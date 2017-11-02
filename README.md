@@ -8,7 +8,7 @@ $ cloc src
 classified 78 files      78 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.74  T=0.11 s (713.4 files/s, 46163.8 lines/s)
+github.com/AlDanial/cloc v 1.74  T=0.11 s (726.9 files/s, 47033.7 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ $ cloc --exclude-dir elm-stuff .
 classified 30 files      30 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.74  T=0.05 s (592.3 files/s, 86093.6 lines/s)
+github.com/AlDanial/cloc v 1.74  T=0.05 s (592.7 files/s, 86151.6 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
