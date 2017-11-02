@@ -224,6 +224,8 @@ function initializeDrive(app) {
         const metadata = 
             Object.assign(lastFileMetadata, { title : message.metadata.name, id : message.metadata.id }); 
 
+        console.log(metadata);
+
         saveFile(metadata, message.contents);
 
         function saveFile(metadata, content) {

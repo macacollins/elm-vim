@@ -37,6 +37,30 @@ main {
     padding-top: 8px;
 }
 
+.files h2 {
+    text-align:center;
+}
+
+.files ol {
+    margin-top: 79px;
+    margin-left: 13px;
+    font-size: larger;
+}
+
+.files input {
+    border-radius: 5px;
+    border: 1px solid;
+    /* margin-left: 1%; */
+    position: absolute;
+    width: 90%;
+    font-size: larger;
+    height: 1.9em;
+    padding-left: 14px;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
 .visual {
   background-color: aqua;
 }

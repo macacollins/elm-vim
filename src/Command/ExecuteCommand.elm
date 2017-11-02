@@ -17,16 +17,42 @@ executeCommand model commandName =
             command model
 
         Nothing ->
-            if String.startsWith ":w " commandName then
-                if model.properties.storageMethod == GoogleDrive then
-                    handleGoogleDriveWrite model (String.dropLeft 3 commandName)
-                else
-                    -- TODO have smarter writeLocalStorage
-                    writeToLocalStorage model
+            if commandName == ":w" then
+                delegateWrite model <| getCurrentFileNameOrUntitled model
+            else if String.startsWith ":w " commandName then
+                delegateWrite model (String.dropLeft 3 commandName)
             else if String.startsWith ":e " commandName then
                 handleLoad model (String.dropLeft 3 commandName)
             else
                 { model | mode = Control } ! []
+
+
+getCurrentFileNameOrUntitled : Model -> String
+getCurrentFileNameOrUntitled model =
+    case model.driveState.currentFileStatus of
+        New ->
+            "Untitled"
+
+        NewError _ ->
+            "Untitled"
+
+        Saved metadata ->
+            metadata.name
+
+        UnsavedChanges metadata ->
+            metadata.name
+
+        SavedError metadata _ ->
+            metadata.name
+
+
+delegateWrite : Model -> String -> ( Model, Cmd msg )
+delegateWrite model name =
+    if model.properties.storageMethod == GoogleDrive then
+        handleGoogleDriveWrite model name
+    else
+        -- TODO have smarter writeLocalStorage
+        writeToLocalStorage model
 
 
 handleLoad : Model -> String -> ( Model, Cmd msg )
@@ -81,7 +107,6 @@ handleGoogleDriveWrite model name =
 commandDict : Dict String (Model -> ( Model, Cmd msg ))
 commandDict =
     Dict.empty
-        |> Dict.insert ":w" writeToLocalStorage
         --
         -- TODO replace :set ! with :set no
         --

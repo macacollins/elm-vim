@@ -55,9 +55,13 @@ scriptItself =
                     break;
 
                 case "LoadFile":
-                    var value = JSON.parse(window.localStorage.getItem(message.name))
-                    value.type = "FileLoaded"
-                    app.ports.localStorageToElm.send(value);
+                    var value = JSON.parse(window.localStorage.getItem(message.name));
+                    if (value !== null) {
+                        value.type = "FileLoaded";
+                        app.ports.localStorageToElm.send(value);
+                    } else {
+                        console.log("got null value in LoadFile");
+                    }
                     break;
 
                 case "GetFileList":
@@ -89,8 +93,10 @@ scriptItself =
 
             setTimeout(() => {
                 var value = JSON.parse(window.localStorage.getItem("saved"))
-                value.type = "FileLoaded"
-                app.ports.localStorageToElm.send(value);
+                if (value !== null) {
+                    value.type = "FileLoaded"
+                    app.ports.localStorageToElm.send(value);
+                }
             }, 0);
         }
 
