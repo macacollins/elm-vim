@@ -22,6 +22,20 @@ scriptItself =
 
         setTimeout(() => { initializeDrive(app) }, 1000);
 
+        window.addEventListener("keydown", function(event) {
+
+          if (event.key === 'l' && event.ctrlKey) {
+              event.preventDefault()
+              event.stopPropagation()
+              const fileListMessage =
+                  { type : "TriggerFileSearch"
+                  }
+
+              app.ports.localStorageToElm.send(fileListMessage)
+          }
+          return false
+        })
+
         app.ports.localStorageToJavaScript.subscribe(function(message) {
             if (!window.localStorage) {
                 throw "localStorage not enabled :("
@@ -65,7 +79,6 @@ scriptItself =
                     break;
 
                 case "GetFileList":
-                    // Still TODO!
                     const fileListMessage =
                         { type : "FileList"
                         , files :

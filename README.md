@@ -8,13 +8,13 @@ $ cloc src
 classified 78 files      78 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.74  T=0.11 s (687.5 files/s, 44200.6 lines/s)
+github.com/AlDanial/cloc v 1.74  T=0.11 s (700.9 files/s, 45232.0 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             78           1032             93           3890
+Elm                             78           1036             93           3905
 -------------------------------------------------------------------------------
-SUM:                            78           1032             93           3890
+SUM:                            78           1036             93           3905
 -------------------------------------------------------------------------------
 ```
 ### tests folder
@@ -24,7 +24,7 @@ $ cloc --exclude-dir elm-stuff .
 classified 30 files      30 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.74  T=0.06 s (542.1 files/s, 78799.6 lines/s)
+github.com/AlDanial/cloc v 1.74  T=0.05 s (588.5 files/s, 85545.2 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -47,7 +47,6 @@ src/Command/ExecuteCommand.elm:        -- TODO if we get more stuff, consider :s
 src/Command/ExecuteCommand.elm:        -- TODO figure out if these should become more generic
 src/Command/ExecuteCommand.elm:        -- TODO Consider :set theme=night or similar
 src/Command/ExecuteCommand.elm:{- TODO see if there's a more dynamic way to do this -}
-Binary file src/Command/.ExecuteCommand.elm.swp matches
 src/Properties.elm:-- TODO rename to Preferences
 src/Delete/DeleteNavigationKeys.elm:-- TODO handle firstLine adjustments
 src/Modes/Yank.elm:        -- TODO This is nasty. Move to Yank and YankToLine
@@ -57,7 +56,5 @@ src/Modes/Control.elm:                        -- TODO more thoroughly test the h
 src/Modes/Control.elm:        -- TODO move the addHistory into the functions themselves
 src/Modes/MacroRecord.elm:-- TODO probably refactor
 src/Modes/Delete.elm:{- TODO consider refactoring; Delete Mode and Yank Mode are not fantastic abstractions. They should probably be toplevel rather than nested. -}
-src/View/PortsScript.elm:                    // Still TODO!
-Binary file src/View/.PortsScript.elm.swp matches
 src/Model.elm:    -- TODO probably move this into the StorageMethod type
 ```

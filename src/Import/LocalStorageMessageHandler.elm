@@ -3,8 +3,11 @@ module Import.LocalStorageMessageHandler exposing (acceptLocalStorageMessage, st
 import Model exposing (Model, initialModel)
 import Json.Decode exposing (..)
 import Char
+import Mode exposing (Mode(..))
 import Drive exposing (loadFilesCommand)
 import Properties exposing (propertiesDecoder, defaultProperties)
+import Modes.Command exposing (commandModeUpdate)
+import Command.ExecuteCommand exposing (setShowFiles)
 
 
 acceptLocalStorageMessage : Model -> Value -> ( Model, Cmd msg )
@@ -17,6 +20,9 @@ acceptLocalStorageMessage model incomingMessage =
 
                 "FileLoaded" ->
                     handleFileLoaded model incomingMessage
+
+                "TriggerFileSearch" ->
+                    setShowFiles model
 
                 _ ->
                     model ! []
