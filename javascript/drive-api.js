@@ -8,6 +8,7 @@ function initializeDrive(app) {
     }
 
     function handleMessageFromElm(message) {
+        console.log("got message ", message)
         switch (message.type) {
             case 'WriteFile' :
                 writeFile(message);
@@ -32,6 +33,9 @@ function initializeDrive(app) {
             case 'GetFileList' :
                 listFiles();
                 return;
+
+            default:
+                console.log("Not sure what to do with ", message)
         }
     }
 
@@ -100,18 +104,14 @@ function initializeDrive(app) {
      *  Sign in the user upon button click.
      */
     function handleAuth() {
-        if (!signedIn) {
-            gapi.auth2.getAuthInstance().signIn();
-        }
+        gapi.auth2.getAuthInstance().signIn();
     }
 
     /**
      *  Sign out the user upon button click.
      */
     function handleSignout() {
-        if (signedIn) {
-            gapi.auth2.getAuthInstance().signOut();
-        }
+        gapi.auth2.getAuthInstance().signOut();
     }
 
     /**

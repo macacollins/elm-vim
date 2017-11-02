@@ -8,7 +8,8 @@ import List exposing (..)
 import Json.Encode exposing (string)
 import View.PortsScript exposing (..)
 import View.NormalLine exposing (..)
-import Html.Attributes exposing (id)
+import Html.Attributes exposing (id, class, value)
+import Drive exposing (File)
 import View.Line exposing (Line(..), tildeLine)
 import View.Util exposing (getActualScreenWidth, getLinesInView, getLinesInView)
 
@@ -34,10 +35,48 @@ topView model =
         mode =
             footer [ id "modeDisplay" ] <| modeFooter model
 
+        filesList =
+            case model.mode of
+                FileSearch _ _ ->
+                    getFilesList model
+
+                _ ->
+                    text ""
+
         children =
-            styles :: mode :: portsScript :: lines
+            filesList :: styles :: mode :: portsScript :: lines
     in
         main_ [] children
+
+
+getFilesList : Model -> Html msg
+getFilesList model =
+    let
+        ( searchString, index ) =
+            case model.mode of
+                FileSearch searchString innerIndex ->
+                    ( searchString, innerIndex )
+
+                _ ->
+                    ( "", 0 )
+
+        files =
+            model.driveState.files
+                |> List.filter (\file -> String.contains (String.toLower searchString) (String.toLower file.name))
+    in
+        div [ class "files" ]
+            [ h2 [] [ text "File search" ]
+            , input [ value searchString ] []
+            , ol [] <| List.indexedMap (getFileEntry index) files
+            ]
+
+
+getFileEntry : Int -> Int -> File -> Html msg
+getFileEntry selectedIndex entryIndex file =
+    if selectedIndex == entryIndex then
+        li [ class "selected" ] [ text file.name ]
+    else
+        li [] [ text file.name ]
 
 
 foldLines : Model -> (Line -> List Line -> List Line)
@@ -83,6 +122,9 @@ modeFooter model =
                 , span [ id "cursor" ] [ text " " ]
                 ]
             ]
+
+        FileSearch _ _ ->
+            []
 
         _ ->
             [ text <| (toString model.mode ++ " " ++ model.searchStringBuffer) ]

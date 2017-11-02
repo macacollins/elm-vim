@@ -19,6 +19,8 @@ type Mode
     | Visual Int Int
     | NavigateToCharacter NavigationType
     | Command String
+      -- SearchString, Index
+    | FileSearch String Int
 
 
 

@@ -94,6 +94,21 @@ type ToDriveMessage
     | TriggerSignout
 
 
+loadFilesCommand : Cmd msg
+loadFilesCommand =
+    getDriveCommand GetFileList
+
+
+loadFileCommand : Maybe String -> Cmd msg
+loadFileCommand id =
+    case id of
+        Just actualID ->
+            getDriveCommand <| LoadFile actualID
+
+        Nothing ->
+            Cmd.none
+
+
 getDriveCommand : ToDriveMessage -> Cmd msg
 getDriveCommand msg =
     toDriveJavaScript <|

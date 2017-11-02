@@ -1,4 +1,9 @@
-port module Command.WriteToLocalStorage exposing (writeToLocalStorage, writeProperties, loadPropertiesCommand)
+port module Command.WriteToLocalStorage
+    exposing
+        ( writeToLocalStorage
+        , writeProperties
+        , loadPropertiesCommand
+        )
 
 import Model exposing (Model)
 import Json.Encode exposing (..)
@@ -7,6 +12,7 @@ import Properties exposing (Properties, encodeProperties)
 
 
 -- port for sending strings out to JavaScript
+-- TODO switch to the single port to rule them all
 
 
 port localStorageToJavaScript : Value -> Cmd msg

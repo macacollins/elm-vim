@@ -17,6 +17,26 @@ main {
   height: 100%;
 }
 
+.selected {
+    background-color: #aaa;
+}
+
+.files {
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    width: 500px;
+    margin-top: 25px;
+    background-color: white;
+    color: #111;
+    height: 500px;
+    border-radius: 10px;
+    padding-top: 8px;
+}
+
 .visual {
   background-color: aqua;
 }

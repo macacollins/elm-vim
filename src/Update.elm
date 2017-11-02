@@ -1,5 +1,6 @@
 module Update exposing (update)
 
+import Modes.FileSearch exposing (fileSearchModeUpdate)
 import Char
 import Msg exposing (Msg(..))
 import Model exposing (Model)
@@ -39,12 +40,8 @@ update msg model =
             paste model pasteString |> updateLinesShown
 
         KeyUp keyPress ->
-            if List.member keyPress [ 27, 8, 9 ] then
+            if List.member keyPress [ 27, 8, 9, 37, 38, 39, 40 ] then
                 update (KeyInput keyPress) model
-            else if List.member keyPress [ 37, 38, 39, 40 ] then
-                translateArrowKeys keyPress
-                    |> controlModeUpdate model
-                    |> updateLinesShown
             else
                 ( model, Cmd.none )
 
@@ -139,6 +136,9 @@ updateKeyInput keyPress mode model =
 
         Visual _ _ ->
             visualModeUpdate model keyPress
+
+        FileSearch _ _ ->
+            fileSearchModeUpdate model keyPress
 
         Command _ ->
             commandModeUpdate model keyPress

@@ -3,6 +3,7 @@ module Import.LocalStorageMessageHandler exposing (acceptLocalStorageMessage, st
 import Model exposing (Model, initialModel)
 import Json.Decode exposing (..)
 import Char
+import Drive exposing (loadFilesCommand)
 import Properties exposing (propertiesDecoder, defaultProperties)
 
 

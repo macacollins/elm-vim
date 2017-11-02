@@ -1,6 +1,6 @@
 module Command.ExecuteCommand exposing (executeCommand, commandDict)
 
-import Drive exposing (ToDriveMessage(..), newFile, getDriveCommand, FileStatus(..))
+import Drive exposing (ToDriveMessage(..), newFile, getDriveCommand, FileStatus(..), loadFilesCommand)
 import Command.WriteToLocalStorage exposing (writeToLocalStorage, writeProperties)
 import Dict exposing (Dict)
 import Mode exposing (Mode(..))
@@ -102,6 +102,7 @@ commandDict =
         --
         -- Google Drive specific commands
         -- TODO figure out if these should become more generic
+        |> Dict.insert ":files" (setShowFiles True)
         |> Dict.insert ":drive signin" (runDriveCommand TriggerSignin)
         |> Dict.insert ":drive signout" (runDriveCommand TriggerSignout)
         |> Dict.insert ":drive files" (runDriveCommand GetFileList)
@@ -151,6 +152,11 @@ runDriveCommand message model =
 
 
 {- TODO see if there's a more dynamic way to do this -}
+
+
+setShowFiles : Bool -> Model -> ( Model, Cmd msg )
+setShowFiles newStatus model =
+    { model | mode = FileSearch "" 0 } ! [ loadFilesCommand ]
 
 
 setStorageMethod : StorageMethod -> Model -> ( Model, Cmd msg )
