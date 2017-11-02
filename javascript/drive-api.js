@@ -180,6 +180,7 @@ function initializeDrive(app) {
 
         function setMetadata(dataFromDrive) {
             metadata = dataFromDrive.result;
+            document.title = metadata.name
             if (typeof contentsHolder !== 'undefined') {
                 sendToElm();
             }
