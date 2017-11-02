@@ -17,7 +17,6 @@ scriptItself =
             }
         });
 
-
         var app = Elm.Main.fullscreen()
 
         setTimeout(() => { initializeDrive(app) }, 1000);
@@ -36,7 +35,8 @@ scriptItself =
           return false
         })
 
-        app.ports.localStorageToJavaScript.subscribe(function(message) {
+        app.ports.localStorageToJavaScript.subscribe(localStorageToJavaScriptListener);
+        function localStorageToJavaScriptListener(message) {
             if (!window.localStorage) {
                 throw "localStorage not enabled :("
             }
@@ -90,7 +90,7 @@ scriptItself =
                     break;
             }
 
-        });
+        }
 
         started = true;
 

@@ -1,6 +1,13 @@
-function initializeDrive(app) {
+let cloudVIMDriveInitialized;
 
-    app.ports.toDriveJavaScript.subscribe(handleMessageFromElm);
+function initializeDrive(app) {
+    if (typeof cloudVIMDriveInitialized !== 'undefined') {
+        return;
+    } else {
+        app.ports.toDriveJavaScript.subscribe(handleMessageFromElm);
+    }
+
+    cloudVIMDriveInitialized = true;
 
     function sendMessageToElm(message) {
         console.log("Sending message to elm", message);

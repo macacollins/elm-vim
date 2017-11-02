@@ -22,7 +22,7 @@ executeCommand model commandName =
             else if String.startsWith ":w " commandName then
                 delegateWrite model (String.dropLeft 3 commandName)
             else if String.startsWith ":e " commandName then
-                handleLoad model (String.dropLeft 3 commandName)
+                handleNewFile model (String.dropLeft 3 commandName)
             else
                 { model | mode = Control } ! []
 
@@ -55,28 +55,19 @@ delegateWrite model name =
         writeToLocalStorage model
 
 
-handleLoad : Model -> String -> ( Model, Cmd msg )
-handleLoad model name =
+handleNewFile : Model -> String -> ( Model, Cmd msg )
+handleNewFile model name =
     let
-        fileOrEmptyList =
-            model.driveState.files
-                |> List.filter (\file -> String.contains name file.name)
+        currentDriveState =
+            model.driveState
 
-        command =
-            case fileOrEmptyList of
-                head :: _ ->
-                    -- TODO make this not a maybe somehow
-                    case head.id of
-                        Just id ->
-                            [ getDriveCommand <| LoadFile id ]
+        newDriveState =
+            { currentDriveState | currentFileStatus = New }
 
-                        Nothing ->
-                            []
-
-                _ ->
-                    []
+        updatedModel =
+            { model | driveState = newDriveState }
     in
-        { model | mode = Control } ! command
+        delegateWrite updatedModel name
 
 
 handleGoogleDriveWrite : Model -> String -> ( Model, Cmd msg )
