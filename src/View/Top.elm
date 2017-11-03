@@ -143,5 +143,34 @@ modeFooter model =
         FileSearch _ _ ->
             []
 
+        Control ->
+            []
+
+        Insert ->
+            [ pre [ class "bold" ] [ text "-- INSERT --" ] ]
+
+        EnterMacroName ->
+            []
+
+        Macro char mode ->
+            let
+                baseString =
+                    "recording @"
+                        ++ (String.cons char "")
+            in
+                case mode of
+                    Insert ->
+                        [ pre [ class "bold" ] [ text <| "-- INSERT --" ++ baseString ] ]
+
+                    _ ->
+                        [ pre [ class "bold" ] [ text baseString ] ]
+
+        Search ->
+            [ pre []
+                [ text <| model.searchStringBuffer
+                , span [ id "cursor" ] [ text " " ]
+                ]
+            ]
+
         _ ->
-            [ text <| (toString model.mode ++ " " ++ model.searchStringBuffer) ]
+            []

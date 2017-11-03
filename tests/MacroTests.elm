@@ -86,64 +86,27 @@ macroBufferTests =
 macroKeyTests : Test
 macroKeyTests =
     describe "Record whatever key gets put in"
-        [ test "Test non-mode-switcher" <|
-            \_ ->
-                let
-                    { macroModel } =
-                        newStateAfterActions [ Keys "qg" ]
-
-                    { bufferChar } =
-                        macroModel
-                in
-                    Expect.equal bufferChar <| Just 'g'
-        , test "Test q" <|
-            \_ ->
-                let
-                    { macroModel } =
-                        newStateAfterActions [ Keys "qq" ]
-
-                    { bufferChar } =
-                        macroModel
-                in
-                    Expect.equal bufferChar <| Just 'q'
-        , test "Test i" <|
-            \_ ->
-                let
-                    { macroModel } =
-                        newStateAfterActions [ Keys "qi" ]
-
-                    { bufferChar } =
-                        macroModel
-                in
-                    Expect.equal bufferChar <| Just 'i'
-        , test "Test i doesn't switch to insert mode" <|
+        [ test "Test i doesn't switch to insert mode" <|
             \_ ->
                 let
                     { mode } =
                         newStateAfterActions [ Keys "qi" ]
                 in
-                    Expect.equal mode <| Macro Control
+                    Expect.equal mode <| Macro 'i' Control
         , test "Test that non-characters are ignored " <|
             \_ ->
                 let
-                    { macroModel } =
+                    { mode } =
                         newStateAfterActions [ Keys "q", Enter ]
                 in
-                    Expect.equal macroModel.bufferChar Nothing
+                    Expect.equal mode Control
         , test "Test that numbers are ok " <|
             \_ ->
                 let
-                    { macroModel } =
+                    { mode } =
                         newStateAfterActions [ Keys "q3" ]
                 in
-                    Expect.equal macroModel.bufferChar <| Just '3'
-        , test "Test that character gets reset when exiting macro mode" <|
-            \_ ->
-                let
-                    { macroModel } =
-                        newStateAfterActions [ Keys "q3q" ]
-                in
-                    Expect.equal macroModel.bufferChar Nothing
+                    Expect.equal mode <| Macro '3' Control
         ]
 
 
@@ -156,14 +119,14 @@ macroModeTests =
                     { mode } =
                         newStateAfterActions [ Keys "qq" ]
                 in
-                    Expect.equal mode (Macro Control)
+                    Expect.equal mode (Macro 'q' Control)
         , test "test enter macro without q." <|
             \_ ->
                 let
                     { mode } =
                         newStateAfterActions [ Keys "qg" ]
                 in
-                    Expect.equal mode (Macro Control)
+                    Expect.equal mode (Macro 'g' Control)
         , test "exit macro" <|
             \_ ->
                 let
@@ -177,26 +140,26 @@ macroModeTests =
                     { mode } =
                         newStateAfterActions [ Keys "qqi" ]
                 in
-                    Expect.equal mode (Macro Insert)
+                    Expect.equal mode (Macro 'q' Insert)
         , test "change mode back to control from insert inside macro" <|
             \_ ->
                 let
                     { mode } =
                         newStateAfterActions [ Keys "qqi", Escape ]
                 in
-                    Expect.equal mode (Macro Control)
+                    Expect.equal mode (Macro 'q' Control)
         , test "change mode to search inside macro" <|
             \_ ->
                 let
                     { mode } =
                         newStateAfterActions [ Keys "qq/" ]
                 in
-                    Expect.equal mode (Macro Search)
+                    Expect.equal mode (Macro 'q' Search)
         , test "change mode to back to control from search inside macro" <|
             \_ ->
                 let
                     { mode } =
                         newStateAfterActions [ Keys "qq/", Enter ]
                 in
-                    Expect.equal mode (Macro Control)
+                    Expect.equal mode (Macro 'q' Control)
         ]

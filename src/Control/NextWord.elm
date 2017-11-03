@@ -21,14 +21,12 @@ moveToNextWordInner model numberLeft =
 
         currentLine =
             getLine cursorY lines
-                |> Debug.log "CurrentLine"
 
         actualCursorX =
-            Debug.log "current cursorX" <|
-                if cursorX > String.length currentLine then
-                    String.length currentLine
-                else
-                    cursorX
+            if cursorX > String.length currentLine then
+                String.length currentLine
+            else
+                cursorX
 
         trimmedLine =
             currentLine
@@ -38,7 +36,6 @@ moveToNextWordInner model numberLeft =
                 |> List.map (\char -> String.cons char "")
                 |> String.join ""
                 |> String.trimLeft
-                |> Debug.log "TrimmedLine"
 
         newXIfSameLine =
             if String.length trimmedLine == 0 then

@@ -114,7 +114,7 @@ modeDict =
         |> Dict.insert '/' Search
         |> Dict.insert ':' (Command ":")
         |> Dict.insert '@' MacroExecute
-        |> Dict.insert 'q' (Macro Control)
+        |> Dict.insert 'q' EnterMacroName
         |> Dict.insert 'i' Insert
         |> Dict.insert 'g' GoToLine
         |> Dict.insert 't' (NavigateToCharacter Til)

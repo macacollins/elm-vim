@@ -12,49 +12,25 @@ import Macro.ActionEntry exposing (ActionEntry(..))
 import Macro.KeysToActionEntries exposing (keysToActionEntries)
 
 
--- TODO probably refactor
-
-
-macroRecordModeUpdate : Model -> Model -> KeyCode -> ( Model, Cmd msg )
-macroRecordModeUpdate model initialModel keyCode =
+macroRecordModeUpdate : Model -> Model -> Char -> KeyCode -> ( Model, Cmd msg )
+macroRecordModeUpdate model initialModel bufferCharacter keyCode =
     let
-        { macroModel } =
-            model
-
-        charVersion =
-            Char.fromCode keyCode
-
-        -- still not sure this is the right spot
         shouldExit =
-            (initialModel.mode == Macro Control)
-                && (macroModel.bufferChar /= Nothing)
-                && (Char.fromCode keyCode == 'q')
+            case initialModel.mode of
+                Macro _ Control ->
+                    Char.fromCode keyCode == 'q'
 
-        updatedMacroModel =
-            case macroModel.bufferChar of
-                Just char ->
-                    addToBuffer keyCode macroModel
-
-                Nothing ->
-                    if Char.isDigit charVersion || Char.isLower charVersion || Char.isUpper charVersion then
-                        { macroModel | bufferChar = Just charVersion }
-                    else
-                        macroModel
+                _ ->
+                    False
 
         newMode =
-            -- if the model passed in didn't update from macro, don't add another macro
-            -- but if it returned a non-macro type, wrap with macro
-            case model.mode of
-                Macro inner ->
-                    Macro inner
+            Macro bufferCharacter model.mode
 
-                _ as other ->
-                    Macro other
+        updatedMacroModel =
+            addToBuffer keyCode model.macroModel
     in
         if shouldExit then
-            flushBuffer model ! []
-        else if macroModel.bufferChar == Nothing then
-            { initialModel | macroModel = updatedMacroModel } ! []
+            flushBuffer model bufferCharacter ! []
         else
             { model | macroModel = updatedMacroModel, mode = newMode } ! []
 
@@ -135,8 +111,8 @@ getTest macro =
             ]"""
 
 
-flushBuffer : Model -> Model
-flushBuffer model =
+flushBuffer : Model -> Char -> Model
+flushBuffer model char =
     let
         { macroModel, properties } =
             model
@@ -151,20 +127,14 @@ flushBuffer model =
 
         updatedMacroMap : Dict Char (List ActionEntry)
         updatedMacroMap =
-            case macroModel.bufferChar of
-                Just char ->
-                    Dict.insert
-                        char
-                        macroModel.buffer
-                        macroModel.macroMap
-
-                Nothing ->
-                    macroModel.macroMap
+            Dict.insert
+                char
+                macroModel.buffer
+                macroModel.macroMap
 
         updatedMacroModel =
             { macroModel
-                | bufferChar = Nothing
-                , buffer = []
+                | buffer = []
                 , rawBuffer = []
                 , macroMap = updatedMacroMap
             }

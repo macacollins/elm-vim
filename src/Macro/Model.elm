@@ -9,7 +9,6 @@ type alias MacroModel =
     { buffer : List ActionEntry
     , rawBuffer : List KeyCode
     , macroMap : Dict Char (List ActionEntry)
-    , bufferChar : Maybe Char
     }
 
 
@@ -19,7 +18,6 @@ initialMacroModel =
         []
         []
         Dict.empty
-        Nothing
 
 
 getMacro : Char -> MacroModel -> List ActionEntry

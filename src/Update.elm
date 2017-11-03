@@ -143,7 +143,20 @@ updateKeyInput keyPress mode model =
         Command _ ->
             commandModeUpdate model keyPress
 
-        Macro inner ->
+        EnterMacroName ->
+            let
+                char =
+                    Char.fromCode keyPress
+
+                isAsciiOrNumber =
+                    Char.isUpper char || Char.isLower char || Char.isDigit char
+            in
+                if isAsciiOrNumber then
+                    { model | mode = Macro char Control } ! []
+                else
+                    { model | mode = Control } ! []
+
+        Macro bufferChar inner ->
             let
                 -- future bug if we start returning cmds
                 -- this could impact performance if we are calculating a model we won't use
@@ -154,7 +167,7 @@ updateKeyInput keyPress mode model =
                     model
             in
                 -- consider re-ordering this
-                macroRecordModeUpdate newModel initialModel keyPress
+                macroRecordModeUpdate newModel initialModel bufferChar keyPress
 
 
 translateArrowKeys input =
@@ -237,7 +250,7 @@ paste model string =
                 Control ->
                     String.cons 'i' string
 
-                Macro Control ->
+                Macro _ Control ->
                     String.cons 'i' string
 
                 _ ->
