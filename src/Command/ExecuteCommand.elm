@@ -1,13 +1,13 @@
 module Command.ExecuteCommand exposing (executeCommand, commandDict, setShowFiles)
 
-import Drive exposing (ToDriveMessage(..), newFile, getDriveCommand, FileStatus(..), loadFilesCommand)
-import Command.WriteToLocalStorage exposing (writeToLocalStorage, writeProperties)
+import FileStorage.Command exposing (..)
+import FileStorage.Model exposing (FileStatus(..))
 import Dict exposing (Dict)
 import Mode exposing (Mode(..))
 import Model exposing (Model)
 import Properties exposing (Properties)
 import Theme exposing (Theme(..))
-import Storage exposing (StorageMethod(..))
+import FileStorage.StorageMethod exposing (StorageMethod(..))
 
 
 executeCommand : Model -> String -> ( Model, Cmd msg )
@@ -18,18 +18,20 @@ executeCommand model commandName =
 
         Nothing ->
             if commandName == ":w" then
-                delegateWrite model <| getCurrentFileNameOrUntitled model
+                handleFileStorageWrite model <| getCurrentFileNameOrUntitled model
             else if String.startsWith ":w " commandName then
-                delegateWrite model (String.dropLeft 3 commandName)
+                handleFileStorageWrite model (String.dropLeft 3 commandName)
             else if String.startsWith ":e " commandName then
                 handleNewFile model (String.dropLeft 3 commandName)
             else
-                { model | mode = Control } ! []
+                Debug.log "Command didn't match dict or ifs"
+                    { model | mode = Control }
+                    ! []
 
 
 getCurrentFileNameOrUntitled : Model -> String
 getCurrentFileNameOrUntitled model =
-    case model.driveState.currentFileStatus of
+    case model.fileStorageState.currentFileStatus of
         New ->
             "Untitled"
 
@@ -46,41 +48,32 @@ getCurrentFileNameOrUntitled model =
             metadata.name
 
 
-delegateWrite : Model -> String -> ( Model, Cmd msg )
-delegateWrite model name =
-    if model.properties.storageMethod == GoogleDrive then
-        handleGoogleDriveWrite model name
-    else
-        -- TODO have smarter writeLocalStorage
-        writeToLocalStorage model
-
-
 handleNewFile : Model -> String -> ( Model, Cmd msg )
 handleNewFile model name =
     let
-        currentDriveState =
-            model.driveState
+        currentFileStorageModel =
+            model.fileStorageState
 
-        newDriveState =
-            { currentDriveState | currentFileStatus = New }
+        newFileStorageModel =
+            { currentFileStorageModel | currentFileStatus = New }
 
         updatedModel =
-            { model | driveState = newDriveState }
+            { model | fileStorageState = newFileStorageModel }
     in
-        delegateWrite updatedModel name
+        handleFileStorageWrite updatedModel name
 
 
-handleGoogleDriveWrite : Model -> String -> ( Model, Cmd msg )
-handleGoogleDriveWrite model name =
+handleFileStorageWrite : Model -> String -> ( Model, Cmd msg )
+handleFileStorageWrite model name =
     let
         command =
-            case model.driveState.currentFileStatus of
+            case model.fileStorageState.currentFileStatus of
                 New ->
                     -- TODO rewrite prolly
-                    WriteFile (newFile name) (String.join "\x0D\n" model.lines)
+                    WriteNewFile name (String.join "\x0D\n" model.lines)
 
                 NewError _ ->
-                    WriteFile (newFile name) (String.join "\x0D\n" model.lines)
+                    WriteNewFile name (String.join "\x0D\n" model.lines)
 
                 -- TODO skip?
                 Saved metadata ->
@@ -92,7 +85,7 @@ handleGoogleDriveWrite model name =
                 SavedError metadata _ ->
                     WriteFile { metadata | name = name } (String.join "\x0D\n" model.lines)
     in
-        { model | mode = Control } ! [ getDriveCommand command ]
+        { model | mode = Control } ! [ getFileStorageCommand model.properties.storageMethod command ]
 
 
 commandDict : Dict String (Model -> ( Model, Cmd msg ))
@@ -114,7 +107,7 @@ commandDict =
         -- TODO if we get more stuff, consider :set storage=drive
         |> Dict.insert ":set drive" (setStorageMethod GoogleDrive)
         |> Dict.insert ":set nodrive" (setStorageMethod LocalStorage)
-        |> Dict.insert ":save properties" writeProperties
+        |> Dict.insert ":save properties" (\model -> runDriveCommand (WriteProperties model.properties) model)
         --
         -- Google Drive specific commands
         -- TODO figure out if these should become more generic
@@ -130,19 +123,9 @@ commandDict =
 
 write : Model -> ( Model, Cmd msg )
 write model =
-    case model.properties.storageMethod of
-        LocalStorage ->
-            writeToLocalStorage model
-
-        GoogleDrive ->
-            writeToGoogleDrive model
-
-
-writeToGoogleDrive : Model -> ( Model, Cmd msg )
-writeToGoogleDrive model =
     let
         name =
-            case model.driveState.currentFileStatus of
+            case model.fileStorageState.currentFileStatus of
                 New ->
                     "Untitled"
 
@@ -158,12 +141,12 @@ writeToGoogleDrive model =
                 UnsavedChanges file ->
                     file.name
     in
-        handleGoogleDriveWrite model name
+        handleFileStorageWrite model name
 
 
-runDriveCommand : ToDriveMessage -> Model -> ( Model, Cmd msg )
+runDriveCommand : ToFileStorageMessage -> Model -> ( Model, Cmd msg )
 runDriveCommand message model =
-    { model | mode = Control } ! [ getDriveCommand message ]
+    { model | mode = Control } ! [ getFileStorageCommand model.properties.storageMethod message ]
 
 
 
@@ -172,12 +155,7 @@ runDriveCommand message model =
 
 setShowFiles : Model -> ( Model, Cmd msg )
 setShowFiles model =
-    { model | mode = FileSearch "" 0 } ! [ loadFilesCommand ]
-
-
-setStorageMethod : StorageMethod -> Model -> ( Model, Cmd msg )
-setStorageMethod newStorageMethod model =
-    propertiesUpdate (\properties -> { properties | storageMethod = newStorageMethod }) model
+    { model | mode = FileSearch "" 0 } ! [ loadFilesCommand model ]
 
 
 setTestsFromMacros : Bool -> Model -> ( Model, Cmd msg )
@@ -198,6 +176,24 @@ setLineNumber newState model =
 setRelativeLineNumber : Bool -> Model -> ( Model, Cmd msg )
 setRelativeLineNumber newState model =
     propertiesUpdate (\properties -> { properties | relativeLineNumbers = newState }) model
+
+
+setStorageMethod : StorageMethod -> Model -> ( Model, Cmd msg )
+setStorageMethod newStorageMethod model =
+    let
+        { properties } =
+            model
+
+        newProperties =
+            { properties | storageMethod = newStorageMethod }
+
+        updatedModel =
+            { model
+                | properties = newProperties
+                , mode = Control
+            }
+    in
+        runDriveCommand Initialize updatedModel
 
 
 propertiesUpdate : (Properties -> Properties) -> Model -> ( Model, Cmd msg )

@@ -1,22 +1,126 @@
 let cloudVIMDriveInitialized;
 
-function initializeDrive(app) {
+function initializePorts(app) {
     if (typeof cloudVIMDriveInitialized !== 'undefined') {
         return;
     } else {
-        app.ports.toDriveJavaScript.subscribe(handleMessageFromElm);
+        app.ports.toFileStorageJavaScript.subscribe(handleMessageFromElm);
     }
 
+    // intentionally global-- TODO consider using window / namespace
     cloudVIMDriveInitialized = true;
 
     function sendMessageToElm(message) {
-        console.log("Sending message to elm", message);
-        app.ports.fromDriveJavaScript.send(message)
+        // console.log("Sending message to elm", message);
+        app.ports.fromFileStorageJavaScript.send(message)
     }
 
+    const driveHandleMessageFromElm = wrapDriveMessageHandler(sendMessageToElm);
+    const localStorageHandleMessageFromElm = wrapLocalStorageMessageHandler(sendMessageToElm);
+
     function handleMessageFromElm(message) {
-        console.log("got message ", message)
+        console.log("JS got message", message);
+        switch (message.storageMethod) {
+            case "GoogleDrive":
+                driveHandleMessageFromElm(message);
+                break;
+
+            case "LocalStorage":
+                localStorageHandleMessageFromElm(message);
+                break;
+        }
+    }
+
+    // TODO move the below into a function addWindowListeners or similar
+    // this code passes tabs to Elm and prevents changing focus.
+    document.addEventListener('keydown', function(event) {
+        if (event.keyCode === 9) {
+            event.preventDefault();
+        }
+    });
+
+
+    window.addEventListener("keydown", function(event) {
+
+      if (event.key === 'l' && event.ctrlKey) {
+          event.preventDefault()
+          event.stopPropagation()
+          const fileListMessage =
+              { type : "TriggerFileSearch"
+              }
+
+          sendMessageToElm(fileListMessage)
+      }
+      return false
+    })
+
+    // this part adds the paste handler, which still uses another port
+    // I don't love it, but this doesn't quite fit in the File API port
+    setTimeout( () => {
+        var body = document.querySelector('body');
+        body.onpaste = function(e) {
+          var pastedText = undefined;
+          if (window.clipboardData && window.clipboardData.getData) { // IE
+            pastedText = window.clipboardData.getData('Text');
+          } else if (e.clipboardData && e.clipboardData.getData) {
+            pastedText = e.clipboardData.getData('text/plain');
+          }
+          console.log("pasted", pastedText);
+          if (typeof pastedText === 'string') {
+              app.ports.paste.send(pastedText);
+          }
+          return false; // Prevent the default handler from running.
+        };
+
+
+
+    }, 0);
+
+    console.log("Sending initialized message to Elm.");
+    initializationMessage =
+        { type : "JavaScriptInitialized" }
+
+    sendMessageToElm(initializationMessage );
+}
+
+//////////////////////////////////////////////////////////////////////
+//                     Google Drive Event Handler
+//////////////////////////////////////////////////////////////////////
+
+
+
+function wrapDriveMessageHandler(sendMessageToElm) {
+    let signedIn = false;
+    if (typeof sendMessageToElm !== 'function') {
+        console.log("didn't receive a function in wrapDriveMessageHandler", sendMessageToElm);
+        return;
+    } else {
+        // Client ID and API key from the Developer Console
+        var CLIENT_ID = '839363603519-kb1olgtasm8i92e49gduihh12e0328pt.apps.googleusercontent.com';
+        var API_KEY = 'AIzaSyBTQf0HmLUFr8V6NSls5eWRPKC79bmB2t8';
+        var DEFAULT_FIELDS = 'id,title,mimeType,userPermission,editable,copyable,shared,fileSize';
+
+        // Array of API discovery doc URLs for APIs used by the quickstart
+        var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
+
+        // Authorization scopes required by the API; multiple scopes can be
+        // included, separated by spaces.
+        var SCOPES = 'https://www.googleapis.com/auth/drive';
+
+        var lastFileMetadata =
+            { "kind": "drive#file"
+            , "mimeType": "text/plain"
+            }
+        return driveHandleMessageFromElm;
+    }
+
+    function driveHandleMessageFromElm(message) {
         switch (message.type) {
+            case 'Initialize':
+                console.log("initializing google drive");
+                handleClientLoad();
+                return;
+                
             case 'WriteFile' :
                 writeFile(message);
                 return;
@@ -25,8 +129,9 @@ function initializeDrive(app) {
                 if (!message.id) {
                     console.log("LoadFile message without id.");
                     // TODO send something back to Elm
+                } else {
+                    loadFile(message.id);
                 }
-                loadFile(message.id);
                 return;
 
             case 'TriggerSignout' :
@@ -46,25 +151,6 @@ function initializeDrive(app) {
         }
     }
 
-    // Client ID and API key from the Developer Console
-    var CLIENT_ID = '839363603519-kb1olgtasm8i92e49gduihh12e0328pt.apps.googleusercontent.com';
-    var API_KEY = 'AIzaSyBTQf0HmLUFr8V6NSls5eWRPKC79bmB2t8';
-    var DEFAULT_FIELDS = 'id,title,mimeType,userPermission,editable,copyable,shared,fileSize';
-
-    // Array of API discovery doc URLs for APIs used by the quickstart
-    var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
-
-    // Authorization scopes required by the API; multiple scopes can be
-    // included, separated by spaces.
-    var SCOPES = 'https://www.googleapis.com/auth/drive';
-
-    var authorizeButton = document.getElementById('authorize-button');
-    var signoutButton = document.getElementById('signout-button');
-
-    var lastFileMetadata =
-        { "kind": "drive#file"
-        , "mimeType": "text/plain"
-        }
 
     /**
      *  On load, called to load the auth2 library and API client library.
@@ -92,7 +178,6 @@ function initializeDrive(app) {
         });
     }
 
-    let signedIn = false;
 
     /**
      *  Called when the signed in status changes, to update the UI
@@ -313,55 +398,135 @@ function initializeDrive(app) {
     }
 
 
-    /**
-     * Helper for building multipart requests for uploading to Drive.
-     */
-    var MultiPartBuilder = function() {
-        this.boundary = Math.random().toString(36).slice(2);
-        this.mimeType = 'multipart/mixed; boundary="' + this.boundary + '"';
-        this.parts = [];
-        this.body = null;
-    };
-
-    /**
-     * Appends a part.
-     *
-     * @param {String} mimeType Content type of this part
-     * @param {Blob|File|String} content Body of this part
-     */
-    MultiPartBuilder.prototype.append = function(mimeType, content) {
-        if(this.body !== null) {
-            throw new Error("Builder has already been finalized.");
-        }
-        this.parts.push(
-                "\r\n--", this.boundary, "\r\n",
-                "Content-Type: ", mimeType, "\r\n\r\n",
-                content);
-        return this;
-    };
-
-    /**
-     * Finalizes building of the multipart request and returns a Blob containing
-     * the request. Once finalized, appending additional parts will result in an
-     * error.
-     *
-     * @returns {Object} Object containing the mime type (mimeType) & assembled multipart body (body)
-     */
-    MultiPartBuilder.prototype.finish = function() {
-        if (this.parts.length === 0) {
-            throw new Error("No parts have been added.");
-        }
-        if (this.body === null) {
-            this.parts.push("\r\n--", this.boundary, "--");
-            this.body = this.parts.join('');
-            // TODO - switch to blob once gapi.client.request allows it
-            // this.body = new Blob(this.parts, {type: this.mimeType});
-        }
-        return {
-            type: this.mimeType,
-            body: this.body
-        };
-    };
 
     handleClientLoad();
+};
+
+
+//////////////////////////////////////////////////////////////////////
+//                     Local Storage Event Handler
+//////////////////////////////////////////////////////////////////////
+
+
+
+function wrapLocalStorageMessageHandler(sendMessageToElm) {
+    if (typeof sendMessageToElm !== 'function') {
+        console.log("didn't receive a function in wrapLocalStorageMessageHandler", sendMessageToElm);
+        return;
+    } else {
+        return localStorageToJavaScriptListener;
+    }
+
+    function localStorageToJavaScriptListener(message) {
+        if (!window.localStorage) {
+            throw "localStorage not enabled :("
+        }
+
+        switch (message.type) {
+            case "WriteFile":
+                window.localStorage.setItem(message.name, JSON.stringify(message.payload));
+                break;
+
+            case "WriteProperties":
+                console.log("Saving properties.");
+                window.localStorage.setItem("savedProperties", JSON.stringify(message.payload));
+                break;
+
+            case "LoadProperties":
+                const props =
+                    window.localStorage.getItem("savedProperties");
+
+                console.log("Got props", props);
+
+                if (props) {
+                    const message =
+                        { type : "PropertiesLoaded"
+                        , properties : JSON.parse(props)
+                        }
+                    sendMessageToElm(message)
+                }
+
+                break;
+
+            case "LoadFile":
+                var value = JSON.parse(window.localStorage.getItem(message.name));
+                if (value !== null) {
+                    value.type = "FileLoaded";
+                    sendMessageToElm(value);
+                } else {
+                    console.log("got null value in LoadFile");
+                }
+                break;
+
+            case "GetFileList":
+                // TODO pump this up a bit (requires file list prop probably)
+                const fileListMessage =
+                    { type : "FileList"
+                    , files :
+                        [ { name : "saved", id : "saved" }
+                        ]
+                }
+
+                sendMessageToElm(fileListMessage)
+                break;
+        }
+
+    }
+
+}
+
+//////////////////////////////////////////////////////////////////////
+//                     MultiPartBuilder
+//////////////////////////////////////////////////////////////////////
+
+
+
+/**
+ * Helper for building multipart requests for uploading to Drive.
+ */
+var MultiPartBuilder = function() {
+    this.boundary = Math.random().toString(36).slice(2);
+    this.mimeType = 'multipart/mixed; boundary="' + this.boundary + '"';
+    this.parts = [];
+    this.body = null;
+};
+
+/**
+ * Appends a part.
+ *
+ * @param {String} mimeType Content type of this part
+ * @param {Blob|File|String} content Body of this part
+ */
+MultiPartBuilder.prototype.append = function(mimeType, content) {
+    if(this.body !== null) {
+        throw new Error("Builder has already been finalized.");
+    }
+    this.parts.push(
+            "\r\n--", this.boundary, "\r\n",
+            "Content-Type: ", mimeType, "\r\n\r\n",
+            content);
+    return this;
+};
+
+/**
+ * Finalizes building of the multipart request and returns a Blob containing
+ * the request. Once finalized, appending additional parts will result in an
+ * error.
+ *
+ * @returns {Object} Object containing the mime type (mimeType) & assembled multipart body (body)
+ */
+MultiPartBuilder.prototype.finish = function() {
+    if (this.parts.length === 0) {
+        throw new Error("No parts have been added.");
+    }
+    if (this.body === null) {
+        this.parts.push("\r\n--", this.boundary, "--");
+        this.body = this.parts.join('');
+        // TODO - switch to blob once gapi.client.request allows it
+        // this.body = new Blob(this.parts, {type: this.mimeType});
+    }
+    return {
+        type: this.mimeType,
+        body: this.body
+    };
 };

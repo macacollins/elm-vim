@@ -1,5 +1,7 @@
 module Update exposing (update)
 
+import FileStorage.Update exposing (updateFileStorageModel)
+import FileStorage.Command exposing (loadPropertiesCommand)
 import Modes.FileSearch exposing (fileSearchModeUpdate)
 import Char
 import Msg exposing (Msg(..))
@@ -16,12 +18,10 @@ import Modes.Search exposing (searchModeUpdate)
 import Modes.MacroRecord exposing (macroRecordModeUpdate)
 import Control.NavigateFile exposing (goToLineModeUpdate)
 import Keyboard exposing (KeyCode)
-import Import.LocalStorageMessageHandler exposing (acceptLocalStorageMessage, stringToLines)
 import Window
 import Macro.ActionEntry exposing (ActionEntry(..))
 import Macro.Model exposing (getMacro)
 import View.Util exposing (getActualScreenWidth, getNumberOfLinesOnScreen)
-import Drive exposing (updateDriveModel)
 
 
 update : Msg -> Model -> ( Model, Cmd msg )
@@ -31,10 +31,8 @@ update msg model =
             updateKeyInput keyPress model.mode model
                 |> updateLinesShown
 
-        LocalStorageMessageHandler buffer ->
-            acceptLocalStorageMessage model buffer
-                |> updateLinesShown
-                |> Debug.log ("got localStorage message." ++ (toString buffer))
+        HandleFileStorageMessage value ->
+            updateFileStorageModel model value
 
         Paste pasteString ->
             paste model pasteString |> updateLinesShown
@@ -45,47 +43,16 @@ update msg model =
             else
                 ( model, Cmd.none )
 
-        UpdateFromDrive value ->
-            let
-                newDriveModel =
-                    updateDriveModel value model.driveState
-
-                newContents =
-                    case newDriveModel.contents of
-                        Just string ->
-                            stringToLines string
-
-                        Nothing ->
-                            model.lines
-
-                ( newX, newY ) =
-                    if model.lines == newContents then
-                        ( 0, 0 )
-                    else
-                        ( model.cursorX, model.cursorY )
-
-                modelWithoutContents =
-                    { newDriveModel | contents = Nothing }
-            in
-                { model
-                    | driveState = modelWithoutContents
-                    , lines = newContents
-                    , cursorX = newX
-                    , cursorY = newY
-                }
-                    ! []
-
         WindowResized size ->
             let
                 newWidth =
-                    Debug.log "newHeight" ((toFloat size.width) / 9.5 |> floor)
+                    ((toFloat size.width) / 9.5 |> floor)
 
                 newHeight =
-                    Debug.log "newHeight" (size.height // 19) - 1
+                    (size.height // 19) - 1
 
                 newLinesShown =
                     getNumberOfLinesOnScreen partiallyUpdatedModel
-                        |> Debug.log "newLinesShown"
 
                 partiallyUpdatedModel =
                     { model
@@ -159,7 +126,8 @@ updateKeyInput keyPress mode model =
                 if isAsciiOrNumber then
                     { model | mode = Macro char Control } ! []
                 else
-                    { model | mode = Control } ! []
+                    { model | mode = Control }
+                        ! [ loadPropertiesCommand ]
 
         Macro bufferChar inner ->
             let

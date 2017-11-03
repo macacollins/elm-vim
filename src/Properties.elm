@@ -3,7 +3,7 @@ module Properties exposing (Properties, defaultProperties, encodeProperties, dec
 -- TODO rename to Preferences
 
 import Theme exposing (Theme(..))
-import Storage exposing (StorageMethod(..))
+import FileStorage.StorageMethod exposing (StorageMethod(..))
 import Json.Decode as Decoder
 import Json.Encode as Encoder
 

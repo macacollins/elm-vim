@@ -2,6 +2,7 @@ module Util.ListUtils exposing (..)
 
 import List exposing (..)
 import Model exposing (PasteBuffer(..))
+import Char
 
 
 getOrDefault : Int -> List a -> a -> a
@@ -91,3 +92,18 @@ mutateAtIndex index list transformer =
 
         Nothing ->
             list
+
+
+stringToLines : String -> List String
+stringToLines string =
+    let
+        removeRs string =
+            string
+                |> String.split (String.cons (Char.fromCode 13) "")
+                |> String.join ""
+                |> String.split (String.cons (Char.fromCode 10) "")
+                |> String.join ""
+    in
+        string
+            |> String.split "\n"
+            |> List.map removeRs

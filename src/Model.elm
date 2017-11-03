@@ -4,7 +4,7 @@ import Macro.ActionEntry exposing (ActionEntry(..))
 import Mode exposing (Mode(..))
 import Macro.Model exposing (MacroModel, initialMacroModel)
 import Properties exposing (Properties, defaultProperties)
-import Drive exposing (DriveState)
+import FileStorage.Model exposing (FileStorageModel, defaultFileStorageModel)
 
 
 type alias Model =
@@ -30,7 +30,7 @@ type alias Model =
     , properties : Properties
 
     -- TODO probably move this into the StorageMethod type
-    , driveState : DriveState
+    , fileStorageState : FileStorageModel
     }
 
 
@@ -74,5 +74,5 @@ initialModel =
     , windowWidth = 80
     , properties = defaultProperties
     , linesShown = 31
-    , driveState = Drive.defaultDriveState
+    , fileStorageState = defaultFileStorageModel
     }

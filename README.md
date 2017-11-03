@@ -4,17 +4,17 @@
 ### src folder
 ```bash
 $ cloc src
-      78 text files.
-classified 78 files      78 unique files.                              
+      79 text files.
+classified 79 files      79 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.74  T=0.11 s (686.4 files/s, 44896.5 lines/s)
+github.com/AlDanial/cloc v 1.74  T=0.11 s (693.5 files/s, 43948.2 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             78           1047             91           3964
+Elm                             79           1030            113           3863
 -------------------------------------------------------------------------------
-SUM:                            78           1047             91           3964
+SUM:                            79           1030            113           3863
 -------------------------------------------------------------------------------
 ```
 ### tests folder
@@ -24,7 +24,7 @@ $ cloc --exclude-dir elm-stuff .
 classified 31 files      31 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.74  T=0.05 s (582.3 files/s, 83076.9 lines/s)
+github.com/AlDanial/cloc v 1.74  T=0.05 s (596.5 files/s, 85111.9 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -37,8 +37,6 @@ SUM:                            31            266             41           4116
 ## TODOs
 ```bash
 $ grep -r TODO src
-src/Command/WriteToLocalStorage.elm:-- TODO switch to the single port to rule them all
-src/Command/ExecuteCommand.elm:        -- TODO have smarter writeLocalStorage
 src/Command/ExecuteCommand.elm:                    -- TODO rewrite prolly
 src/Command/ExecuteCommand.elm:                -- TODO skip?
 src/Command/ExecuteCommand.elm:        -- TODO replace :set ! with :set no
@@ -50,14 +48,19 @@ src/Properties.elm:-- TODO rename to Preferences
 src/Delete/DeleteNavigationKeys.elm:-- TODO handle firstLine adjustments
 src/Modes/Yank.elm:        -- TODO This is nasty. Move to Yank and YankToLine
 src/Modes/FileSearch.elm:-- TODO split this up?
-src/Modes/FileSearch.elm:            -- TODO consider inverting this code
+src/Modes/FileSearch.elm:        -- TODO consider inverting this code
 src/Modes/Control.elm:                        -- TODO more thoroughly test the history here
 src/Modes/Control.elm:        -- TODO move the addHistory into the functions themselves
-Binary file src/Modes/.Control.elm.swp matches
-Binary file src/Modes/.Delete.elm.swp matches
 src/Modes/Delete.elm:{- TODO consider refactoring; Delete Mode and Yank Mode are not fantastic abstractions. They should probably be toplevel rather than nested. -}
 src/Modes/Delete.elm:        -- TODO TilBack :/
+Binary file src/.Model.elm.swp matches
 src/Update.elm:            -- TODO figure out a different structure that avoids loops
 src/Model.elm:    -- TODO probably move this into the StorageMethod type
-Binary file src/.Update.elm.swp matches
+Binary file src/FileStorage/.Model.elm.swp matches
+src/FileStorage/Update.elm:-- TODO reconsider these functions. Lots of boilerplate
+src/FileStorage/Update.elm:{- TODO handle position data from saved files properly
+src/FileStorage/Model.elm:    -- TODO figure out better abstraction
+Binary file src/FileStorage/.Update.elm.swp matches
+src/FileStorage/Drive.elm:                    -- TODO rewrite prolly
+src/FileStorage/Drive.elm:                -- TODO skip?
 ```

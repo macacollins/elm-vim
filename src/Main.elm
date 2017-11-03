@@ -16,5 +16,5 @@ main =
         { subscriptions = subscriptions
         , view = topView
         , update = update
-        , init = init { testsFromMacros = True }
+        , init = init
         }

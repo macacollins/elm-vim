@@ -9,7 +9,7 @@ import Json.Encode exposing (string)
 import View.PortsScript exposing (..)
 import View.NormalLine exposing (..)
 import Html.Attributes exposing (id, class, value)
-import Drive exposing (File)
+import FileStorage.Model exposing (File)
 import View.Line exposing (Line(..), tildeLine)
 import View.Util exposing (getActualScreenWidth, getLinesInView, getLinesInView)
 
@@ -61,7 +61,7 @@ getFilesList model =
                     ( "", 0 )
 
         files =
-            model.driveState.files
+            model.fileStorageState.files
                 |> List.filter (\file -> String.contains (String.toLower searchString) (String.toLower file.name))
     in
         div [ class "files" ]
