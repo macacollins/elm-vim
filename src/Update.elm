@@ -113,7 +113,12 @@ updateKeyInput keyPress mode model =
             insertModeUpdate model keyPress
 
         Control ->
-            controlModeUpdate model keyPress
+            -- TODO figure out a different structure that avoids loops
+            -- Pass in update as a function parameter? It's not special
+            if Char.fromCode keyPress == '.' then
+                applyActions model [ model.lastAction ] ! []
+            else
+                controlModeUpdate model keyPress
 
         GoToLine ->
             goToLineModeUpdate model

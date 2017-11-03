@@ -16,9 +16,16 @@ import Modes.Control exposing (controlModeUpdate)
 import Char
 import Dict exposing (Dict)
 import Mode exposing (Mode(..))
+import Macro.ActionEntry exposing (ActionEntry(..))
+import Util.ModifierUtils exposing (getNumberModifier)
 
 
 {- TODO consider refactoring; Delete Mode and Yank Mode are not fantastic abstractions. They should probably be toplevel rather than nested. -}
+
+
+addLastCommand : ActionEntry -> Model -> Model
+addLastCommand action model =
+    { model | lastAction = action }
 
 
 dict : Dict Char (Model -> Model)
@@ -61,6 +68,7 @@ deleteModeUpdate model keyCode =
         Delete (NavigateToCharacter ToBack) ->
             deleteToCharacter model keyCode
 
+        -- TODO TilBack :/
         _ ->
             handleDefaultInput model keyCode
 
@@ -88,8 +96,15 @@ deleteModeUpdateInner model keyCode =
 
                         _ as other ->
                             other
+
+                lastAction =
+                    (toString <| getNumberModifier model) ++ "d" ++ (String.cons (Char.fromCode keyCode) "")
             in
-                { updatedModel | mode = newMode } ! []
+                { updatedModel
+                    | mode = newMode
+                    , lastAction = Keys lastAction
+                }
+                    ! []
 
         Nothing ->
             handleDefaultInput model keyCode

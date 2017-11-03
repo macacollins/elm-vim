@@ -1,5 +1,6 @@
 module Model exposing (PasteBuffer(..), Model, State, getState, initialModel)
 
+import Macro.ActionEntry exposing (ActionEntry(..))
 import Mode exposing (Mode(..))
 import Macro.Model exposing (MacroModel, initialMacroModel)
 import Properties exposing (Properties, defaultProperties)
@@ -20,6 +21,7 @@ type alias Model =
     , searchStringBuffer : String
     , macroModel : MacroModel
     , windowHeight : Int
+    , lastAction : ActionEntry
 
     -- Computed property with the # of logical lines displayed on the screen
     -- We need this in order to handle line wraps
@@ -61,6 +63,7 @@ initialModel =
     , mode = Control
     , numberBuffer = []
     , buffer = (LinesBuffer [])
+    , lastAction = Keys ""
     , firstLine = 0
     , pastStates = []
     , futureStates = []

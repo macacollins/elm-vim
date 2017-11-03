@@ -85,14 +85,30 @@ end =
 
 getTest : List ActionEntry -> String
 getTest macro =
-    """
+    let
+        macroName =
+            case List.head (List.reverse macro) of
+                Just head ->
+                    case head of
+                        Keys actualKeys ->
+                            actualKeys
+
+                        _ as other ->
+                            toString other
+
+                _ ->
+                    "Empty test."
+    in
+        """
       let
           { mode, lines, cursorX, buffer, cursorY } =
             newStateAfterActions """
-        ++ (toString macro)
-        ++ """
+            ++ (toString macro)
+            ++ """
         in
-          describe "z"
+          describe """
+            ++ toString macroName
+            ++ """
             [ test "lines" <|
               \\_ ->
                 Expect.equal lines [ "" ]

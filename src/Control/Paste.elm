@@ -1,43 +1,51 @@
 module Control.Paste exposing (handlePaste, handlePasteBefore)
 
+import Macro.ActionEntry exposing (ActionEntry(..))
 import Model exposing (..)
 import List
 import Util.ListUtils exposing (..)
 
 
+addLastCommand : ActionEntry -> Model -> Model
+addLastCommand action model =
+    { model | lastAction = action }
+
+
 handlePaste : Model -> Model
 handlePaste model =
-    case model.buffer of
-        LinesBuffer buffer ->
-            { model
-                | lines = insertMultiple (model.cursorY + 1) model.lines buffer
-                , cursorX = 0
-                , cursorY =
-                    if List.isEmpty buffer then
-                        model.cursorY
-                    else
-                        model.cursorY + 1
-            }
+    addLastCommand (Keys "p") <|
+        case model.buffer of
+            LinesBuffer buffer ->
+                { model
+                    | lines = insertMultiple (model.cursorY + 1) model.lines buffer
+                    , cursorX = 0
+                    , cursorY =
+                        if List.isEmpty buffer then
+                            model.cursorY
+                        else
+                            model.cursorY + 1
+                }
 
-        InlineBuffer buffer ->
-            insertInline model buffer
+            InlineBuffer buffer ->
+                insertInline model buffer
 
 
 handlePasteBefore : Model -> Model
 handlePasteBefore model =
-    let
-        newLines =
-            case model.buffer of
-                LinesBuffer buffer ->
-                    insertMultiple model.cursorY model.lines buffer
+    addLastCommand (Keys "P") <|
+        let
+            newLines =
+                case model.buffer of
+                    LinesBuffer buffer ->
+                        insertMultiple model.cursorY model.lines buffer
 
-                InlineBuffer buffer ->
-                    insertBeforeInline model buffer
-    in
-        { model
-            | lines = newLines
-            , cursorX = 0
-        }
+                    InlineBuffer buffer ->
+                        insertBeforeInline model buffer
+        in
+            { model
+                | lines = newLines
+                , cursorX = 0
+            }
 
 
 insertBeforeInline : Model -> List String -> List String
