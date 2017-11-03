@@ -46,7 +46,7 @@ update msg model =
         WindowResized size ->
             let
                 newWidth =
-                    ((toFloat size.width) / 9.5 |> floor)
+                    ((toFloat size.width) / 9.5 |> floor) - 1
 
                 newHeight =
                     (size.height // 19) - 1

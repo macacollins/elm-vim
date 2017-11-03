@@ -8,7 +8,7 @@ $ cloc src
 classified 79 files      79 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.74  T=0.11 s (693.5 files/s, 43948.2 lines/s)
+github.com/AlDanial/cloc v 1.74  T=0.11 s (694.1 files/s, 43981.3 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ $ cloc --exclude-dir elm-stuff .
 classified 31 files      31 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.74  T=0.05 s (596.5 files/s, 85111.9 lines/s)
+github.com/AlDanial/cloc v 1.74  T=0.05 s (596.5 files/s, 85106.8 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -56,6 +56,7 @@ src/Modes/Delete.elm:        -- TODO TilBack :/
 Binary file src/.Model.elm.swp matches
 src/Update.elm:            -- TODO figure out a different structure that avoids loops
 src/Model.elm:    -- TODO probably move this into the StorageMethod type
+Binary file src/.Update.elm.swp matches
 Binary file src/FileStorage/.Model.elm.swp matches
 src/FileStorage/Update.elm:-- TODO reconsider these functions. Lots of boilerplate
 src/FileStorage/Update.elm:{- TODO handle position data from saved files properly
