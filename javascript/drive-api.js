@@ -151,6 +151,22 @@ function wrapDriveMessageHandler(sendMessageToElm) {
         }
     }
 
+    // TODO Figure out a "real" promise library
+    function getDriveClient() {
+        return { 
+            then : function(handler) {
+                if (gapi && gapi.client && gapi.client.drive) {
+                    handler(gapi.client.drive);
+                } else {
+                    setTimeout( () => {
+                        console.log("Drive client not initialized. Waiting a second and trying again.");
+                        getDriveClient().then(handler);
+                    }, 100);
+                }
+           }
+        }
+    }
+
 
     /**
      *  On load, called to load the auth2 library and API client library.
@@ -258,8 +274,10 @@ function wrapDriveMessageHandler(sendMessageToElm) {
         const contentOptions = 
             Object.assign({ alt : 'media' }, metadataOptions);
 
-        gapi.client.drive.files.get(contentOptions).then(setFileContents, handleFileError);
-        gapi.client.drive.files.get(metadataOptions).then(setMetadata, handleFileError);
+        getDriveClient().then(client => {
+            client.files.get(contentOptions).then(setFileContents, handleFileError);
+            client.files.get(metadataOptions).then(setMetadata, handleFileError);
+        });
 
         let metadata = undefined, contentsHolder = undefined;
 
@@ -338,22 +356,24 @@ function wrapDriveMessageHandler(sendMessageToElm) {
                 .append(metadata.mimeType, content)
                 .finish();
 
-            var uploadRequest = gapi.client.request({
-                path: path,
-                method: method,
-                params: 
-                    { uploadType: 'multipart'
-                    , supportsTeamDrives: true
-                    , fields: DEFAULT_FIELDS
-                    },
-                headers: { 'Content-Type' : multipart.type },
-                body: multipart.body
-            }).then(function(response) { 
-                const outgoingMessage =
-                    { type : "SaveSuccessful"
-                    , metadata : response.result
-                    }
-                sendMessageToElm(outgoingMessage);
+            var uploadRequest = getDriveClient().then(client => {
+                client.request({
+                    path: path,
+                    method: method,
+                    params: 
+                        { uploadType: 'multipart'
+                        , supportsTeamDrives: true
+                        , fields: DEFAULT_FIELDS
+                        },
+                    headers: { 'Content-Type' : multipart.type },
+                    body: multipart.body
+                }).then(function(response) { 
+                    const outgoingMessage =
+                        { type : "SaveSuccessful"
+                        , metadata : response.result
+                        }
+                    sendMessageToElm(outgoingMessage);
+                });
             });
         };
     }
@@ -381,23 +401,23 @@ function wrapDriveMessageHandler(sendMessageToElm) {
      *
      */
     function listFiles() {
-        gapi.client.drive.files.list({
-            'pageSize': 100,
-            'fields': "nextPageToken, files(id, name)",
-            'q' : 'mimeType = "text/plain"'
-        }).then(function(response) {
-            console.log("Sending file list to elm.")
+        getDriveClient().then(client => {
+            client.files.list({
+                'pageSize': 100,
+                'fields': "nextPageToken, files(id, name)",
+                'q' : 'mimeType = "text/plain"'
+            }).then(function(response) {
+                console.log("Sending file list to elm.")
 
-            // TODO handle bad responses probably
-            var files = response.result.files;
-            sendMessageToElm({
-                files : files,
-                type : 'FileList'
+                // TODO handle bad responses probably
+                var files = response.result.files;
+                sendMessageToElm({
+                    files : files,
+                    type : 'FileList'
+                });
             });
         });
     }
-
-
 
     handleClientLoad();
 };

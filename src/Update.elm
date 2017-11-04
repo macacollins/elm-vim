@@ -76,6 +76,22 @@ updateLinesShown ( model, command ) =
 updateKeyInput : KeyCode -> Mode -> Model -> ( Model, Cmd msg )
 updateKeyInput keyPress mode model =
     case mode of
+        StartingMessage ->
+            {-
+               TODO update this to leave this mode when vim does
+               This will probably involve:
+               1. lines change
+               2. command done run
+
+               At the time of writing, I don't know how to detect that a command has run
+               without storing additional state or adding an extra mode like
+               StartingMessageCommandStarted
+            -}
+            updateKeyInput keyPress Control { model | mode = Control }
+
+        ShowMessage _ ->
+            updateKeyInput keyPress Control { model | mode = Control }
+
         Insert ->
             insertModeUpdate model keyPress
 

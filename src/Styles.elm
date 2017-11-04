@@ -52,6 +52,18 @@ main {
     font-size: larger;
 }
 
+#startingMessage {
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    text-align: center;
+    height: 187px;
+    width: 422px;
+}
+
 li {
     list-style-type: none;
 }

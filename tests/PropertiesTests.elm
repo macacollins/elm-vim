@@ -16,12 +16,12 @@ testProperties =
         List.map testCommandToProps
             [ ( ":set relati\t", .relativeLineNumbers, True )
             , ( ":set relativenumber", .relativeLineNumbers, True )
-            , ( ":set !relati\t", .relativeLineNumbers, False )
-            , ( ":set !relativenumber", .relativeLineNumbers, False )
+            , ( ":set norelati\t", .relativeLineNumbers, False )
+            , ( ":set norelativenumber", .relativeLineNumbers, False )
             , ( ":set num\t", .lineNumbers, True )
             , ( ":set number", .lineNumbers, True )
-            , ( ":set !number", .lineNumbers, False )
-            , ( ":set !nu\t", .lineNumbers, False )
+            , ( ":set nonumber", .lineNumbers, False )
+            , ( ":set nonu\t", .lineNumbers, False )
             ]
 
 

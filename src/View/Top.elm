@@ -8,7 +8,7 @@ import List exposing (..)
 import Json.Encode exposing (string)
 import View.PortsScript exposing (..)
 import View.NormalLine exposing (..)
-import Html.Attributes exposing (id, class, value)
+import Html.Attributes exposing (id, class, value, href, rel, target)
 import FileStorage.Model exposing (File)
 import View.Line exposing (Line(..), tildeLine)
 import View.Util exposing (getActualScreenWidth, getLinesInView, getLinesInView)
@@ -43,10 +43,33 @@ topView model =
                 _ ->
                     text ""
 
+        startingMessage =
+            getStartingMessage model
+
         children =
-            filesList :: styles :: mode :: portsScript :: lines
+            startingMessage :: filesList :: styles :: mode :: portsScript :: lines
     in
         main_ [] children
+
+
+getStartingMessage : Model -> Html msg
+getStartingMessage model =
+    if model.mode == StartingMessage then
+        section
+            [ id "startingMessage" ]
+            [ pre [] [ text """
+Cloud VIM
+
+beta version
+
+by Mac Collins
+Source is on """, a [ href "https://github.com/macacollins/elm-vim", target "_blank", rel "noopener noreferrer" ] [ text "GitHub" ], text """
+
+type  :set drive     to initialize Google Drive
+type  Control + l    to initiate file search
+""" ] ]
+    else
+        text ""
 
 
 getFilesList : Model -> Html msg

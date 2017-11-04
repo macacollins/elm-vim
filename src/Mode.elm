@@ -1,10 +1,13 @@
 module Mode exposing (Mode(..), NavigationType(..))
 
 import Json.Decode exposing (Value)
+import Message exposing (Message)
 
 
 type Mode
-    = Control
+    = StartingMessage
+    | ShowMessage Message
+    | Control
     | Insert
       -- This is for when the user presses g
     | GoToLine

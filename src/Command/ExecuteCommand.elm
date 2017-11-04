@@ -92,16 +92,16 @@ commandDict : Dict String (Model -> ( Model, Cmd msg ))
 commandDict =
     Dict.empty
         --
-        -- TODO replace :set ! with :set no
+        -- TODO replace :set no with :set no
         --
         |> Dict.insert ":set testsFromMacros" (setTestsFromMacros True)
-        |> Dict.insert ":set !testsFromMacros" (setTestsFromMacros False)
+        |> Dict.insert ":set notestsFromMacros" (setTestsFromMacros False)
         --
         -- These are the basic number commands from vim
         |> Dict.insert ":set number" (setLineNumber True)
-        |> Dict.insert ":set !number" (setLineNumber False)
+        |> Dict.insert ":set nonumber" (setLineNumber False)
         |> Dict.insert ":set relativenumber" (setRelativeLineNumber True)
-        |> Dict.insert ":set !relativenumber" (setRelativeLineNumber False)
+        |> Dict.insert ":set norelativenumber" (setRelativeLineNumber False)
         --
         -- set storage mode
         -- TODO if we get more stuff, consider :set storage=drive

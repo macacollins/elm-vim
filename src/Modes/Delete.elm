@@ -20,9 +20,6 @@ import Macro.ActionEntry exposing (ActionEntry(..))
 import Util.ModifierUtils exposing (getNumberModifier)
 
 
-{- TODO consider refactoring; Delete Mode and Yank Mode are not fantastic abstractions. They should probably be toplevel rather than nested. -}
-
-
 addLastCommand : ActionEntry -> Model -> Model
 addLastCommand action model =
     { model | lastAction = action }
