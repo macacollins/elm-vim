@@ -8,7 +8,7 @@ $ cloc src
 classified 80 files      80 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.21 s (378.2 files/s, 24047.2 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.21 s (374.6 files/s, 23817.5 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -20,18 +20,18 @@ SUM:                            80           1046            121           3920
 ### tests folder
 ```bash
 $ cloc --exclude-dir elm-stuff .
-      31 text files.
-classified 31 files      31 unique files.                              
+      32 text files.
+classified 32 files      32 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.09 s (341.3 files/s, 48695.3 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.09 s (343.1 files/s, 47709.9 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             30            266             41           4096
+Elm                             31            269             41           4120
 JSON                             1              0              0             20
 -------------------------------------------------------------------------------
-SUM:                            31            266             41           4116
+SUM:                            32            269             41           4140
 -------------------------------------------------------------------------------
 ```
 ## TODOs
@@ -53,7 +53,6 @@ src/FileStorage/Model.elm:    -- TODO figure out better abstraction
 src/FileStorage/Update.elm:-- TODO reconsider these functions. Lots of boilerplate
 src/FileStorage/Update.elm:{- TODO handle position data from saved files properly
 src/Model.elm:    -- TODO probably move this into the StorageMethod type
-Binary file src/Modes/.Delete.elm.swp matches
 src/Modes/Control.elm:                        -- TODO more thoroughly test the history here
 src/Modes/Control.elm:        -- TODO move the addHistory into the functions themselves
 src/Modes/Delete.elm:        -- TODO TilBack :/

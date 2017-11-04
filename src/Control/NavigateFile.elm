@@ -66,6 +66,7 @@ goToLineInner model defaultCursorX defaultCursorY =
             , cursorX = newCursorX
             , firstLine = newFirstLine
             , mode = Control
+            , numberBuffer = []
         }
 
 

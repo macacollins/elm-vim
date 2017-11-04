@@ -57,8 +57,7 @@ main {
     margin: auto;
     left: 0;
     right: 0;
-    top: 0;
-    bottom: 0;
+    top: 15%;
     text-align: center;
     height: 187px;
     width: 422px;
