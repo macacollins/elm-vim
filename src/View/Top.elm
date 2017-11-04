@@ -61,7 +61,7 @@ getFilesList model =
                     ( "", 0 )
 
         files =
-            model.fileStorageState.files
+            model.fileStorageModel.files
                 |> List.filter (\file -> String.contains (String.toLower searchString) (String.toLower file.name))
     in
         div [ class "files" ]

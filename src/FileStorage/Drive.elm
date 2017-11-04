@@ -8,7 +8,7 @@ handleGoogleDriveWrite : Model -> String -> ( Model, Cmd msg )
 handleGoogleDriveWrite model name =
     let
         command =
-            case model.fileStorageState.currentFileStatus of
+            case model.fileStorageModel.currentFileStatus of
                 New ->
                     -- TODO rewrite prolly
                     WriteNewFile name (String.join "\x0D\n" model.lines)

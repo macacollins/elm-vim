@@ -35,7 +35,7 @@ fileSearchModeUpdate model keyCode =
                 currentSearchString
 
         files =
-            model.fileStorageState.files
+            model.fileStorageModel.files
                 |> List.filter (\file -> String.contains (String.toLower newSearchString) (String.toLower file.name))
 
         newIndex =

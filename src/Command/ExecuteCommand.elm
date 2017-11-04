@@ -1,7 +1,7 @@
 module Command.ExecuteCommand exposing (executeCommand, commandDict, setShowFiles)
 
 import FileStorage.Command exposing (..)
-import FileStorage.Model exposing (FileStatus(..))
+import FileStorage.Model exposing (defaultFileStorageModel, FileStatus(..))
 import Dict exposing (Dict)
 import Mode exposing (Mode(..))
 import Model exposing (Model)
@@ -31,7 +31,7 @@ executeCommand model commandName =
 
 getCurrentFileNameOrUntitled : Model -> String
 getCurrentFileNameOrUntitled model =
-    case model.fileStorageState.currentFileStatus of
+    case model.fileStorageModel.currentFileStatus of
         New ->
             "Untitled"
 
@@ -52,13 +52,13 @@ handleNewFile : Model -> String -> ( Model, Cmd msg )
 handleNewFile model name =
     let
         currentFileStorageModel =
-            model.fileStorageState
+            model.fileStorageModel
 
         newFileStorageModel =
             { currentFileStorageModel | currentFileStatus = New }
 
         updatedModel =
-            { model | fileStorageState = newFileStorageModel }
+            { model | fileStorageModel = newFileStorageModel }
     in
         handleFileStorageWrite updatedModel name
 
@@ -67,7 +67,7 @@ handleFileStorageWrite : Model -> String -> ( Model, Cmd msg )
 handleFileStorageWrite model name =
     let
         command =
-            case model.fileStorageState.currentFileStatus of
+            case model.fileStorageModel.currentFileStatus of
                 New ->
                     -- TODO rewrite prolly
                     WriteNewFile name (String.join "\x0D\n" model.lines)
@@ -125,7 +125,7 @@ write : Model -> ( Model, Cmd msg )
 write model =
     let
         name =
-            case model.fileStorageState.currentFileStatus of
+            case model.fileStorageModel.currentFileStatus of
                 New ->
                     "Untitled"
 
@@ -190,6 +190,7 @@ setStorageMethod newStorageMethod model =
         updatedModel =
             { model
                 | properties = newProperties
+                , fileStorageModel = defaultFileStorageModel
                 , mode = Control
             }
     in

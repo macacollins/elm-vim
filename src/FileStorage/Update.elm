@@ -19,7 +19,7 @@ updateFileStorageModel model value =
                 updateProperties value model.properties
 
             newDriveModel =
-                innerUpdate value model.fileStorageState
+                innerUpdate value model.fileStorageModel
 
             newContents =
                 case newDriveModel.contents of
@@ -43,7 +43,7 @@ updateFileStorageModel model value =
                     | lines = newContents
                     , cursorX = newX
                     , cursorY = newY
-                    , fileStorageState = modelWithoutContents
+                    , fileStorageModel = modelWithoutContents
                     , properties = newProperties
                 }
         in

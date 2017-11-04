@@ -52,6 +52,10 @@ main {
     font-size: larger;
 }
 
+li {
+    list-style-type: none;
+}
+
 .files input {
     border-radius: 5px;
     border: 1px solid;

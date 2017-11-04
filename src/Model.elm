@@ -30,7 +30,7 @@ type alias Model =
     , properties : Properties
 
     -- TODO probably move this into the StorageMethod type
-    , fileStorageState : FileStorageModel
+    , fileStorageModel : FileStorageModel
     }
 
 
@@ -74,5 +74,5 @@ initialModel =
     , windowWidth = 80
     , properties = defaultProperties
     , linesShown = 31
-    , fileStorageState = defaultFileStorageModel
+    , fileStorageModel = defaultFileStorageModel
     }

@@ -11,7 +11,7 @@ function initializePorts(app) {
     cloudVIMDriveInitialized = true;
 
     function sendMessageToElm(message) {
-        // console.log("Sending message to elm", message);
+        console.log("Sending message to elm", message);
         app.ports.fromFileStorageJavaScript.send(message)
     }
 
@@ -410,6 +410,7 @@ function wrapDriveMessageHandler(sendMessageToElm) {
 
 
 function wrapLocalStorageMessageHandler(sendMessageToElm) {
+    const FILE_LIST_KEY = "__fileList"
     if (typeof sendMessageToElm !== 'function') {
         console.log("didn't receive a function in wrapLocalStorageMessageHandler", sendMessageToElm);
         return;
@@ -422,9 +423,35 @@ function wrapLocalStorageMessageHandler(sendMessageToElm) {
             throw "localStorage not enabled :("
         }
 
+
         switch (message.type) {
+            case "WriteNewFile":
+                var fileName = message.metadata.name;
+                window.localStorage.setItem(fileName, JSON.stringify(message.contents));
+                addFileToList(fileName);
+                sendMessageToElm(
+                        { type : "FileLoaded" 
+                        , metadata : 
+                            { name : fileName
+                            , id : fileName
+                            }
+                        , contents : message.contents
+                        })
+
+                break;
+
             case "WriteFile":
-                window.localStorage.setItem(message.name, JSON.stringify(message.payload));
+                var fileName = message.metadata.name;
+                window.localStorage.setItem(fileName, JSON.stringify(message.contents));
+                addFileToList(fileName)
+                sendMessageToElm(
+                        { type : "FileLoaded" 
+                        , metadata : 
+                            { name : fileName
+                            , id : fileName
+                            }
+                        , contents : message.contents
+                        })
                 break;
 
             case "WriteProperties":
@@ -449,23 +476,18 @@ function wrapLocalStorageMessageHandler(sendMessageToElm) {
                 break;
 
             case "LoadFile":
-                var value = JSON.parse(window.localStorage.getItem(message.name));
-                if (value !== null) {
-                    value.type = "FileLoaded";
-                    sendMessageToElm(value);
-                } else {
-                    console.log("got null value in LoadFile");
-                }
+                loadFile(message.id)
                 break;
 
             case "GetFileList":
-                // TODO pump this up a bit (requires file list prop probably)
+
+                const fileArray =
+                    getFileList().map(file => ({ name : file, id : file }))
+
                 const fileListMessage =
                     { type : "FileList"
-                    , files :
-                        [ { name : "saved", id : "saved" }
-                        ]
-                }
+                    , files : fileArray
+                    }
 
                 sendMessageToElm(fileListMessage)
                 break;
@@ -473,6 +495,56 @@ function wrapLocalStorageMessageHandler(sendMessageToElm) {
 
     }
 
+    function loadFile(id) {
+        console.log("loading file with id", id);
+
+        const localStorageValue = window.localStorage.getItem(id);
+
+        if (localStorageValue !== null) {
+            const javascriptVersion = JSON.parse(localStorageValue);
+            sendToElm(JSON.parse(localStorageValue));
+        }
+
+        function sendToElm(payload) {
+            const message = 
+                { type : 'FileLoaded'
+                , metadata : 
+                    { name : id
+                    , id : id
+                    } 
+                , contents : payload
+                }    
+
+            sendMessageToElm(message);
+        }
+    }
+
+    function getFileList() {
+        const storageValue = window.localStorage.getItem(FILE_LIST_KEY);
+
+        if (storageValue !== null) {
+            return JSON.parse(storageValue);
+        } else {
+            return []
+        }
+    }
+
+
+    // Expects new file data as a String signifying the name
+    function addFileToList(newFileData) {
+        // TODO come up with namespacing strategy
+        const storageValue = window.localStorage.getItem(FILE_LIST_KEY);
+        if (storageValue !== null) {
+            var arrayVersion = JSON.parse(storageValue);
+            if (arrayVersion.indexOf(newFileData) === -1) {
+                arrayVersion.push(newFileData);
+            }
+            window.localStorage.setItem(FILE_LIST_KEY, JSON.stringify(arrayVersion));
+        } else {
+            window.localStorage.setItem(FILE_LIST_KEY, JSON.stringify([ newFileData ]));
+        }
+
+    }
 }
 
 //////////////////////////////////////////////////////////////////////
