@@ -24,7 +24,6 @@ after_success:
     - cp $TRAVIS_BUILD_DIR/html/public.html $TRAVIS_BUILD_DIR/public/index.html
     - ls $TRAVIS_BUILD_DIR/public
     - echo "Finished pre-deploy. Should have ls results in there."
-    - FIREBASE_API_TOKEN=AbjyQrNfX7dDKht57eIQj7pgAdv9fXBdJARnQGmBHFxuTEFKw70K8WacisvZAs+0WVfhUNs6nMFUwrNL9m/qvbucPYrErUMrdggPh3bI8KCcuNcUuSaCm1+lUOXiz6zcC4ZKnVo/zRmIjeQX/IOiiYxj3iuhqyZt9jJWAw79sSEjWEK56w0DZwQrhgFc/7njMqcADL/KphCqwesXZSc9oLejVOOaqnz5u+jgrvAB5KBPMbgNv/AiXqJX8nB1FMYXLcNMadL5jL2+Wnr+b5DAJ4DAu76shlyi8o0da8/Va/MfmNkXDQZ2tZdwAFdPRK55I28MWVoC+zLxvDM+B6xTyPjyHJ8YAdCSdcxZlJ3KX/lJAC1HdFLZOA5BaDkpLjvXheU3Mw9HklQuQLAY9WTlvTiiXabAObq3REhAU9Sm9yYheuXYiN3pQMMs6HEBpMuxUUv0dchHnbkY8ZEUCPfhRG9QCKTL4niLySdJ7IlS6rSyAT/pXeGGa1iZvyXFr12FQW0HLsibIGDIpHy4CGsmd5kiTIf9FSbnvQNs3auGyv3iOmRjKzD41/rSCuOZrl6Rl27jXdr49ORPdTiax4tMwN8bYPNEwdhLUZjuvERIYhOWcL0Q9Rs0iH77NJgZ26jP3qOE9Li6TWufqzQXq5KftLRVTBDAWvOu8gexGLO/y2A=
     - echo "About to run"
-    - echo "firebase deploy --project macacollins/cloud-vim --public public --only hosting --token="${FIREBASE_API_TOKEN}
-    - firebase deploy --project macacollins/cloud-vim --public public --only hosting --token=${FIREBASE_API_TOKEN}
+    - echo firebase deploy --project macacollins/cloud-vim --public public --only hosting --token "$FIREBASE_API_TOKEN"
+    - firebase deploy --project macacollins/cloud-vim --public public --only hosting --token "$FIREBASE_API_TOKEN"
