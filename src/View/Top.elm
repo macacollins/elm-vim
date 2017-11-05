@@ -65,6 +65,7 @@ beta version
 
 by Mac Collins
 Source is on """, a [ href "https://github.com/macacollins/elm-vim", target "_blank", rel "noopener noreferrer" ] [ text "GitHub" ], text """
+By default, this application uses localStorage for :w and :e
 
 type  :set drive     to initialize Google Drive
 type  Control + l    to initiate file search
