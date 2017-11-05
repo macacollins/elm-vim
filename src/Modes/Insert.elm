@@ -14,29 +14,28 @@ insertModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
 insertModeUpdate model keyCode =
     let
         newModel =
-            Debug.log "new model insert mode update" <|
-                case keyCode of
-                    27 ->
-                        -- Escape key
-                        { model
-                            | mode = Control
-                            , cursorX =
-                                if model.cursorX > 0 then
-                                    model.cursorX - 1
-                                else
-                                    0
-                        }
+            case keyCode of
+                27 ->
+                    -- Escape key
+                    { model
+                        | mode = Control
+                        , cursorX =
+                            if model.cursorX > 0 then
+                                model.cursorX - 1
+                            else
+                                0
+                    }
 
-                    13 ->
-                        -- Enter key
-                        handleNewLine model
+                13 ->
+                    -- Enter key
+                    handleNewLine model
 
-                    8 ->
-                        -- backspace, duh
-                        handleBackspace model
+                8 ->
+                    -- backspace, duh
+                    handleBackspace model
 
-                    _ ->
-                        handleInsertCharacter model keyCode
+                _ ->
+                    handleInsertCharacter model keyCode
     in
         if List.member keyCode [ 37, 38, 39, 40 ] then
             controlModeUpdate model keyCode
