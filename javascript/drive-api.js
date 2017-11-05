@@ -156,7 +156,7 @@ function wrapDriveMessageHandler(sendMessageToElm) {
         return { 
             then : function(handler) {
                 if (gapi && gapi.client && gapi.client.drive) {
-                    handler(gapi.client.drive);
+                    handler(gapi.client);
                 } else {
                     setTimeout( () => {
                         console.log("Drive client not initialized. Waiting a second and trying again.");
@@ -275,8 +275,8 @@ function wrapDriveMessageHandler(sendMessageToElm) {
             Object.assign({ alt : 'media' }, metadataOptions);
 
         getDriveClient().then(client => {
-            client.files.get(contentOptions).then(setFileContents, handleFileError);
-            client.files.get(metadataOptions).then(setMetadata, handleFileError);
+            client.drive.files.get(contentOptions).then(setFileContents, handleFileError);
+            client.drive.files.get(metadataOptions).then(setMetadata, handleFileError);
         });
 
         let metadata = undefined, contentsHolder = undefined;
@@ -402,7 +402,7 @@ function wrapDriveMessageHandler(sendMessageToElm) {
      */
     function listFiles() {
         getDriveClient().then(client => {
-            client.files.list({
+            client.drive.files.list({
                 'pageSize': 100,
                 'fields': "nextPageToken, files(id, name)",
                 'q' : 'mimeType = "text/plain"'
