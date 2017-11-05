@@ -34,21 +34,21 @@ handlePasteBefore : Model -> Model
 handlePasteBefore model =
     addLastCommand (Keys "P") <|
         let
-            newLines =
+            ( newLines, newCursorX ) =
                 case model.buffer of
                     LinesBuffer buffer ->
-                        insertMultiple model.cursorY model.lines buffer
+                        ( insertMultiple model.cursorY model.lines buffer, 0 )
 
                     InlineBuffer buffer ->
                         insertBeforeInline model buffer
         in
             { model
                 | lines = newLines
-                , cursorX = 0
+                , cursorX = newCursorX
             }
 
 
-insertBeforeInline : Model -> List String -> List String
+insertBeforeInline : Model -> List String -> ( List String, Int )
 insertBeforeInline { lines, cursorX, cursorY } buffer =
     case buffer of
         head :: second :: rest ->
@@ -57,7 +57,7 @@ insertBeforeInline { lines, cursorX, cursorY } buffer =
                     getLine cursorY lines
 
                 ( left, right ) =
-                    splitLine insertLine (cursorX - 1)
+                    splitLine insertLine (cursorX)
 
                 withLineBefore =
                     mutateAtIndex cursorY lines (\_ -> left ++ head)
@@ -71,17 +71,20 @@ insertBeforeInline { lines, cursorX, cursorY } buffer =
                 withLineAfter =
                     mutateAtIndex lastLineIndex withLinesInserted (\line -> line ++ right)
             in
-                withLineAfter
+                ( withLineAfter, 0 )
 
         head :: [] ->
             let
                 ( left, right ) =
-                    splitLine (getLine cursorY lines) (cursorX - 1)
+                    splitLine (getLine cursorY lines) cursorX
             in
-                (mutateAtIndex cursorY lines (\line -> left ++ head ++ right))
+                Debug.log "Got in the single line insert before inline" <|
+                    ( mutateAtIndex cursorY lines (\line -> left ++ head ++ right)
+                    , cursorX + (String.length head) - 1
+                    )
 
         _ ->
-            lines
+            ( lines, 0 )
 
 
 insertInline : Model -> List String -> Model

@@ -57,6 +57,24 @@ pasteBeforeTests =
                         newStateAfterActions [ Keys "iaaabb", Enter, Keys "bbbcc", Enter, Keys "cccdd", Escape, Keys "0llvklx0P" ]
                 in
                     Expect.equal lines [ "aaabb", "cc", "cccbbbdd" ]
+        , let
+            { mode, lines, cursorX, buffer, cursorY } =
+                newStateAfterActions [ Keys "i1 2 3", Escape, Keys "hxP" ]
+          in
+            describe "hxP"
+                [ test "lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1 2 3" ]
+                , test "buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ " " ]
+                , test "cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 3
+                , test "cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                ]
         ]
 
 

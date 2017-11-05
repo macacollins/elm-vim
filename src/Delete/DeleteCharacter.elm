@@ -1,6 +1,6 @@
 module Delete.DeleteCharacter exposing (deleteCharacterUnderCursor, handleBackspace)
 
-import Model exposing (Model, InlineBuffer)
+import Model exposing (Model, PasteBuffer(..))
 import List
 import Util.ListUtils exposing (..)
 
