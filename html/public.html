@@ -1,0 +1,27 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <script id="prod" src="javascript/main.js"></script>
+        <script>
+            var app = Elm.Main.fullscreen();
+
+            var driveOnload = function() {
+                if (typeof gapi !== 'undefined') {
+                    initializePorts(app);
+                }
+            }
+            var googleOnload = function() {
+                if (typeof initializePorts !== 'undefined') {
+                    initializePorts(app);
+                }
+            }
+        </script>
+        <script src="javascript/drive-api.js" async defer onload="driveOnload()"></script>
+        <script src="https://apis.google.com/js/api.js" async defect onload="googleOnload()"></script>
+        <noscript>
+            Hi! This site does not work without JavaScript.
+        </noscript>
+        <div id="main"></div>
+    </body>
+</html>

@@ -8,13 +8,13 @@ $ cloc src
 classified 80 files      80 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.22 s (364.5 files/s, 23256.8 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.22 s (368.6 files/s, 23630.5 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             80           1049            121           3935
+Elm                             80           1052            121           3955
 -------------------------------------------------------------------------------
-SUM:                            80           1049            121           3935
+SUM:                            80           1052            121           3955
 -------------------------------------------------------------------------------
 ```
 ### tests folder
@@ -24,7 +24,7 @@ $ cloc --exclude-dir elm-stuff .
 classified 34 files      34 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.09 s (362.3 files/s, 48106.7 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.10 s (343.7 files/s, 45646.2 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -37,6 +37,7 @@ SUM:                            34            273             41           4201
 ## TODOs
 ```bash
 $ grep -r TODO src
+Binary file src/.Update.elm.swp matches
 src/Command/ExecuteCommand.elm:                    -- TODO rewrite prolly
 src/Command/ExecuteCommand.elm:                -- TODO skip?
 src/Command/ExecuteCommand.elm:        -- TODO replace :set no with :set no

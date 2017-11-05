@@ -41,6 +41,15 @@ main {
     padding-top: 8px;
 }
 
+.tildeLine {
+    height: 19px;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
 .files h2 {
     text-align:center;
 }

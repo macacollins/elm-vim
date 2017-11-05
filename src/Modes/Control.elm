@@ -69,6 +69,10 @@ dict =
         |> Dict.insert 'h' moveLeft
         |> Dict.insert 'j' moveDown
         |> Dict.insert 'k' moveUp
+        |> Dict.insert (Char.fromCode 39) moveRight
+        |> Dict.insert (Char.fromCode 37) moveLeft
+        |> Dict.insert (Char.fromCode 40) moveDown
+        |> Dict.insert (Char.fromCode 38) moveUp
         |> Dict.insert 'b' moveToLastWord
         |> Dict.insert 'w' moveToNextWord
         |> Dict.insert 'H' moveToTopOfScreen

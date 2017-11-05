@@ -21,7 +21,9 @@ handleInsertCharacter model keyCode =
                 after =
                     String.slice indexToSplit (String.length currentLine) currentLine
             in
-                before ++ (String.cons (Char.fromCode keyCode) "") ++ after
+                before
+                    ++ (String.cons (Char.fromCode keyCode) "")
+                    ++ after
 
         newLines =
             mutateAtIndex model.cursorY model.lines transformer

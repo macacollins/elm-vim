@@ -17,7 +17,8 @@ portsScript =
 
 scriptItself =
     """
-    if (typeof started === "undefined") {
+    var prod = document.getElementById("prod");
+    if (typeof started === "undefined" && !prod) {
 
         var app = Elm.Main.fullscreen();
 
@@ -37,6 +38,8 @@ scriptItself =
                 var main = document.querySelector("main")
                 if (!main) { alert("no main found after querySelectorAll(\\"main\\") returned multiple results."); }
                 main.parentElement.removeChild(main);
+                console.log("removed main child");
+
 
                 setTimeout(() => {
                     var value = JSON.parse(window.localStorage.getItem("saved"))
