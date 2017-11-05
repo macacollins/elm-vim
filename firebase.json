@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "public",
+    "public": "/home/travis/build/macacollins/elm-vim/public",
     "ignore": [
       "firebase.json",
       "**/.*",
