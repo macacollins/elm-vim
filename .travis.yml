@@ -13,7 +13,11 @@ before_script:
 - npm install -g elm elm-test
 script: $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 elm-test
 before_deploy:
- - " mkdir public && bash deploy.sh"
+ - " mkdir public 
+    \n$TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 elm package install -y
+    \n$TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 elm make src/Main.elm --output=public/javascript/main.js
+    \ncp javascript/drive-api.js public/javascript/drive-api.js
+    \ncp html/public.html public/index.html"
 deploy:
   provider: firebase
   token:
