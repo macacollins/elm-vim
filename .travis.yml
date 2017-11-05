@@ -13,11 +13,14 @@ before_script:
 - npm install -g elm elm-test
 script: $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 elm-test
 before_deploy:
- - " mkdir public 
+ - "\n echo \"Starting pre-deploy\"
+    \n mkdir $TRAVIS_BUILD_DIR/public 
     \n$TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 elm package install -y
-    \n$TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 elm make src/Main.elm --output=public/javascript/main.js
-    \ncp javascript/drive-api.js public/javascript/drive-api.js
-    \ncp html/public.html public/index.html"
+    \n$TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 elm make $TRAVIS_BUILD_DIR/src/Main.elm --output=$TRAVIS_BUILD_DIR/public/javascript/main.js
+    \ncp $TRAVIS_BUILD_DIR/javascript/drive-api.js $TRAVIS_BUILD_DIR/public/javascript/drive-api.js
+    \ncp $TRAVIS_BUILD_DIR/html/public.html $TRAVIS_BUILD_DIR/public/index.html
+    \nls $TRAVIS_BUILD_DIR/\necho \"Finished pre-deploy. Should have ls results in there.\""
+
 deploy:
   provider: firebase
   token:
