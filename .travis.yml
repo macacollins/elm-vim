@@ -1,20 +1,20 @@
 language: node_js
 node_js:
-  - "7"
+- '7'
 cache:
   directories:
-    - tests/elm-stuff/build-artifacts
-    - sysconfcpus
+  - tests/elm-stuff/build-artifacts
+  - sysconfcpus
 install:
-  - |
-    if [ ! -d sysconfcpus/bin ];
-    then
-      git clone https://github.com/obmarg/libsysconfcpus.git; 
-      cd libsysconfcpus;
-      ./configure --prefix=$TRAVIS_BUILD_DIR/sysconfcpus;
-      make && make install;
-      cd ..;
-    fi
+- "if [ ! -d sysconfcpus/bin ];\nthen\n  git clone https://github.com/obmarg/libsysconfcpus.git;
+  \n  cd libsysconfcpus;\n  ./configure --prefix=$TRAVIS_BUILD_DIR/sysconfcpus;\n
+  \ make && make install;\n  cd ..;\nfi\n"
 before_script:
-  - npm install -g elm elm-test
+- npm install -g elm elm-test
 script: $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 elm-test
+before_deploy:
+ - " mkdir public && bash deploy.sh"
+deploy:
+  provider: firebase
+  token:
+    secure: AbjyQrNfX7dDKht57eIQj7pgAdv9fXBdJARnQGmBHFxuTEFKw70K8WacisvZAs+0WVfhUNs6nMFUwrNL9m/qvbucPYrErUMrdggPh3bI8KCcuNcUuSaCm1+lUOXiz6zcC4ZKnVo/zRmIjeQX/IOiiYxj3iuhqyZt9jJWAw79sSEjWEK56w0DZwQrhgFc/7njMqcADL/KphCqwesXZSc9oLejVOOaqnz5u+jgrvAB5KBPMbgNv/AiXqJX8nB1FMYXLcNMadL5jL2+Wnr+b5DAJ4DAu76shlyi8o0da8/Va/MfmNkXDQZ2tZdwAFdPRK55I28MWVoC+zLxvDM+B6xTyPjyHJ8YAdCSdcxZlJ3KX/lJAC1HdFLZOA5BaDkpLjvXheU3Mw9HklQuQLAY9WTlvTiiXabAObq3REhAU9Sm9yYheuXYiN3pQMMs6HEBpMuxUUv0dchHnbkY8ZEUCPfhRG9QCKTL4niLySdJ7IlS6rSyAT/pXeGGa1iZvyXFr12FQW0HLsibIGDIpHy4CGsmd5kiTIf9FSbnvQNs3auGyv3iOmRjKzD41/rSCuOZrl6Rl27jXdr49ORPdTiax4tMwN8bYPNEwdhLUZjuvERIYhOWcL0Q9Rs0iH77NJgZ26jP3qOE9Li6TWufqzQXq5KftLRVTBDAWvOu8gexGLO/y2A=
