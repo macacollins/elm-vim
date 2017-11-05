@@ -47,17 +47,6 @@ testEscapeGetsToCommandMode =
                 Expect.equal mode Control
 
 
-testInvalidSequence : Test
-testInvalidSequence =
-    let
-        { mode } =
-            newStateAfterActions [ Keys ":set sxzxaszxs\t", Enter ]
-    in
-        test "Goes back to control mode with an invalid sequence" <|
-            \_ ->
-                Expect.equal mode Control
-
-
 testBackspaceALotOfTimes : Test
 testBackspaceALotOfTimes =
     let

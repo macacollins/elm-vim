@@ -1,5 +1,6 @@
 module Command.ExecuteCommand exposing (executeCommand, commandDict, setShowFiles)
 
+import Message exposing (Message(..))
 import FileStorage.Command exposing (..)
 import FileStorage.Model exposing (defaultFileStorageModel, FileStatus(..))
 import Dict exposing (Dict)
@@ -24,8 +25,7 @@ executeCommand model commandName =
             else if String.startsWith ":e " commandName then
                 handleNewFile model (String.dropLeft 3 commandName)
             else
-                Debug.log "Command didn't match dict or ifs"
-                    { model | mode = Control }
+                { model | mode = ShowMessage (UnrecognizedCommand <| String.dropLeft 1 commandName) Control }
                     ! []
 
 

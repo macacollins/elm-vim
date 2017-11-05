@@ -63,6 +63,10 @@ main {
     width: 422px;
 }
 
+.error {
+    font-weight: bold;
+}
+
 li {
     list-style-type: none;
 }

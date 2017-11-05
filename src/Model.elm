@@ -5,6 +5,7 @@ import Mode exposing (Mode(..))
 import Macro.Model exposing (MacroModel, initialMacroModel)
 import Properties exposing (Properties, defaultProperties)
 import FileStorage.Model exposing (FileStorageModel, defaultFileStorageModel)
+import Message exposing (Message(..))
 
 
 type alias Model =
@@ -56,6 +57,7 @@ getState model =
         model.firstLine
 
 
+initialModel : Model
 initialModel =
     { lines = (List.repeat 1 "")
     , cursorX = 0

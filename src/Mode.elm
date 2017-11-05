@@ -6,7 +6,7 @@ import Message exposing (Message)
 
 type Mode
     = StartingMessage
-    | ShowMessage Message
+    | ShowMessage Message Mode
     | Control
     | Insert
       -- This is for when the user presses g

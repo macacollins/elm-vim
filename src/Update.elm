@@ -89,8 +89,8 @@ updateKeyInput keyPress mode model =
             -}
             updateKeyInput keyPress Control { model | mode = Control }
 
-        ShowMessage _ ->
-            updateKeyInput keyPress Control { model | mode = Control }
+        ShowMessage _ innerMode ->
+            updateKeyInput keyPress innerMode { model | mode = innerMode }
 
         Insert ->
             insertModeUpdate model keyPress

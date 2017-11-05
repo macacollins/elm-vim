@@ -12,6 +12,7 @@ import Html.Attributes exposing (id, class, value, href, rel, target)
 import FileStorage.Model exposing (File)
 import View.Line exposing (Line(..), tildeLine)
 import View.Util exposing (getActualScreenWidth, getLinesInView, getLinesInView)
+import Message exposing (getMessageText)
 
 
 topView : Model -> Html msg
@@ -162,6 +163,9 @@ modeFooter model =
                 , span [ id "cursor" ] [ text " " ]
                 ]
             ]
+
+        ShowMessage message _ ->
+            [ pre [ class "error" ] [ text (getMessageText message) ] ]
 
         FileSearch _ _ ->
             []
