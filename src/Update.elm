@@ -38,8 +38,10 @@ update msg model =
             paste model pasteString |> updateLinesShown
 
         KeyUp keyPress ->
-            if List.member keyPress [ 27, 8, 9, 37, 38, 39, 40 ] then
+            if List.member keyPress [ 27, 8, 9 ] then
                 update (KeyInput keyPress) model
+            else if List.member keyPress [ 37, 38, 39, 40 ] then
+                update (KeyInput (keyPress - 41)) model
             else
                 ( model, Cmd.none )
 

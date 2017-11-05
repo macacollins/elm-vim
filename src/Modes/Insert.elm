@@ -37,7 +37,7 @@ insertModeUpdate model keyCode =
                 _ ->
                     handleInsertCharacter model keyCode
     in
-        if List.member keyCode [ 37, 38, 39, 40 ] then
+        if List.member keyCode [ -4, -3, -2, -1 ] then
             controlModeUpdate model keyCode
         else
             ( newModel, Cmd.none )
