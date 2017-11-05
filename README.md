@@ -8,37 +8,37 @@ $ cloc src
 classified 80 files      80 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.21 s (374.6 files/s, 23817.5 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.21 s (387.5 files/s, 24711.5 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             80           1046            121           3920
+Elm                             80           1049            121           3932
 -------------------------------------------------------------------------------
-SUM:                            80           1046            121           3920
+SUM:                            80           1049            121           3932
 -------------------------------------------------------------------------------
 ```
 ### tests folder
 ```bash
 $ cloc --exclude-dir elm-stuff .
-      32 text files.
-classified 32 files      32 unique files.                              
+      34 text files.
+classified 34 files      34 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.09 s (343.1 files/s, 47709.9 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.10 s (342.5 files/s, 45300.6 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             31            269             41           4120
+Elm                             33            273             41           4163
 JSON                             1              0              0             20
 -------------------------------------------------------------------------------
-SUM:                            32            269             41           4140
+SUM:                            34            273             41           4183
 -------------------------------------------------------------------------------
 ```
 ## TODOs
 ```bash
 $ grep -r TODO src
 Binary file src/.Model.elm.swp matches
-Binary file src/.Update.elm.swp matches
+Binary file src/Command/.ExecuteCommand.elm.swp matches
 src/Command/ExecuteCommand.elm:                    -- TODO rewrite prolly
 src/Command/ExecuteCommand.elm:                -- TODO skip?
 src/Command/ExecuteCommand.elm:        -- TODO replace :set no with :set no

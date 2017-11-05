@@ -1,6 +1,6 @@
 module Delete.DeleteCharacter exposing (deleteCharacterUnderCursor, handleBackspace)
 
-import Model exposing (Model)
+import Model exposing (Model, InlineBuffer)
 import List
 import Util.ListUtils exposing (..)
 
@@ -11,10 +11,22 @@ deleteCharacterUnderCursor model =
         { lines, cursorY, cursorX } =
             model
 
+        line =
+            getLine cursorY lines
+
+        actualCursorX =
+            if cursorX < String.length line - 1 then
+                cursorX
+            else
+                String.length line - 1
+
+        stolenCharacter =
+            String.slice actualCursorX (actualCursorX + 1) line
+
         updateLine currentLine =
-            (String.slice 0 cursorX currentLine)
+            (String.slice 0 actualCursorX currentLine)
                 ++ (String.slice
-                        (cursorX + 1)
+                        (actualCursorX + 1)
                         (String.length currentLine)
                         currentLine
                    )
@@ -33,7 +45,11 @@ deleteCharacterUnderCursor model =
             else
                 String.length mutatedLine - 1
     in
-        { model | lines = finalLines, cursorX = finalCursorX }
+        { model
+            | lines = finalLines
+            , cursorX = finalCursorX
+            , buffer = InlineBuffer [ stolenCharacter ]
+        }
 
 
 handleBackspace : Model -> Model
