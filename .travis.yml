@@ -25,6 +25,5 @@ after_success:
     - ls $TRAVIS_BUILD_DIR/public
     - echo "Finished pre-deploy. Should have ls results in there."
     - echo "About to run"
-    - firebase login:ci 
-    - echo firebase deploy --project macacollins/cloud-vim --public public --only hosting --token "$FIREBASE_API_TOKEN"
-    - firebase deploy --project macacollins/cloud-vim --public public --only hosting --token "$FIREBASE_API_TOKEN"
+    - echo firebase deploy --token "$FIREBASE_TOKEN"
+    - firebase deploy --token "$FIREBASE_TOKEN"
