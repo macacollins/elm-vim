@@ -83,7 +83,6 @@ li {
 .files input {
     border-radius: 5px;
     border: 1px solid;
-    /* margin-left: 1%; */
     position: absolute;
     width: 90%;
     font-size: larger;

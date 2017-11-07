@@ -11,6 +11,21 @@ import Util.ListUtils exposing (..)
 import Mode exposing (Mode(..))
 
 
+resetsNumberBuffer : Test
+resetsNumberBuffer =
+    describe "reset number buffer after yy" <|
+        [ let
+            { numberBuffer } =
+                newStateAfterActions [ Keys "i", Enter, Enter, Enter, Enter, Enter, Escape, Keys "kkkkk2yy" ]
+          in
+            describe "kkkkk2yy"
+                [ test "numberBuffer" <|
+                    \_ ->
+                        Expect.equal numberBuffer []
+                ]
+        ]
+
+
 yankTests : Test
 yankTests =
     describe "Yank it"

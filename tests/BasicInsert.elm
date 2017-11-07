@@ -9,6 +9,27 @@ import List
 import Util.ListUtils exposing (..)
 
 
+enterSplitsLineTests : Test
+enterSplitsLineTests =
+    describe "Enter" <|
+        [ let
+            { mode, lines, cursorX, buffer, cursorY } =
+                newStateAfterActions [ Keys "i12341234", Escape, Keys "hhhi", Enter, Escape ]
+          in
+            describe "Enter splits lines"
+                [ test "lines" <|
+                    \_ ->
+                        Expect.equal lines [ "1234", "1234" ]
+                , test "cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 1
+                ]
+        ]
+
+
 testBasicInsert : Test
 testBasicInsert =
     describe "Basic Inserts"

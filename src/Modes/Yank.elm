@@ -50,7 +50,11 @@ yankModeNormalUpdate : Model -> KeyCode -> ( Model, Cmd msg )
 yankModeNormalUpdate model keyCode =
     case Dict.get (Char.fromCode keyCode) dict of
         Just handler ->
-            handler model ! []
+            let
+                updatedModel =
+                    handler model
+            in
+                { updatedModel | numberBuffer = [] } ! []
 
         Nothing ->
             if List.member (Char.fromCode keyCode) [ 'j', 'k', 'h', 'l', 'w', 'b', '$', 'G' ] then

@@ -11,8 +11,20 @@ handleNewLine model =
         sliceIndex =
             (model.cursorY + 1)
 
+        currentLine =
+            getLine model.cursorY model.lines
+
+        textToKeepOnLine =
+            String.left model.cursorX currentLine
+
+        textToCarryOver =
+            String.dropLeft model.cursorX currentLine
+
+        insertedLines =
+            insertAtIndex sliceIndex updatedLines textToCarryOver
+
         updatedLines =
-            insertAtIndex sliceIndex model.lines ""
+            mutateAtIndex model.cursorY model.lines (\_ -> textToKeepOnLine)
 
         newCursorY =
             model.cursorY + 1
@@ -29,7 +41,7 @@ handleNewLine model =
                 model.firstLine
     in
         { model
-            | lines = updatedLines
+            | lines = insertedLines
             , cursorY = newCursorY
             , cursorX = newCursorX
             , firstLine = newFirstLine
