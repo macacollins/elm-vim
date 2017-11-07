@@ -15,10 +15,15 @@ renderLineWithCursor model index line =
         let
             adjustedCursorX =
                 if String.length line <= model.cursorX then
-                    if model.mode == Insert then
-                        String.length line + 1
-                    else
-                        String.length line - 1
+                    case model.mode of
+                        Insert ->
+                            String.length line + 1
+
+                        Macro _ Insert ->
+                            String.length line + 1
+
+                        _ ->
+                            String.length line - 1
                 else
                     model.cursorX
 

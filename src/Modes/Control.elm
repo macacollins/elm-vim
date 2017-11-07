@@ -3,6 +3,7 @@ module Modes.Control exposing (controlModeUpdate)
 import Model exposing (..)
 import Keyboard exposing (KeyCode)
 import Dict exposing (Dict)
+import Macro.ActionEntry exposing (ActionEntry(..))
 import Char
 import Mode exposing (Mode(..), NavigationType(..))
 import Delete.DeleteCharacter exposing (..)
@@ -86,6 +87,7 @@ dict =
         -- text manipulation
         |> Dict.insert 'J' joinLines
         |> Dict.insert 'D' deleteToEndOfLine
+        |> Dict.insert 'C' cutToEndOfLine
         |> Dict.insert 'X' handleBackspace
         |> Dict.insert (Char.fromCode 8) handleBackspace
         |> Dict.insert 's' substitute
@@ -108,6 +110,19 @@ dict =
         |> Dict.insert 'P' (\model -> addHistory model <| handlePasteBefore model)
         |> Dict.insert 'x' (\model -> addHistory model <| deleteCharacterUnderCursor model)
         |> Dict.insert 'a' enterAppendMode
+
+
+cutToEndOfLine : Model -> Model
+cutToEndOfLine =
+    deleteToEndOfLine
+        >> moveToEndOfLine
+        >> enterAppendMode
+        >> setLastAction (Keys "C")
+
+
+setLastAction : ActionEntry -> Model -> Model
+setLastAction entry model =
+    { model | lastAction = entry }
 
 
 modeDict : Dict Char Mode

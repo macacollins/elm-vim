@@ -8,36 +8,36 @@ $ cloc src
 classified 80 files      80 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.22 s (368.6 files/s, 23630.5 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.20 s (394.4 files/s, 25396.4 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             80           1052            121           3955
+Elm                             80           1058            122           3971
 -------------------------------------------------------------------------------
-SUM:                            80           1052            121           3955
+SUM:                            80           1058            122           3971
 -------------------------------------------------------------------------------
 ```
 ### tests folder
 ```bash
 $ cloc --exclude-dir elm-stuff .
-      34 text files.
-classified 34 files      34 unique files.                              
+      35 text files.
+classified 35 files      35 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.10 s (343.7 files/s, 45646.2 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.10 s (344.6 files/s, 45195.4 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             33            273             41           4181
+Elm                             34            276             41           4253
 JSON                             1              0              0             20
 -------------------------------------------------------------------------------
-SUM:                            34            273             41           4201
+SUM:                            35            276             41           4273
 -------------------------------------------------------------------------------
 ```
 ## TODOs
 ```bash
 $ grep -r TODO src
-Binary file src/.Update.elm.swp matches
+Binary file src/.Model.elm.swp matches
 src/Command/ExecuteCommand.elm:                    -- TODO rewrite prolly
 src/Command/ExecuteCommand.elm:                -- TODO skip?
 src/Command/ExecuteCommand.elm:        -- TODO replace :set no with :set no
@@ -52,11 +52,13 @@ src/FileStorage/Model.elm:    -- TODO figure out better abstraction
 src/FileStorage/Update.elm:-- TODO reconsider these functions. Lots of boilerplate
 src/FileStorage/Update.elm:{- TODO handle position data from saved files properly
 src/Model.elm:    -- TODO probably move this into the StorageMethod type
+Binary file src/Modes/.Control.elm.swp matches
 src/Modes/Control.elm:                        -- TODO more thoroughly test the history here
 src/Modes/Control.elm:        -- TODO move the addHistory into the functions themselves
 src/Modes/Delete.elm:        -- TODO TilBack :/
 src/Modes/FileSearch.elm:-- TODO split this up?
 src/Modes/FileSearch.elm:        -- TODO consider inverting this code
+src/Modes/Insert.elm:            -- TODO make the right arrow key go past the end of the line by 1 space in insert mode
 src/Modes/Yank.elm:        -- TODO This is nasty. Move to Yank and YankToLine
 src/Properties.elm:-- TODO rename to Preferences
 src/Update.elm:               TODO update this to leave this mode when vim does

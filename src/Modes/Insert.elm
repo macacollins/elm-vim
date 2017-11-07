@@ -38,6 +38,7 @@ insertModeUpdate model keyCode =
                     handleInsertCharacter model keyCode
     in
         if List.member keyCode [ -4, -3, -2, -1 ] then
+            -- TODO make the right arrow key go past the end of the line by 1 space in insert mode
             controlModeUpdate model keyCode
         else
             ( newModel, Cmd.none )
