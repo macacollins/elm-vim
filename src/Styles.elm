@@ -69,7 +69,7 @@ html, body {
     top: 15%;
     text-align: center;
     height: 187px;
-    width: 422px;
+    width: 100%;
 }
 
 .error {

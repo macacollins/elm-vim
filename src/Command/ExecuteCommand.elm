@@ -91,9 +91,6 @@ handleFileStorageWrite model name =
 commandDict : Dict String (Model -> ( Model, Cmd msg ))
 commandDict =
     Dict.empty
-        --
-        -- TODO replace :set no with :set no
-        --
         |> Dict.insert ":set testsFromMacros" (setTestsFromMacros True)
         |> Dict.insert ":set notestsFromMacros" (setTestsFromMacros False)
         --

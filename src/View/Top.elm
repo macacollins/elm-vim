@@ -68,8 +68,7 @@ Source is on """, a [ href "https://github.com/macacollins/elm-vim", target "_bl
 By default, this application uses localStorage for :w and :e
 
 type  :set drive     to initialize Google Drive
-type  Control + l    to initiate file search
-""" ] ]
+type  Control + l    to initiate file search   """ ] ]
     else
         text ""
 
