@@ -10,7 +10,6 @@ subscriptions _ =
     Sub.batch
         [ Keyboard.presses KeyInput
         , Keyboard.ups KeyUp
-        , Keyboard.downs KeyDown
         , paste Paste
         , fromFileStorageJavaScript HandleFileStorageMessage
         , Window.resizes WindowResized

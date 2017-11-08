@@ -8,13 +8,13 @@ $ cloc src
 classified 82 files      82 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.74  T=0.12 s (710.3 files/s, 47556.3 lines/s)
+github.com/AlDanial/cloc v 1.74  T=0.12 s (696.9 files/s, 46525.5 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             82           1130            126           4234
+Elm                             82           1130            121           4223
 -------------------------------------------------------------------------------
-SUM:                            82           1130            126           4234
+SUM:                            82           1130            121           4223
 -------------------------------------------------------------------------------
 ```
 ### tests folder
@@ -24,7 +24,7 @@ $ cloc --exclude-dir elm-stuff .
 classified 36 files      36 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.74  T=0.06 s (616.2 files/s, 89068.3 lines/s)
+github.com/AlDanial/cloc v 1.74  T=0.06 s (595.8 files/s, 86126.0 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -54,13 +54,13 @@ src/Modes/Control.elm:                        -- TODO more thoroughly test the h
 src/Modes/Control.elm:        -- TODO move the addHistory into the functions themselves
 src/Modes/Insert.elm:            -- TODO make the right arrow key go past the end of the line by 1 space in insert mode
 src/Modes/Delete.elm:        -- TODO TilBack :/
-src/Update.elm:        -- TODO research more on the rules here
 src/Update.elm:               TODO update this to leave this mode when vim does
 src/Update.elm:            -- TODO figure out a different structure that avoids loops
 src/Model.elm:    -- TODO probably move this into the StorageMethod type
 src/FileStorage/Update.elm:-- TODO reconsider these functions. Lots of boilerplate
 src/FileStorage/Update.elm:{- TODO handle position data from saved files properly
 src/FileStorage/Model.elm:    -- TODO figure out better abstraction
+Binary file src/FileStorage/.Update.elm.swp matches
 src/FileStorage/Drive.elm:                    -- TODO rewrite prolly
 src/FileStorage/Drive.elm:                -- TODO skip?
 ```

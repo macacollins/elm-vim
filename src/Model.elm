@@ -32,10 +32,6 @@ type alias Model =
 
     -- TODO probably move this into the StorageMethod type
     , fileStorageModel : FileStorageModel
-
-    -- Control pressed - used for tracking control state.
-    -- It would be better to expose ctrlKey from the browser somehow
-    , controlPressed : Bool
     }
 
 
@@ -81,5 +77,4 @@ initialModel =
     , properties = defaultProperties
     , linesShown = 31
     , fileStorageModel = defaultFileStorageModel
-    , controlPressed = False
     }

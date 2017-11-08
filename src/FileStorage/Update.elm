@@ -62,6 +62,12 @@ updateMode incomingMessage model =
                 "TriggerFileSearch" ->
                     setShowFiles model
 
+                "TriggerPageForward" ->
+                    ( pageForward model, Cmd.none )
+
+                "TriggerPageBack" ->
+                    ( pageBackward model, Cmd.none )
+
                 "JavaScriptInitialized" ->
                     ( model, loadPropertiesCommand )
 
@@ -73,6 +79,59 @@ updateMode incomingMessage model =
 
         _ ->
             model ! []
+
+
+pageForward : Model -> Model
+pageForward model =
+    let
+        newFirstLine =
+            if model.firstLine + model.linesShown >= List.length model.lines then
+                List.length model.lines - 1
+            else
+                model.firstLine + model.linesShown
+    in
+        { model
+            | firstLine = newFirstLine
+            , cursorY = newFirstLine
+        }
+
+
+pageBackward : Model -> Model
+pageBackward model =
+    pageBackwardInner model model.firstLine model.firstLine model
+
+
+pageBackwardInner : Model -> Int -> Int -> Model -> Model
+pageBackwardInner model firstLine originalFirstLine lastSuccessfulModel =
+    let
+        proposedFirstLine =
+            firstLine - 1
+
+        proposedNumberOfLinesOnScreen =
+            getNumberOfLinesOnScreen { model | cursorY = proposedFirstLine }
+
+        proposedLineContainsOriginalLine =
+            proposedFirstLine + proposedNumberOfLinesOnScreen > originalFirstLine
+    in
+        if proposedLineContainsOriginalLine then
+            if proposedFirstLine > 0 then
+                pageBackwardInner model
+                    proposedFirstLine
+                    originalFirstLine
+                    { model
+                        | cursorY = proposedFirstLine + proposedNumberOfLinesOnScreen - 1
+                        , firstLine = proposedFirstLine
+                    }
+            else
+                pageBackwardInner model
+                    proposedFirstLine
+                    originalFirstLine
+                    { model
+                        | cursorY = 0
+                        , firstLine = 0
+                    }
+        else
+            lastSuccessfulModel
 
 
 updateProperties : Decoder.Value -> Properties -> Properties

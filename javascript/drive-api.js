@@ -53,6 +53,19 @@ function initializePorts(app) {
       } else if (event.key === 'f' && event.ctrlKey) {
           event.preventDefault()
           event.stopPropagation()
+          const fileListMessage =
+              { type : "TriggerPageForward"
+              }
+
+          sendMessageToElm(fileListMessage)
+      } else if (event.key === 'b' && event.ctrlKey) {
+          event.preventDefault()
+          event.stopPropagation()
+          const fileListMessage =
+              { type : "TriggerPageBack"
+              }
+
+          sendMessageToElm(fileListMessage)
       }
       return false
     })
