@@ -37,11 +37,26 @@ update msg model =
         Paste pasteString ->
             paste model pasteString |> updateLinesShown
 
+        -- the logic in here lives here because the Elm keyboard library
+        -- only gives the correct keydown if ctrl is pressed
+        -- TODO research more on the rules here
+        KeyDown keyDown ->
+            if keyDown == 17 then
+                ( { model | controlPressed = True }, Cmd.none )
+            else if model.controlPressed && keyDown == 70 then
+                ( pageForward model, Cmd.none )
+            else if model.controlPressed && keyDown == 66 then
+                ( pageBackward model, Cmd.none )
+            else
+                ( model, Cmd.none )
+
         KeyUp keyPress ->
             if List.member keyPress [ 27, 8, 9 ] then
                 update (KeyInput keyPress) model
             else if List.member keyPress [ 37, 38, 39, 40 ] then
                 update (KeyInput (keyPress - 41)) model
+            else if keyPress == 17 then
+                { model | controlPressed = False } ! []
             else
                 ( model, Cmd.none )
 
@@ -68,6 +83,59 @@ update msg model =
                     , linesShown = newLinesShown
                 }
                     ! []
+
+
+pageBackward : Model -> Model
+pageBackward model =
+    pageBackwardInner model model.firstLine model.firstLine model
+
+
+pageBackwardInner : Model -> Int -> Int -> Model -> Model
+pageBackwardInner model firstLine originalFirstLine lastSuccessfulModel =
+    let
+        proposedFirstLine =
+            firstLine - 1
+
+        proposedNumberOfLinesOnScreen =
+            getNumberOfLinesOnScreen { model | cursorY = proposedFirstLine }
+
+        proposedLineContainsOriginalLine =
+            proposedFirstLine + proposedNumberOfLinesOnScreen > originalFirstLine
+    in
+        if proposedLineContainsOriginalLine then
+            if proposedFirstLine > 0 then
+                pageBackwardInner model
+                    proposedFirstLine
+                    originalFirstLine
+                    { model
+                        | cursorY = proposedFirstLine + proposedNumberOfLinesOnScreen - 1
+                        , firstLine = proposedFirstLine
+                    }
+            else
+                pageBackwardInner model
+                    proposedFirstLine
+                    originalFirstLine
+                    { model
+                        | cursorY = 0
+                        , firstLine = 0
+                    }
+        else
+            lastSuccessfulModel
+
+
+pageForward : Model -> Model
+pageForward model =
+    let
+        newFirstLine =
+            if model.firstLine + model.linesShown >= List.length model.lines then
+                List.length model.lines - 1
+            else
+                model.firstLine + model.linesShown
+    in
+        { model
+            | firstLine = newFirstLine
+            , cursorY = newFirstLine
+        }
 
 
 updateLinesShown : ( Model, Cmd msg ) -> ( Model, Cmd msg )

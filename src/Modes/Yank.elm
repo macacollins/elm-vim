@@ -11,6 +11,9 @@ import Dict exposing (Dict)
 import Modes.Delete exposing (deleteModeUpdate)
 
 
+-- TODO strip out this dict structure
+
+
 dict : Dict Char (Model -> Model)
 dict =
     Dict.empty
@@ -57,7 +60,7 @@ yankModeNormalUpdate model keyCode =
                 { updatedModel | numberBuffer = [] } ! []
 
         Nothing ->
-            if List.member (Char.fromCode keyCode) [ 'j', 'k', 'h', 'l', 'w', 'b', '$', 'G' ] then
+            if List.member (Char.fromCode keyCode) [ 'j', 'k', 'h', 'l', 'w', 'b', '$', 'G', 'e' ] then
                 wrapDelete model keyCode
             else if List.isEmpty model.numberBuffer && Char.fromCode keyCode == '0' then
                 wrapDelete model keyCode

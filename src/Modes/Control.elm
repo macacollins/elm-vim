@@ -25,6 +25,7 @@ import Control.NextSearchResult exposing (..)
 import Control.LastSearchResults exposing (..)
 import Control.MoveToStartOfLine exposing (..)
 import Control.MoveToEndOfLine exposing (..)
+import Control.MoveToEndOfWord exposing (..)
 import Control.InsertLineAboveCursor exposing (..)
 import Control.InsertLineBelowCursor exposing (..)
 import Yank.YankLines exposing (..)
@@ -74,6 +75,7 @@ dict =
         |> Dict.insert (Char.fromCode -4) moveLeft
         |> Dict.insert (Char.fromCode -1) moveDown
         |> Dict.insert (Char.fromCode -3) moveUp
+        |> Dict.insert 'e' moveToEndOfWord
         |> Dict.insert 'b' moveToLastWord
         |> Dict.insert 'w' moveToNextWord
         |> Dict.insert 'H' moveToTopOfScreen
@@ -138,5 +140,5 @@ modeDict =
         |> Dict.insert 'g' GoToLine
         |> Dict.insert 't' (NavigateToCharacter Til)
         |> Dict.insert 'T' (NavigateToCharacter TilBack)
-        |> Dict.insert 'f' (NavigateToCharacter To)
         |> Dict.insert 'F' (NavigateToCharacter ToBack)
+        |> Dict.insert 'f' (NavigateToCharacter To)

@@ -30,6 +30,7 @@ dict =
     Dict.empty
         |> Dict.insert 'd' deleteLines
         |> Dict.insert 'w' deleteToNextWord
+        |> Dict.insert 'e' deleteToEndOfWord
         |> Dict.insert 'b' deleteBackWords
         |> Dict.insert 'j' deleteDown
         |> Dict.insert 'k' deleteUp

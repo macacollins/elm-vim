@@ -2,6 +2,8 @@ module Delete.DeleteWords exposing (..)
 
 import Control.PreviousWord exposing (..)
 import Control.NextWord exposing (moveToNextWord)
+import Control.NextWord exposing (moveToNextWord)
+import Control.MoveToEndOfWord exposing (moveToEndOfWord)
 import Control.Move exposing (moveLeft)
 import Control.CutSegment exposing (cutSegment)
 import Util.ListUtils exposing (getLine, removeAtIndex)
@@ -68,6 +70,55 @@ deleteToNextWord model =
                             ( False, True, String.length line - 1, leftedModel.cursorY - 1 )
             else
                 ( False, False, leftedModel.cursorX, leftedModel.cursorY )
+
+        modifiedModelWithVisualModeHack =
+            { model
+                | mode = Visual cursorX cursorY
+            }
+
+        cutSegmentModel =
+            cutSegment modifiedModelWithVisualModeHack
+
+        ( withExtraDeletedLine, _ ) =
+            if deleteLine then
+                removeAtIndex model.cursorY cutSegmentModel.lines
+            else
+                ( cutSegmentModel.lines, Nothing )
+
+        newCursorX =
+            if moveCursorXBack then
+                model.cursorX - 1
+            else
+                model.cursorX
+    in
+        { cutSegmentModel
+            | numberBuffer = []
+            , lines = withExtraDeletedLine
+            , cursorX = newCursorX
+        }
+
+
+deleteToEndOfWord : Model -> Model
+deleteToEndOfWord model =
+    let
+        leftedModel =
+            model
+                |> moveToEndOfWord
+
+        endLine =
+            getLine leftedModel.cursorY model.lines
+
+        ( cursorX, cursorY ) =
+            ( leftedModel.cursorX, leftedModel.cursorY )
+
+        deleteLine =
+            getLine leftedModel.cursorY leftedModel.lines
+                |> String.trimLeft
+                |> String.toList
+                |> List.all (\char -> char /= ' ')
+
+        moveCursorXBack =
+            model.cursorX /= 0 && (deleteLine || model.cursorY == List.length model.lines - 1)
 
         modifiedModelWithVisualModeHack =
             { model

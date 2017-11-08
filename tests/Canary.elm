@@ -7,6 +7,7 @@ import Macro.ActionEntry exposing (ActionEntry(..))
 import List
 import Mode exposing (Mode(..))
 import Model exposing (Model, PasteBuffer(..))
+import Macro.ActionEntry exposing (ActionEntry(..))
 
 
 testCanary : Test

@@ -101,7 +101,7 @@ getTest macro =
     in
         """
       let
-          { mode, lines, cursorX, buffer, cursorY } =
+          { mode, lines, cursorX, buffer, numberBuffer, lastAction, cursorY } =
             newStateAfterActions """
             ++ (toString macro)
             ++ """
@@ -112,6 +112,12 @@ getTest macro =
             [ test "lines" <|
               \\_ ->
                 Expect.equal lines [ "" ]
+            , test "numberBuffer" <|
+              \\_ ->
+                Expect.equal numberBuffer []
+            , test "lastAction" <|
+              \\_ ->
+                Expect.equal lastAction <| Keys ""
             , test "buffer" <|
               \\_ ->
                 Expect.equal buffer <| LinesBuffer []
