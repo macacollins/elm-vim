@@ -7,6 +7,7 @@ import Macro.ActionEntry exposing (ActionEntry(..))
 import Char
 import Mode exposing (Mode(..), NavigationType(..))
 import Delete.DeleteCharacter exposing (..)
+import Constants
 import Control.ScreenMovement exposing (..)
 import Control.Undo exposing (..)
 import Control.Redo exposing (..)
@@ -71,10 +72,10 @@ dict =
         |> Dict.insert 'h' moveLeft
         |> Dict.insert 'j' moveDown
         |> Dict.insert 'k' moveUp
-        |> Dict.insert (Char.fromCode -2) moveRight
-        |> Dict.insert (Char.fromCode -4) moveLeft
-        |> Dict.insert (Char.fromCode -1) moveDown
-        |> Dict.insert (Char.fromCode -3) moveUp
+        |> Dict.insert Constants.rightArrowKeyChar moveRight
+        |> Dict.insert Constants.leftArrowKeyChar moveLeft
+        |> Dict.insert Constants.downArrowKeyChar moveDown
+        |> Dict.insert Constants.upArrowKeyChar moveUp
         |> Dict.insert 'e' moveToEndOfWord
         |> Dict.insert 'b' moveToLastWord
         |> Dict.insert 'w' moveToNextWord

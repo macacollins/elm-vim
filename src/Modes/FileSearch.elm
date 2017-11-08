@@ -1,5 +1,6 @@
 module Modes.FileSearch exposing (fileSearchModeUpdate)
 
+import Constants
 import Model exposing (Model)
 import Mode exposing (Mode(..))
 import FileStorage.Command exposing (loadFileCommand)
@@ -39,12 +40,12 @@ fileSearchModeUpdate model keyCode =
                 |> List.filter (\file -> String.contains (String.toLower newSearchString) (String.toLower file.name))
 
         newIndex =
-            if keyCode == 40 then
+            if keyCode == Constants.downArrowKeyCode then
                 if index < List.length files - 1 then
                     index + 1
                 else
                     List.length files - 1
-            else if keyCode == 38 then
+            else if keyCode == Constants.upArrowKeyCode then
                 if index > 0 then
                     index - 1
                 else

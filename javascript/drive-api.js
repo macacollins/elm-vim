@@ -50,6 +50,9 @@ function initializePorts(app) {
               }
 
           sendMessageToElm(fileListMessage)
+      } else if (event.key === 'f' && event.ctrlKey) {
+          event.preventDefault()
+          event.stopPropagation()
       }
       return false
     })

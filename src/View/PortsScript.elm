@@ -18,7 +18,9 @@ portsScript =
 scriptItself =
     """
     var prod = document.getElementById("prod");
+    console.log("prod", prod);
     if (typeof started === "undefined" && !prod) {
+        console.log("In reactor shim");
 
         var app = Elm.Main.fullscreen();
 

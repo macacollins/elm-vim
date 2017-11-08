@@ -22,7 +22,8 @@ main {
 }
 
 .searchText {
-    color : darkgreen;
+    color : turquoise;
+    font-weight: bold;
 }
 
 .files {

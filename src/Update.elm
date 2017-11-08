@@ -1,5 +1,6 @@
 module Update exposing (update)
 
+import Constants
 import FileStorage.Update exposing (updateFileStorageModel)
 import FileStorage.Command exposing (loadPropertiesCommand)
 import Modes.FileSearch exposing (fileSearchModeUpdate)
@@ -54,7 +55,7 @@ update msg model =
             if List.member keyPress [ 27, 8, 9 ] then
                 update (KeyInput keyPress) model
             else if List.member keyPress [ 37, 38, 39, 40 ] then
-                update (KeyInput (keyPress - 41)) model
+                update (KeyInput <| Constants.getTranslatedArrowKeyFromKeyUp keyPress) model
             else if keyPress == 17 then
                 { model | controlPressed = False } ! []
             else
