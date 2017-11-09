@@ -1,6 +1,6 @@
 module Modes.Yank exposing (yankModeUpdate)
 
-import Model exposing (Model)
+import Model exposing (Model, PasteBuffer(..))
 import Keyboard exposing (KeyCode)
 import Mode exposing (Mode(..), NavigationType(..))
 import Modes.Control exposing (controlModeUpdate)
@@ -33,6 +33,8 @@ yankModeUpdate model keyCode =
                 { model | mode = Yank (NavigateToCharacter To) } ! []
             else if Char.fromCode keyCode == 'F' then
                 { model | mode = Yank (NavigateToCharacter ToBack) } ! []
+            else if Char.fromCode keyCode == 'T' then
+                { model | mode = Yank (NavigateToCharacter TilBack) } ! []
             else
                 yankModeNormalUpdate model keyCode
 
@@ -109,11 +111,21 @@ wrapDelete model keyCode =
                 deletedModel ! []
             else
                 model ! []
+
+        newBuffer =
+            if
+                wrapsNavigateTo
+                    && deletedModel.lines
+                    == model.lines
+            then
+                LinesBuffer []
+            else
+                deletedModel.buffer
     in
         { model
             | cursorX = moveModel.cursorX
             , cursorY = moveModel.cursorY
-            , buffer = deletedModel.buffer
+            , buffer = newBuffer
             , numberBuffer = []
             , mode = Control
         }

@@ -43,6 +43,7 @@ dict =
         |> Dict.insert 't' (\model -> { model | mode = Delete (NavigateToCharacter Til) })
         |> Dict.insert 'f' (\model -> { model | mode = Delete (NavigateToCharacter To) })
         |> Dict.insert 'F' (\model -> { model | mode = Delete (NavigateToCharacter ToBack) })
+        |> Dict.insert 'T' (\model -> { model | mode = Delete (NavigateToCharacter TilBack) })
 
 
 deleteModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
@@ -57,16 +58,9 @@ deleteModeUpdate model keyCode =
             else
                 handleDefaultInput model keyCode
 
-        Delete (NavigateToCharacter Til) ->
+        Delete (NavigateToCharacter _) ->
             deleteToCharacter model keyCode
 
-        Delete (NavigateToCharacter To) ->
-            deleteToCharacter model keyCode
-
-        Delete (NavigateToCharacter ToBack) ->
-            deleteToCharacter model keyCode
-
-        -- TODO TilBack :/
         _ ->
             handleDefaultInput model keyCode
 

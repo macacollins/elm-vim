@@ -3,8 +3,10 @@ module Delete.DeleteToCharacter exposing (deleteToCharacter)
 import Model exposing (Model, PasteBuffer(..))
 import Util.ListUtils exposing (mutateAtIndex, getLine)
 import Keyboard exposing (KeyCode)
+import Macro.ActionEntry exposing (ActionEntry(..))
+import Char
 import Modes.NavigateToCharacter exposing (navigateToCharacterModeUpdate)
-import Mode exposing (Mode(..))
+import Mode exposing (Mode(..), NavigationType(..))
 
 
 -- mutateAtIndex : Int -> List a -> (a -> a) -> List a
@@ -20,6 +22,23 @@ deleteToCharacter model keyCode =
 
                 _ ->
                     Delete Control
+
+        newLastAction =
+            case innerMode of
+                NavigateToCharacter Til ->
+                    Keys <| "dt" ++ (String.cons (Char.fromCode keyCode) "")
+
+                NavigateToCharacter To ->
+                    Keys <| "df" ++ (String.cons (Char.fromCode keyCode) "")
+
+                NavigateToCharacter ToBack ->
+                    Keys <| "dF" ++ (String.cons (Char.fromCode keyCode) "")
+
+                NavigateToCharacter TilBack ->
+                    Keys <| "dT" ++ (String.cons (Char.fromCode keyCode) "")
+
+                _ ->
+                    Keys ""
 
         { cursorX, cursorY, lines } =
             model
@@ -58,7 +77,10 @@ deleteToCharacter model keyCode =
                 updatedBuffer
     in
         if cursorX == newCursorX then
-            { model | mode = Control }
+            { model
+                | mode = Control
+                , lastAction = Keys ""
+            }
                 ! []
         else
             { model
@@ -67,5 +89,6 @@ deleteToCharacter model keyCode =
                 , numberBuffer = []
                 , mode = Control
                 , cursorX = low
+                , lastAction = newLastAction
             }
                 ! []
