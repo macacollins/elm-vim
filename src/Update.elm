@@ -1,13 +1,16 @@
 module Update exposing (update)
 
+import Dict exposing (Dict)
 import Constants
 import FileStorage.Update exposing (updateFileStorageModel)
 import FileStorage.Command exposing (loadPropertiesCommand)
+import Util.ModifierUtils exposing (getNumberModifier)
 import Modes.FileSearch exposing (fileSearchModeUpdate)
 import Char
+import Util.ListUtils exposing (getLine, mutateAtIndex)
 import Msg exposing (Msg(..))
-import Model exposing (Model)
-import Mode exposing (Mode(..))
+import Model exposing (Model, PasteBuffer(..))
+import Mode exposing (Mode(..), NavigationType(..))
 import Modes.Control exposing (controlModeUpdate)
 import Modes.Command exposing (commandModeUpdate)
 import Modes.Visual exposing (visualModeUpdate)
@@ -133,6 +136,12 @@ updateKeyInput keyPress mode model =
 
         Command _ ->
             commandModeUpdate model keyPress
+
+        ChangeText ->
+            changeTextModeUpdate model keyPress
+
+        ChangeToCharacter navigationMode ->
+            changeToCharacterModeUpdate model keyPress navigationMode
 
         EnterMacroName ->
             let
@@ -262,3 +271,265 @@ getActionsFromString string =
         |> List.concatMap (String.split (String.cons (Char.fromCode 13) ""))
         |> List.map Keys
         |> List.intersperse Enter
+
+
+changeModeActionDict : Dict Char (List ActionEntry)
+changeModeActionDict =
+    Dict.empty
+        |> Dict.insert '$' ([ Keys "d$a" ])
+        |> Dict.insert '0' ([ Keys "d0i" ])
+
+
+changeToCharacterModeUpdate : Model -> KeyCode -> NavigationType -> ( Model, Cmd msg )
+changeToCharacterModeUpdate model keyPress navigationType =
+    let
+        ( { cursorX, lines, buffer }, _ ) =
+            deleteModeUpdate { model | mode = Delete (NavigateToCharacter navigationType) } keyPress
+
+        modeChar =
+            case navigationType of
+                Til ->
+                    "t"
+
+                To ->
+                    "f"
+
+                TilBack ->
+                    "T"
+
+                ToBack ->
+                    "F"
+
+        newLastAction =
+            Keys <|
+                (model |> getNumberModifier |> toString)
+                    ++ "c"
+                    ++ modeChar
+                    ++ (String.cons (Char.fromCode keyPress) "")
+    in
+        if lines /= model.lines then
+            { model
+                | cursorX = cursorX
+                , lines = lines
+                , buffer = buffer
+                , mode = Insert
+                , lastAction = newLastAction
+                , numberBuffer = []
+            }
+                ! []
+        else
+            { model | mode = Control } ! []
+
+
+changeTextModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
+changeTextModeUpdate model keyPress =
+    case Dict.get (Char.fromCode keyPress) changeModeActionDict of
+        Nothing ->
+            if keyPress |> Char.fromCode |> Char.isDigit then
+                let
+                    ( { numberBuffer }, _ ) =
+                        updateKeyInput keyPress Control model
+                in
+                    { model | numberBuffer = numberBuffer } ! []
+            else if List.member (Char.fromCode keyPress) [ 't', 'T', 'f', 'F' ] then
+                let
+                    ( { mode }, _ ) =
+                        controlModeUpdate model keyPress
+                in
+                    case mode of
+                        NavigateToCharacter (_ as navigationType) ->
+                            { model | mode = ChangeToCharacter navigationType } ! []
+
+                        _ ->
+                            model ! []
+            else
+                case Char.fromCode keyPress of
+                    'k' ->
+                        handleUp model ! []
+
+                    'j' ->
+                        handleDown model ! []
+
+                    'l' ->
+                        handleRight model ! []
+
+                    'h' ->
+                        handleLeft model ! []
+
+                    'w' ->
+                        handleChangeWords model ! []
+
+                    _ ->
+                        ( { model | mode = Control }, Cmd.none )
+
+        Just actions ->
+            let
+                updatedModel =
+                    Debug.log "updatedDict" <|
+                        applyActions { model | mode = Control } actions
+
+                newBuffer =
+                    if updatedModel.buffer == InlineBuffer [ "" ] then
+                        model.buffer
+                    else
+                        updatedModel.buffer
+
+                modelWithLastAction =
+                    { updatedModel
+                        | lastAction = Keys <| (toString <| getNumberModifier model) ++ "c" ++ (String.cons (Char.fromCode keyPress) "")
+                        , buffer = newBuffer
+                        , numberBuffer = []
+                    }
+            in
+                ( modelWithLastAction, Cmd.none )
+
+
+handleChangeWords : Model -> Model
+handleChangeWords model =
+    handleChangeWordsInner model (getNumberModifier model)
+
+
+handleChangeWordsInner : Model -> Int -> Model
+handleChangeWordsInner model numLeft =
+    let
+        newLastAction =
+            Keys <|
+                (toString <| getNumberModifier model)
+                    ++ "cw"
+
+        currentLine =
+            getLine model.cursorY model.lines
+
+        numberAtEnd =
+            currentLine
+                |> String.dropLeft model.cursorX
+                |> String.trimLeft
+                |> String.toList
+                |> dropWhile (\char -> char /= ' ')
+                |> List.length
+
+        newLine =
+            String.left model.cursorX currentLine
+                ++ String.right numberAtEnd currentLine
+
+        newLines =
+            mutateAtIndex model.cursorY model.lines <| \_ -> newLine
+
+        newBuffer =
+            currentLine
+                |> String.dropLeft model.cursorX
+                |> String.dropRight numberAtEnd
+                |> List.singleton
+                |> InlineBuffer
+
+        updatedModel =
+            { model
+                | mode = Insert
+                , numberBuffer = []
+                , lines = newLines
+                , buffer = newBuffer
+                , lastAction = newLastAction
+            }
+    in
+        updatedModel
+
+
+dropWhile : (a -> Bool) -> List a -> List a
+dropWhile selector list =
+    case list of
+        first :: rest ->
+            if selector first then
+                dropWhile selector rest
+            else
+                list
+
+        [] ->
+            []
+
+
+handleRight : Model -> Model
+handleRight model =
+    let
+        numberModifier =
+            getNumberModifier model
+
+        newLastAction =
+            Keys <|
+                (toString <| getNumberModifier model)
+                    ++ "cl"
+
+        afterDeletion =
+            applyActions { model | mode = Control } [ Keys "dl" ]
+
+        afterActions =
+            { afterDeletion | mode = Insert, numberBuffer = [], cursorX = model.cursorX }
+    in
+        { afterActions | lastAction = newLastAction }
+
+
+handleLeft : Model -> Model
+handleLeft model =
+    let
+        numberModifier =
+            getNumberModifier model
+
+        newLastAction =
+            Keys <|
+                (toString <| getNumberModifier model)
+                    ++ "ch"
+
+        afterDeletion =
+            applyActions { model | mode = Control } [ Keys "dh" ]
+
+        afterActions =
+            { afterDeletion | mode = Insert, numberBuffer = [] }
+    in
+        { afterActions | lastAction = newLastAction }
+
+
+handleUp : Model -> Model
+handleUp model =
+    let
+        numberModifier =
+            getNumberModifier model
+    in
+        if model.cursorY - numberModifier - 1 < 0 then
+            { model | mode = Control, numberBuffer = [] }
+        else
+            let
+                newLastAction =
+                    Keys <|
+                        (toString <| getNumberModifier model)
+                            ++ "ck"
+
+                afterDeletion =
+                    applyActions { model | mode = Control } [ Keys "dk" ]
+
+                afterActions =
+                    if afterDeletion.cursorY == List.length afterDeletion.lines - 1 then
+                        applyActions { afterDeletion | mode = Control } [ Keys "o" ]
+                    else
+                        { afterDeletion | mode = Insert }
+            in
+                { afterActions | lastAction = newLastAction }
+
+
+handleDown : Model -> Model
+handleDown model =
+    let
+        numberModifier =
+            getNumberModifier model
+    in
+        if model.cursorY + numberModifier + 1 >= List.length model.lines then
+            { model | mode = Control, numberBuffer = [] }
+        else
+            let
+                newLastAction =
+                    Keys <|
+                        (toString <| getNumberModifier model)
+                            ++ "cj"
+
+                afterActions =
+                    applyActions { model | mode = Control } [ Keys "djO" ]
+            in
+                { afterActions | lastAction = newLastAction }

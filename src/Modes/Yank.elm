@@ -23,7 +23,7 @@ dict =
 yankModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
 yankModeUpdate model keyCode =
     case model.mode of
-        -- TODO This is nasty. Move to Yank and YankToLine
+        -- TODO Move this to a lookup table of some sort
         Yank Control ->
             if Char.fromCode keyCode == 'g' then
                 { model | mode = Yank GoToLine } ! []

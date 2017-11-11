@@ -9,6 +9,8 @@ type Mode
     | ShowMessage Message Mode
     | Control
     | Insert
+    | ChangeText
+    | ChangeToCharacter NavigationType
       -- This is for when the user presses g
     | GoToLine
       -- This is cleaner than checking for (List.member 'd' numberBuffer)

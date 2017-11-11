@@ -138,6 +138,7 @@ modeDict =
         |> Dict.insert '@' MacroExecute
         |> Dict.insert 'q' EnterMacroName
         |> Dict.insert 'i' Insert
+        |> Dict.insert 'c' ChangeText
         |> Dict.insert 'g' GoToLine
         |> Dict.insert 't' (NavigateToCharacter Til)
         |> Dict.insert 'T' (NavigateToCharacter TilBack)

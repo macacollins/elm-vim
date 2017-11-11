@@ -11,18 +11,28 @@ import Mode exposing (Mode(..))
 deleteRight : Model -> Model
 deleteRight model =
     let
-        { cursorX } =
-            moveRight model
+        numberModifier =
+            getNumberModifier model
+
+        line =
+            getLine model.cursorY model.lines
+
+        newCursorX =
+            if model.cursorX + numberModifier > String.length line then
+                String.length line
+            else
+                model.cursorX + numberModifier
 
         updatedModel =
             { model
-                | mode = Visual (model.cursorX) model.cursorY
-                , cursorX = cursorX - 1
+                | mode = Visual (newCursorX - 1) model.cursorY
+                , cursorX = model.cursorX
             }
                 |> cutSegment
     in
         { updatedModel
-            | cursorX = model.cursorX
+            | cursorX = newCursorX - numberModifier
+            , numberBuffer = []
         }
 
 
@@ -32,15 +42,28 @@ deleteLeft model =
         { cursorX } =
             moveLeft model
 
+        numberModifier =
+            getNumberModifier model
+
+        newCursorX =
+            if model.cursorX - numberModifier > 0 then
+                model.cursorX - numberModifier
+            else
+                0
+
         updatedModel =
-            { model
-                | mode = Visual cursorX model.cursorY
-                , cursorX = model.cursorX - 1
-            }
-                |> cutSegment
+            if newCursorX == model.cursorX then
+                { model | mode = Control }
+            else
+                { model
+                    | mode = Visual newCursorX model.cursorY
+                    , cursorX = model.cursorX - 1
+                }
+                    |> cutSegment
     in
         { updatedModel
-            | cursorX = cursorX
+            | cursorX = newCursorX
+            , numberBuffer = []
         }
 
 

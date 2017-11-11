@@ -14,8 +14,10 @@ enterAppendMode model =
         newCursorX =
             if String.length line == 0 then
                 0
-            else
+            else if model.cursorX < String.length line then
                 model.cursorX + 1
+            else
+                String.length line
     in
         { model
             | mode = Insert
