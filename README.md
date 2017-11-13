@@ -8,13 +8,13 @@ $ cloc src
 classified 83 files      83 unique files.                              
        0 files ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.22 s (371.5 files/s, 26154.2 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.27 s (306.0 files/s, 21615.7 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             83           1201            121           4521
+Elm                             83           1204            121           4538
 -------------------------------------------------------------------------------
-SUM:                            83           1201            121           4521
+SUM:                            83           1204            121           4538
 -------------------------------------------------------------------------------
 ```
 ### tests folder
@@ -24,14 +24,14 @@ $ cloc --exclude-dir elm-stuff .
 classified 38 files      38 unique files.                              
        1 file ignored.
 
-github.com/AlDanial/cloc v 1.72  T=0.12 s (319.0 files/s, 65517.1 lines/s)
+github.com/AlDanial/cloc v 1.72  T=0.12 s (320.9 files/s, 65953.3 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Elm                             37            333           1032           6419
+Elm                             37            336            891           6562
 JSON                             1              0              0             20
 -------------------------------------------------------------------------------
-SUM:                            38            333           1032           6439
+SUM:                            38            336            891           6582
 -------------------------------------------------------------------------------
 ```
 ## TODOs
@@ -44,7 +44,6 @@ src/Command/ExecuteCommand.elm:        -- TODO if we get more stuff, consider :s
 src/Command/ExecuteCommand.elm:        -- TODO figure out if these should become more generic
 src/Command/ExecuteCommand.elm:        -- TODO Consider :set theme=night or similar
 src/Command/ExecuteCommand.elm:{- TODO see if there's a more dynamic way to do this -}
-Binary file src/Delete/.DeleteNavigationKeys.elm.swp matches
 src/Delete/DeleteNavigationKeys.elm:-- TODO handle firstLine adjustments
 src/FileStorage/Drive.elm:                    -- TODO rewrite prolly
 src/FileStorage/Drive.elm:                -- TODO skip?

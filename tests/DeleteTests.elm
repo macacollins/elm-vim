@@ -294,7 +294,7 @@ deleteRightTests =
                     \_ ->
                         Expect.equal cursorX 0
                 ]
-        , describe "double dh" <|
+        , describe "double dl" <|
             let
                 { lines, cursorX, buffer, cursorY } =
                     newStateAfterActions [ Keys "i1234", Escape, Keys "02dl" ]

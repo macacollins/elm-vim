@@ -7,7 +7,7 @@ import FileStorage.Command exposing (loadPropertiesCommand)
 import Util.ModifierUtils exposing (getNumberModifier)
 import Modes.FileSearch exposing (fileSearchModeUpdate)
 import Char
-import Util.ListUtils exposing (getLine, mutateAtIndex)
+import Util.ListUtils exposing (getLine, mutateAtIndex, removeSlice)
 import Msg exposing (Msg(..))
 import Model exposing (Model, PasteBuffer(..))
 import Mode exposing (Mode(..), NavigationType(..))
@@ -342,6 +342,8 @@ changeTextModeUpdate model keyPress =
 
                         _ ->
                             model ! []
+            else if Char.fromCode keyPress == 'G' then
+                handleChangeToEndOfBuffer model ! []
             else
                 case Char.fromCode keyPress of
                     'k' ->
@@ -382,6 +384,24 @@ changeTextModeUpdate model keyPress =
                     }
             in
                 ( modelWithLastAction, Cmd.none )
+
+
+handleChangeToEndOfBuffer : Model -> Model
+handleChangeToEndOfBuffer model =
+    let
+        ( withoutLastLines, newBuffer ) =
+            removeSlice (model.cursorY) (List.length model.lines) model.lines
+
+        updatedLines =
+            withoutLastLines ++ [ "" ]
+    in
+        { model
+            | lines = updatedLines
+            , mode = Insert
+            , lastAction = Keys "cG"
+            , buffer = newBuffer
+            , cursorX = 0
+        }
 
 
 handleChangeWords : Model -> Model
