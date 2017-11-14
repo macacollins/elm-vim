@@ -11,6 +11,7 @@ type Mode
     | Insert
     | ChangeText
     | ChangeToCharacter NavigationType
+    | ChangeToLine
       -- This is for when the user presses g
     | GoToLine
       -- This is cleaner than checking for (List.member 'd' numberBuffer)

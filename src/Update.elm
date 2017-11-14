@@ -4,10 +4,10 @@ import Dict exposing (Dict)
 import Constants
 import FileStorage.Update exposing (updateFileStorageModel)
 import FileStorage.Command exposing (loadPropertiesCommand)
-import Util.ModifierUtils exposing (getNumberModifier)
+import Util.ModifierUtils exposing (hasNumberModifier, getNumberModifier)
 import Modes.FileSearch exposing (fileSearchModeUpdate)
 import Char
-import Util.ListUtils exposing (getLine, mutateAtIndex, removeSlice)
+import Util.ListUtils exposing (getLine, mutateAtIndex, removeSlice, insertAtIndex)
 import Msg exposing (Msg(..))
 import Model exposing (Model, PasteBuffer(..))
 import Mode exposing (Mode(..), NavigationType(..))
@@ -139,6 +139,9 @@ updateKeyInput keyPress mode model =
 
         ChangeText ->
             changeTextModeUpdate model keyPress
+
+        ChangeToLine ->
+            changeToLineModeUpdate model keyPress
 
         ChangeToCharacter navigationMode ->
             changeToCharacterModeUpdate model keyPress navigationMode
@@ -358,6 +361,9 @@ changeTextModeUpdate model keyPress =
                     'h' ->
                         handleLeft model ! []
 
+                    'g' ->
+                        { model | mode = ChangeToLine } ! []
+
                     'w' ->
                         handleChangeWords model ! []
 
@@ -367,8 +373,7 @@ changeTextModeUpdate model keyPress =
         Just actions ->
             let
                 updatedModel =
-                    Debug.log "updatedDict" <|
-                        applyActions { model | mode = Control } actions
+                    applyActions { model | mode = Control } actions
 
                 newBuffer =
                     if updatedModel.buffer == InlineBuffer [ "" ] then
@@ -553,3 +558,44 @@ handleDown model =
                     applyActions { model | mode = Control } [ Keys "djO" ]
             in
                 { afterActions | lastAction = newLastAction }
+
+
+changeToLineModeUpdate : Model -> KeyCode -> ( Model, Cmd msg )
+changeToLineModeUpdate model keyCode =
+    if Char.fromCode keyCode == 'g' then
+        let
+            targetLine =
+                if hasNumberModifier model then
+                    getNumberModifier model
+                else
+                    0
+
+            ( actualLow, actualHigh ) =
+                if model.cursorY < targetLine then
+                    ( model.cursorY, targetLine )
+                else
+                    ( targetLine, model.cursorY + 1 )
+
+            ( withoutLastLines, newBuffer ) =
+                removeSlice actualLow actualHigh model.lines
+
+            updatedLines =
+                insertAtIndex actualLow withoutLastLines ""
+
+            actualBuffer =
+                if newBuffer == LinesBuffer [] then
+                    LinesBuffer [ "" ]
+                else
+                    newBuffer
+        in
+            { model
+                | lines = updatedLines
+                , mode = Insert
+                , lastAction = Keys "cgg"
+                , buffer = actualBuffer
+                , cursorX = 0
+                , cursorY = actualLow
+            }
+                ! []
+    else
+        { model | mode = Control } ! []

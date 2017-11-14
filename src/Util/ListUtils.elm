@@ -54,9 +54,6 @@ removeSlice start end list =
             else
                 List.length list
 
-        deleteme =
-            start
-
         startPart =
             List.take start list
 

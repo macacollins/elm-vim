@@ -78,10 +78,9 @@ insertBeforeInline { lines, cursorX, cursorY } buffer =
                 ( left, right ) =
                     splitLine (getLine cursorY lines) cursorX
             in
-                Debug.log "Got in the single line insert before inline" <|
-                    ( mutateAtIndex cursorY lines (\line -> left ++ head ++ right)
-                    , cursorX + (String.length head) - 1
-                    )
+                ( mutateAtIndex cursorY lines (\line -> left ++ head ++ right)
+                , cursorX + (String.length head) - 1
+                )
 
         _ ->
             ( lines, 0 )
