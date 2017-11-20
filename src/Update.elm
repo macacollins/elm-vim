@@ -131,6 +131,35 @@ updateKeyInput keyPress mode model =
         Visual _ _ ->
             visualModeUpdate model keyPress
 
+        ReplaceCharacter ->
+            let
+                middleCharacter =
+                    String.cons (Char.fromCode keyPress) ""
+
+                updatedLines =
+                    mutateAtIndex model.cursorY
+                        model.lines
+                        (\line ->
+                            (String.left (model.cursorX) line)
+                                ++ (middleCharacter)
+                                ++ (String.dropLeft (model.cursorX + 1) line)
+                        )
+
+                isValidCharacter =
+                    Char.isDigit (Char.fromCode keyPress)
+                        || Char.isUpper (Char.fromCode keyPress)
+                        || Char.isLower (Char.fromCode keyPress)
+            in
+                if isValidCharacter then
+                    { model
+                        | lines = updatedLines
+                        , mode = Control
+                        , lastAction = Keys ("r" ++ middleCharacter)
+                    }
+                        ! []
+                else
+                    { model | mode = Control } ! []
+
         FileSearch _ _ ->
             fileSearchModeUpdate model keyPress
 

@@ -18,7 +18,8 @@ type Mode
     | Delete Mode
     | Yank Mode
     | Search
-      -- this allows us to macro record arbitrary states (including Macro? not sure that's useful)
+      -- this allows us to macro record arbitrary states
+      -- (including Macro? not sure that's useful)
     | EnterMacroName
     | Macro Char Mode
     | MacroExecute
@@ -28,6 +29,7 @@ type Mode
     | Command String
       -- SearchString, Index
     | FileSearch String Int
+    | ReplaceCharacter
 
 
 

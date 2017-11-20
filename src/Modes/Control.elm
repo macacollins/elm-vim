@@ -140,6 +140,7 @@ modeDict =
         |> Dict.insert 'i' Insert
         |> Dict.insert 'c' ChangeText
         |> Dict.insert 'g' GoToLine
+        |> Dict.insert 'r' ReplaceCharacter
         |> Dict.insert 't' (NavigateToCharacter Til)
         |> Dict.insert 'T' (NavigateToCharacter TilBack)
         |> Dict.insert 'F' (NavigateToCharacter ToBack)
