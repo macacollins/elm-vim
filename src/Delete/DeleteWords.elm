@@ -6,7 +6,7 @@ import Control.NextWord exposing (moveToNextWord)
 import Control.MoveToEndOfWord exposing (moveToEndOfWord)
 import Control.Move exposing (moveLeft)
 import Control.CutSegment exposing (cutSegment)
-import Util.ListUtils exposing (getLine, removeAtIndex)
+import Util.ListUtils exposing (getLine, removeAtIndex, mutateAtIndex)
 import Util.ModifierUtils exposing (..)
 import Mode exposing (Mode(Visual))
 import Model exposing (Model)
@@ -101,24 +101,15 @@ deleteToNextWord model =
 deleteToEndOfWord : Model -> Model
 deleteToEndOfWord model =
     let
-        leftedModel =
+        afterMoveModel =
             model
                 |> moveToEndOfWord
 
         endLine =
-            getLine leftedModel.cursorY model.lines
+            getLine afterMoveModel.cursorY model.lines
 
-        ( cursorX, cursorY ) =
-            ( leftedModel.cursorX, leftedModel.cursorY )
-
-        deleteLine =
-            getLine leftedModel.cursorY leftedModel.lines
-                |> String.trimLeft
-                |> String.toList
-                |> List.all (\char -> char /= ' ')
-
-        moveCursorXBack =
-            model.cursorX /= 0 && (deleteLine || model.cursorY == List.length model.lines - 1)
+        { cursorX, cursorY } =
+            afterMoveModel
 
         modifiedModelWithVisualModeHack =
             { model
@@ -128,11 +119,19 @@ deleteToEndOfWord model =
         cutSegmentModel =
             cutSegment modifiedModelWithVisualModeHack
 
-        ( withExtraDeletedLine, _ ) =
+        deleteLine =
+            getLine model.cursorY cutSegmentModel.lines == ""
+
+        ( finalLines, _ ) =
             if deleteLine then
                 removeAtIndex model.cursorY cutSegmentModel.lines
             else
                 ( cutSegmentModel.lines, Nothing )
+
+        moveCursorXBack =
+            model.cursorX
+                /= 0
+                && (deleteLine || model.cursorY == List.length finalLines - 1)
 
         newCursorX =
             if moveCursorXBack then
@@ -142,6 +141,6 @@ deleteToEndOfWord model =
     in
         { cutSegmentModel
             | numberBuffer = []
-            , lines = withExtraDeletedLine
             , cursorX = newCursorX
+            , lines = finalLines
         }

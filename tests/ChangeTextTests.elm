@@ -2074,125 +2074,154 @@ changeToEndOfBuffer =
         ]
 
 
-
-{-
-
-   changeToEndOfWordTests : Test
-   changeToEndOfWordTests =
-       describe "ce tests" <|
-           [ let
-               { mode, lines, cursorX, buffer, numberBuffer, lastAction, cursorY } =
-                   newStateAfterActions [ Keys "i12 34 56", Escape, Keys "bbce" ]
-             in
-               describe "bbce"
-                   [ test "lines" <|
-                       \_ ->
-                           Expect.equal lines [ "12  56" ]
-                   , test "numberBuffer" <|
-                       \_ ->
-                           Expect.equal numberBuffer []
-                   , test "lastAction" <|
-                       \_ ->
-                           Expect.equal lastAction <| Keys "ce"
-                   , test "buffer" <|
-                       \_ ->
-                           Expect.equal buffer <| LinesBuffer [ "34" ]
-                   , test "cursorX" <|
-                       \_ ->
-                           Expect.equal cursorX 3
-                   , test "cursorY" <|
-                       \_ ->
-                           Expect.equal cursorY 0
-                   , test "mode" <|
-                       \_ ->
-                           Expect.equal mode Control
-                   ]
-           , let
-               { mode, lines, cursorX, buffer, numberBuffer, lastAction, cursorY } =
-                   newStateAfterActions [ Keys "i12 34 56 78", Escape, Keys "ce" ]
-             in
-               describe "ce"
-                   [ test "lines" <|
-                       \_ ->
-                           Expect.equal lines [ "12 34 56 7" ]
-                   , test "numberBuffer" <|
-                       \_ ->
-                           Expect.equal numberBuffer []
-                   , test "lastAction" <|
-                       \_ ->
-                           Expect.equal lastAction <| Keys ""
-                   , test "buffer" <|
-                       \_ ->
-                           Expect.equal buffer <| LinesBuffer [ "8" ]
-                   , test "cursorX" <|
-                       \_ ->
-                           Expect.equal cursorX 10
-                   , test "cursorY" <|
-                       \_ ->
-                           Expect.equal cursorY 0
-                   , test "mode" <|
-                       \_ ->
-                           Expect.equal mode Insert
-                   ]
-           , let
-               { mode, lines, cursorX, buffer, numberBuffer, lastAction, cursorY } =
-                   newStateAfterActions [ Keys "i12", Enter, Keys "34", Enter, Enter, Enter, Keys "56", Escape, Keys "kkkce" ]
-             in
-               describe "kkkce"
-                   [ test "lines" <|
-                       \_ ->
-                           Expect.equal lines [ "12", "3" ]
-                   , test "numberBuffer" <|
-                       \_ ->
-                           Expect.equal numberBuffer []
-                   , test "lastAction" <|
-                       \_ ->
-                           Expect.equal lastAction <| Keys "ce"
-                   , test "buffer" <|
-                       \_ ->
-                           Expect.equal buffer <|
-                               LinesBuffer
-                                   [ "4"
-                                   , ""
-                                   , ""
-                                   , "56"
-                                   ]
-                   , test "cursorX" <|
-                       \_ ->
-                           Expect.equal cursorX 1
-                   , test "cursorY" <|
-                       \_ ->
-                           Expect.equal cursorY 1
-                   , test "mode" <|
-                       \_ ->
-                           Expect.equal mode Insert
-                   ]
-           , let
-               { mode, lines, cursorX, buffer, numberBuffer, lastAction, cursorY } =
-                   newStateAfterActions [ Keys "ce" ]
-             in
-               describe "ce in empty buffer"
-                   [ test "lines" <|
-                       \_ ->
-                           Expect.equal lines [ "" ]
-                   , test "numberBuffer" <|
-                       \_ ->
-                           Expect.equal numberBuffer []
-                   , test "lastAction" <|
-                       \_ ->
-                           Expect.equal lastAction <| Keys ""
-                   , test "buffer" <|
-                       \_ ->
-                           Expect.equal buffer <| LinesBuffer []
-                   , test "cursorX" <|
-                       \_ ->
-                           Expect.equal cursorX 0
-                   , test "cursorY" <|
-                       \_ ->
-                           Expect.equal cursorY 0
-                   , test "mode" <|
-                       \_ ->
-                           Expect.equal mode Control
-                   ]
-           ]
--}
+changeToEndOfWordTests : Test
+changeToEndOfWordTests =
+    describe "ce tests" <|
+        [ let
+            { mode, lines, cursorX, buffer, numberBuffer, lastAction, cursorY } =
+                newStateAfterActions [ Keys "i12 34 56", Escape, Keys "bbce" ]
+          in
+            describe "bbce"
+                [ test "lines" <|
+                    \_ ->
+                        Expect.equal lines [ "12  56" ]
+                , test "numberBuffer" <|
+                    \_ ->
+                        Expect.equal numberBuffer []
+                , test "lastAction" <|
+                    \_ ->
+                        Expect.equal lastAction <| Keys "1ce"
+                , test "buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "34" ]
+                , test "cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 3
+                , test "cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                , test "mode" <|
+                    \_ ->
+                        Expect.equal mode Insert
+                ]
+        , let
+            { mode, lines, cursorX, buffer, numberBuffer, lastAction, cursorY } =
+                newStateAfterActions [ Keys "i12 34 56 78", Escape, Keys "ce" ]
+          in
+            describe "ce"
+                [ test "lines" <|
+                    \_ ->
+                        Expect.equal lines [ "12 34 56 7" ]
+                , test "numberBuffer" <|
+                    \_ ->
+                        Expect.equal numberBuffer []
+                , test "lastAction" <|
+                    \_ ->
+                        Expect.equal lastAction <| Keys "1ce"
+                , test "buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "8" ]
+                , test "cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 10
+                , test "cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                , test "mode" <|
+                    \_ ->
+                        Expect.equal mode Insert
+                ]
+        , let
+            { mode, lines, cursorX, buffer, numberBuffer, lastAction, cursorY } =
+                newStateAfterActions [ Keys "i12", Enter, Keys "34", Enter, Enter, Enter, Keys "56", Escape, Keys "kkkce" ]
+          in
+            describe "kkkce"
+                [ test "lines" <|
+                    \_ ->
+                        Expect.equal lines [ "12", "3" ]
+                , test "numberBuffer" <|
+                    \_ ->
+                        Expect.equal numberBuffer []
+                , test "lastAction" <|
+                    \_ ->
+                        Expect.equal lastAction <| Keys "1ce"
+                , test "buffer" <|
+                    \_ ->
+                        Expect.equal buffer <|
+                            InlineBuffer
+                                [ "4"
+                                , ""
+                                , ""
+                                , "56"
+                                ]
+                , test "cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 1
+                , test "cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 1
+                , test "mode" <|
+                    \_ ->
+                        Expect.equal mode Insert
+                ]
+        , let
+            { mode, lines, cursorX, buffer, numberBuffer, lastAction, cursorY } =
+                newStateAfterActions [ Keys "i12", Enter, Keys "34", Enter, Enter, Enter, Keys "56", Escape, Keys "kkkde" ]
+          in
+            describe "kkkde"
+                [ test "lines" <|
+                    \_ ->
+                        Expect.equal lines [ "12", "3" ]
+                , test "numberBuffer" <|
+                    \_ ->
+                        Expect.equal numberBuffer []
+                , test "lastAction" <|
+                    \_ ->
+                        Expect.equal lastAction <| Keys "1de"
+                , test "buffer" <|
+                    \_ ->
+                        Expect.equal buffer <|
+                            InlineBuffer
+                                [ "4"
+                                , ""
+                                , ""
+                                , "56"
+                                ]
+                , test "cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 1
+                , test "mode" <|
+                    \_ ->
+                        Expect.equal mode Control
+                ]
+        , let
+            { mode, lines, cursorX, buffer, numberBuffer, lastAction, cursorY } =
+                newStateAfterActions [ Keys "ce" ]
+          in
+            describe "ce in empty buffer"
+                [ test "lines" <|
+                    \_ ->
+                        Expect.equal lines [ "" ]
+                , test "numberBuffer" <|
+                    \_ ->
+                        Expect.equal numberBuffer []
+                , test "lastAction" <|
+                    \_ ->
+                        Expect.equal lastAction <| Keys "1ce"
+                , test "buffer" <|
+                    \_ ->
+                        Expect.equal buffer <| InlineBuffer [ "" ]
+                , test "cursorX" <|
+                    \_ ->
+                        Expect.equal cursorX 0
+                , test "cursorY" <|
+                    \_ ->
+                        Expect.equal cursorY 0
+                , test "mode" <|
+                    \_ ->
+                        Expect.equal mode Insert
+                ]
+        ]

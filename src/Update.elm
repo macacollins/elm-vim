@@ -1,5 +1,6 @@
 module Update exposing (update)
 
+import Delete.DeleteWords exposing (..)
 import Dict exposing (Dict)
 import Constants
 import FileStorage.Update exposing (updateFileStorageModel)
@@ -393,6 +394,9 @@ changeTextModeUpdate model keyPress =
                     'g' ->
                         { model | mode = ChangeToLine } ! []
 
+                    'e' ->
+                        handleChangeToEndOfWords model ! []
+
                     'w' ->
                         handleChangeWords model ! []
 
@@ -436,6 +440,28 @@ handleChangeToEndOfBuffer model =
             , buffer = newBuffer
             , cursorX = 0
         }
+
+
+handleChangeToEndOfWords : Model -> Model
+handleChangeToEndOfWords model =
+    let
+        deletedModel =
+            deleteToEndOfWord model
+
+        newLastAction =
+            Keys <|
+                (toString <| getNumberModifier model)
+                    ++ "ce"
+
+        updatedModel =
+            { deletedModel
+                | mode = Insert
+                , numberBuffer = []
+                , lastAction = newLastAction
+                , cursorX = model.cursorX
+            }
+    in
+        updatedModel
 
 
 handleChangeWords : Model -> Model
