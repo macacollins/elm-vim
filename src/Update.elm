@@ -400,6 +400,9 @@ changeTextModeUpdate model keyPress =
                     'e' ->
                         handleChangeToEndOfWords model ! []
 
+                    'b' ->
+                        handleChangeBackWords model ! []
+
                     'w' ->
                         handleChangeWords model ! []
 
@@ -465,6 +468,33 @@ handleChangeToEndOfWords model =
             }
     in
         updatedModel
+
+
+handleChangeBackWords : Model -> Model
+handleChangeBackWords model =
+    let
+        deletedModel =
+            deleteBackWords model
+
+        newLastAction =
+            Keys <|
+                (toString <| getNumberModifier model)
+                    ++ "cb"
+
+        updatedModel =
+            { deletedModel
+                | mode = Insert
+                , numberBuffer = []
+                , lastAction = newLastAction
+            }
+    in
+        if model.lines == [ "" ] then
+            { model
+                | mode = Control
+                , numberBuffer = []
+            }
+        else
+            updatedModel
 
 
 handleChangeWords : Model -> Model
