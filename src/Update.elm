@@ -1,6 +1,9 @@
 module Update exposing (update)
 
+import Control.Move exposing (moveUp, moveDown, moveLeft, moveRight)
+import Control.CutSegment exposing (cutSegment)
 import Delete.DeleteWords exposing (..)
+import Yank.CopySegment exposing (getSegmentCopyBuffer)
 import Dict exposing (Dict)
 import Constants
 import FileStorage.Update exposing (updateFileStorageModel)
@@ -469,6 +472,83 @@ handleChangeWords model =
     handleChangeWordsInner model (getNumberModifier model)
 
 
+recurToFinalCoordinates : Model -> Int -> Model
+recurToFinalCoordinates model numLeft =
+    if numLeft < 1 then
+        model
+    else
+        let
+            toNextNonEmptyLine : Model -> Model
+            toNextNonEmptyLine innerModel =
+                let
+                    line =
+                        getLine innerModel.cursorY innerModel.lines
+                in
+                    if (line |> String.trim |> String.length) == 0 then
+                        if innerModel.cursorY + 1 < List.length innerModel.lines then
+                            toNextNonEmptyLine
+                                { innerModel | cursorY = innerModel.cursorY + 1 }
+                        else
+                            innerModel
+                    else
+                        innerModel
+
+            withAdjustedY =
+                if model.cursorX > String.length originalLine - 1 then
+                    toNextNonEmptyLine
+                        { model
+                            | cursorY = model.cursorY + 1
+                            , cursorX = 0
+                        }
+                else
+                    model
+
+            realNumLeft =
+                if String.trim originalLine == "" then
+                    numLeft - 1
+                else
+                    numLeft
+
+            originalLine =
+                getLine model.cursorY model.lines
+
+            newLine =
+                withAdjustedY.lines
+                    |> getLine withAdjustedY.cursorY
+
+            numberAtEnd =
+                newLine
+                    |> String.dropLeft withAdjustedY.cursorX
+                    |> String.trimLeft
+                    |> String.toList
+                    |> dropWhile (\char -> char /= ' ')
+                    |> List.length
+
+            newCursorX =
+                if realNumLeft == 1 && numberAtEnd - 1 < String.length newLine then
+                    String.length newLine - numberAtEnd - 1
+                else
+                    String.length newLine - numberAtEnd
+
+            newModel =
+                if withAdjustedY.cursorY > List.length withAdjustedY.lines - 1 then
+                    { withAdjustedY
+                        | cursorX =
+                            (withAdjustedY.lines
+                                |> getLine ((List.length withAdjustedY.lines) - 1)
+                                |> String.length
+                            )
+                                - 1
+                        , cursorY = List.length withAdjustedY.lines - 1
+                    }
+                else
+                    { withAdjustedY
+                        | cursorX = newCursorX
+                    }
+        in
+            recurToFinalCoordinates newModel (realNumLeft - 1)
+
+
 handleChangeWordsInner : Model -> Int -> Model
 handleChangeWordsInner model numLeft =
     let
@@ -478,40 +558,41 @@ handleChangeWordsInner model numLeft =
                     ++ "cw"
 
         currentLine =
-            getLine model.cursorY model.lines
+            model.lines
+                |> getLine model.cursorY
 
-        numberAtEnd =
-            currentLine
-                |> String.dropLeft model.cursorX
-                |> String.trimLeft
-                |> String.toList
-                |> dropWhile (\char -> char /= ' ')
-                |> List.length
+        withCorrectedCursorX =
+            if (String.length currentLine == 0) then
+                { model | cursorX = 0 }
+            else if (model.cursorX > String.length currentLine - 1) then
+                { model
+                    | cursorX = String.length currentLine - 1
+                }
+            else
+                model
 
-        newLine =
-            String.left model.cursorX currentLine
-                ++ String.right numberAtEnd currentLine
+        withFinalCoordinates =
+            recurToFinalCoordinates withCorrectedCursorX numLeft
 
-        newLines =
-            mutateAtIndex model.cursorY model.lines <| \_ -> newLine
+        { cursorX, cursorY } =
+            withFinalCoordinates
 
-        newBuffer =
-            currentLine
-                |> String.dropLeft model.cursorX
-                |> String.dropRight numberAtEnd
-                |> List.singleton
-                |> InlineBuffer
+        visualMode =
+            Visual cursorX cursorY
 
-        updatedModel =
-            { model
-                | mode = Insert
-                , numberBuffer = []
-                , lines = newLines
-                , buffer = newBuffer
-                , lastAction = newLastAction
-            }
+        afterCut =
+            cutSegment <|
+                { model
+                    | mode = visualMode
+                    , cursorX = withCorrectedCursorX.cursorX
+                }
     in
-        updatedModel
+        { afterCut
+            | lastAction = newLastAction
+            , mode = Insert
+            , numberBuffer = []
+            , cursorX = withCorrectedCursorX.cursorX
+        }
 
 
 dropWhile : (a -> Bool) -> List a -> List a
